@@ -1,4 +1,5 @@
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/PredictiveEcology/SpaDES.config/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/PredictiveEcology/SpaDES.config/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 <img align="right" width="80" pad="20" src="https://github.com/PredictiveEcology/SpaDES/raw/master/man/figures/SpaDES.png">
