@@ -26,6 +26,7 @@ jobs:
         with:
           extra-packages: |
             any::pkgdown
+        needs: website
 
       - name: Deploy package
         run: |
