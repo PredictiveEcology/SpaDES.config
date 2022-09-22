@@ -1,0 +1,38 @@
+Package: SpaDES.config
+Type: Package
+Title: Utilities for SpaDES project configuration
+Description: Tools for defining and validating project configurations
+    across multiple contexts (including user- and machine-specific settings).
+    Includes default configuration settings for several 'SpaDES' project types.
+URL:
+    https://spades-config.predictiveecology.org/,
+    https://github.com/PredictiveEcology/SpaDES.config
+Version: 0.0.1
+Authors@R: c(
+    person("Alex M", "Chubaty", email = "achubaty@for-cast.ca",
+           role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7146-8135")),
+    person("Eliot J B", "McIntire", email = "eliot.mcintire@nrcan-rncan.gc.ca",
+           role = c("aut"), comment = c(ORCID = "0000-0002-6914-8316"))
+    )
+Depends:
+    R (>= 4.0)
+Imports:
+    methods,
+    Require
+Suggests:
+    covr,
+    knitr,
+    roxygen2,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Remotes:
+    PredictiveEcology/Require@development
+Encoding: UTF-8
+Language: en-CA
+License: GPL (>= 3)
+VignetteBuilder: knitr, rmarkdown
+BugReports: https://github.com/PredictiveEcology/SpaDES.config/issues
+ByteCompile: yes
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+Config/testthat/edition: 3
