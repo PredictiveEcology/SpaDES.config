@@ -1,5 +1,6 @@
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/PredictiveEcology/SpaDES.config/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/PredictiveEcology/SpaDES.config/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/github/PredictiveEcology/SpaDES.config/branch/main/graph/badge.svg?token=D6obCssN0K)](https://codecov.io/github/PredictiveEcology/SpaDES.config)
 <!-- badges: end -->
 
 <img align="right" width="80" pad="20" src="https://github.com/PredictiveEcology/SpaDES/raw/master/man/figures/SpaDES.png">
