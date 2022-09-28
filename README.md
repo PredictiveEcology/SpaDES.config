@@ -17,7 +17,7 @@ Includes default configuration settings for several 'SpaDES' project types.
 **Install from CRAN:**
 
 ```r
-#install.packages("SpaDES.core") ## not yet on CRAN
+#install.packages("SpaDES.config") ## not yet on CRAN
 ```
 
 **Install from GitHub:**
