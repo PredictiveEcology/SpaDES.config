@@ -7,7 +7,7 @@ Description: Tools for defining and validating project configurations
 URL:
     https://spades-config.predictiveecology.org/,
     https://github.com/PredictiveEcology/SpaDES.config
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: c(
     person("Alex M", "Chubaty", email = "achubaty@for-cast.ca",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7146-8135")),
@@ -17,16 +17,29 @@ Authors@R: c(
 Depends:
     R (>= 4.0)
 Imports:
+    crayon,
     methods,
-    Require
+    R6,
+    Require,
+    utils
 Suggests:
     covr,
+    DBI,
+    googledrive,
+    httr,
     knitr,
-    roxygen2,
+    LandR,
+    lme4,
+    raster,
     rmarkdown,
+    roxygen2,
+    RPostgres,
+    RSQLite,
+    SpaDES.core,
     testthat (>= 3.0.0)
 Remotes:
-    PredictiveEcology/Require@development
+    PredictiveEcology/Require@development,
+    PredictiveEcology/SpaDES.core@development
 Encoding: UTF-8
 Language: en-CA
 License: GPL (>= 3)
