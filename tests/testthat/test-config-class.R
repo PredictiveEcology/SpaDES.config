@@ -14,6 +14,9 @@ test_that("LandWeb config + context setup is working", {
   ## landweb ---------------------------------------------------------------------------------------
   context.lw <- useContext("LandWeb", mode = "development", studyAreaName = "LandWeb", version = 3)
   config.lw <- updateLandWebConfig(config, context = context.lw)
+  context.lw <- updateLandWebContext(context.lw, config.lw)
+
+  expect_true(!is.null(context.lw$runName))
 
   expect_equal(config.lw$args$delayStart, 0L)
 
@@ -28,6 +31,9 @@ test_that("LandWeb config + context setup is working", {
   ## manitoba --------------------------------------------------------------------------------------
   context.mb <- useContext("LandWeb", mode = "production", studyAreaName = "provMB", version = 3)
   config.mb <- updateLandWebConfig(config, context = context.mb)
+  context.mb <- updateLandWebContext(context.mb, config.mb)
+
+  expect_true(!is.null(context.mb$runName))
 
   expect_gt(config.mb$args$delayStart, 0L)
 
@@ -44,6 +50,9 @@ test_that("LandWeb config + context setup is working", {
   config.pp.tolko <- suppressWarnings({
     updateLandWebConfig(config, context = context.pp.tolko)
   }) ## TODO: fix upstream?
+  context.pp.tolko <- updateLandWebContext(context.pp.tolko, config.pp.tolko)
+
+  expect_true(!is.null(context.pp.tolko$runName))
 
   expect_equal(config.pp.tolko$args$delayStart, 0L)
 
