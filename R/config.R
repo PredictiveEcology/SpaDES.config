@@ -151,7 +151,7 @@ projConfig <- R6::R6Class(
         names(params_) <- self$modules
 
         params_ <- lapply(names(params_), function(x) {
-          modifyList2(params_[[x]], self$params[[x]]) ## TODO: ensure user hasn't passed unused params
+          modifyList2(params_[[x]], self$params[[x]]) ## TODO: check that dot params are being seen/read
         })
         names(params_) <- self$modules
       }
