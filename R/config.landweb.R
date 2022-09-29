@@ -293,7 +293,7 @@ updateLandWebConfig <- function(config, context) {
         )
       )
     )
-  } else if (context$studyAreaName == "provMB") {
+  } else if (grepl("provMB", context$studyAreaName)) {
     cnfg$update(
       params = list(
         Biomass_speciesData = list(

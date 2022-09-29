@@ -57,7 +57,7 @@ projConfig <- R6::R6Class(
     #'
     #' @importFrom Require modifyList2 normPath
     update = function(args = NULL, modules = NULL, options = NULL, params = NULL, paths = NULL) {
-      ## need to update paths first, as these are potentially used by fields
+      ## update paths first ------------------------------------------------------------------------
       self$paths <- modifyList2(self$paths, paths)
 
       pathNames <- names(self$paths)
@@ -78,14 +78,19 @@ projConfig <- R6::R6Class(
 
       self$paths <- updatedPaths
 
-      if (!is.null(modules)) {
-        if (is.null(names(modules))) names(modules) <- modules
-      }
-
+      ## update args -------------------------------------------------------------------------------
       self$args <- modifyList2(self$args, args)
 
-      self$modules <- modifyList2(self$modules, modules)
+      ## update modules ----------------------------------------------------------------------------
+      if (!is.null(modules)) {
+        if (is.null(names(modules))) names(modules) <- modules
 
+        ## allow passing partial list to exclude modules
+        # self$modules <- modifyList2(self$modules, modules)
+        self$modules <- modules
+      }
+
+      ## update options ----------------------------------------------------------------------------
       self$options <- modifyList2(self$options, options)
 
       ## update known paths in options
@@ -101,6 +106,7 @@ projConfig <- R6::R6Class(
         self$options$reproducible.destinationPath <- self$paths$inputPath
       }
 
+      ## update params -----------------------------------------------------------------------------
       if (is.null(params)) {
         params <- list()
       } else {
@@ -113,11 +119,12 @@ projConfig <- R6::R6Class(
         }
       }
 
-      params_ <- self$params
-      params_ <- lapply(names(params_), function(x) {
+      mods2keep <- c(".globals", names(self$modules))
+      params_ <- subset(self$params, names(self$params) %in% mods2keep)
+      params_ <- lapply(mods2keep, function(x) {
         modifyList2(params_[[x]], params[[x]])
       })
-      names(params_) <- names(self$params)
+      names(params_) <- mods2keep
 
       self$params <- params_
 
