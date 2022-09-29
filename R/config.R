@@ -119,6 +119,9 @@ projConfig <- R6::R6Class(
         }
       }
 
+      ## TODO: if user updates global params, propagate this change to corresponding module params.
+      ##       should user be warned if trying to update module pram that would be overridden by global?
+
       mods2keep <- c(".globals", names(self$modules))
       params_ <- subset(self$params, names(self$params) %in% mods2keep)
       params_ <- lapply(mods2keep, function(x) {
