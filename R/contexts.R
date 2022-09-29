@@ -20,6 +20,13 @@ useContext <- function(projectName = NULL, ...) {
   if (is.null(projectName)) projectName <- ""
 
   dots <- list(...)
+
+  .studyAreaName <- if (is.null(dots$studyAreaName)) {
+    "LandWeb" ## TODO: is this too big for default study area?
+  } else {
+    dots$studyAreaName
+  }
+
   .nodename <- Sys.info()[["nodename"]]
   .user <- Sys.info()[["user"]]
 
@@ -33,7 +40,7 @@ useContext <- function(projectName = NULL, ...) {
                dispersalType = "high", ## "aspen", "default", "none"
                forceResprout = TRUE,
                friMultiple = 1L,
-               studyAreaName = "LandWeb_v2", ## multiple others; see LandWeb_preamble
+               studyAreaName = paste0(.studyAreaName, "_v2"), ## multiple others; see LandWeb_preamble
                succession = TRUE, ## FALSE
                pixelSize = 250,
                rep = 1L,
@@ -47,7 +54,7 @@ useContext <- function(projectName = NULL, ...) {
                dispersalType = "default",
                forceResprout = FALSE,
                friMultiple = 1L,
-               studyAreaName = "LandWeb_v3", ## multiple others; see LandWeb_preamble
+               studyAreaName = paste0(.studyAreaName, "_v3"), ## multiple others; see LandWeb_preamble
                succession = TRUE,
                pixelSize = 250,
                rep = 1L,

@@ -11,7 +11,7 @@ test_that("LandWeb config + context setup is working", {
   )
   config.lw$validate()
 
-  context.lw <- useContext("LandWeb", mode = "development", version = 3)
+  context.lw <- useContext("LandWeb", mode = "development", studyAreaName = "LandWeb", version = 3)
   config.lw <- updateLandWebConfig(config.lw, context = context.lw)
 
   expect_identical(config.lw$args$delayStart, 0L)
