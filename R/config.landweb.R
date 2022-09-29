@@ -296,7 +296,7 @@ updateLandWebConfig <- function(config, context) {
   } else if (context$studyAreaName == "provMB") {
     cnfg$update(
       params = list(
-        Biomass_specieData = list(
+        Biomass_speciesData = list(
           types = c("KNN", "CASFRI", "Pickell", "MBFRI")
         )
       )
