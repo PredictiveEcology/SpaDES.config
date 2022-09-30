@@ -10,6 +10,10 @@ printRunInfo(context)
 \item{context}{A named list of run descriptors, including e.g.,
 the current user and machine names, the study area name, and replicate id.}
 }
+\value{
+Invoked for its side-effect of printing to the screen,
+but invisibly returns the message string so it can e.g., be written to a file by the user.
+}
 \description{
-Print (as a message) the current run context information.
+Print (via message) the current run context information using markdown table syntax.
 }

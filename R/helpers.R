@@ -159,22 +159,33 @@ paths4spades <- function(paths) {
 
 #' Print current run information
 #'
-#' Print (as a message) the current run context information.
+#' Print (via message) the current run context information using markdown table syntax.
 #'
 #' @param context A named list of run descriptors, including e.g.,
 #'                the current user and machine names, the study area name, and replicate id.
 #'
+#' @return Invoked for its side-effect of printing to the screen,
+#'         but invisibly returns the message string so it can e.g., be written to a file by the user.
 #' @export
 printRunInfo <- function(context) {
-  message(
-    rep("*", getOption("width")), "\n",
-    "Run info:\n",
-    rep("-", getOption("width")), "\n",
-    lapply(names(context), function(x) {
-      paste(sprintf("  %16s:\t", x), context[[x]], "\n")
+  col1width <- max(nchar(names(context)))
+  col2width <- max(nchar(context))
+
+  info <- c(
+    "# Run info\n\n",
+    "| ", rep("-", col1width), " | ", rep("-", col2width), " |\n",
+    sapply(names(context), function(x) {
+      col1text <- formatC(x, width = col1width, format = "s")
+      col2text <- formatC(as.character(context[[x]]), width = col2width, format = "s")
+
+      paste("|", col1text, "|", col2text, "|\n")
     }),
-    rep("*", getOption("width"))
+    "| ", rep("-", col1width), " | ", rep("-", col2width), " |\n"
   )
+
+  message(info)
+
+  return(invisible(info))
 }
 
 #' Google Drive authentication
