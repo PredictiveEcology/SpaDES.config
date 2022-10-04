@@ -17,7 +17,7 @@ landwebConfig <- R6::R6Class(
     #' @param ... Additional arguments passed to `useContext()`
     #'
     initialize = function(projectPath, ...) {
-      self$context <- useContext("LandWeb", projectPath = projectPath, ...)
+      self$context <- useContext(projectName = "LandWeb", projectPath = projectPath, ...)
 
       ## do paths first as these may be used below
       # paths ---------------------------------------------------------------------------------------
@@ -348,7 +348,7 @@ landwebConfig <- R6::R6Class(
         pathNames <- names(updatedPaths)
         updatedPaths <- lapply(pathNames, function(pthnm) {
           if (pthnm %in% c("projectPath", "scratchPath")) {
-            private$.paths[[pthnm]]
+            updatedPaths[[pthnm]]
           } else {
             .updateRelativePath(updatedPaths[[pthnm]], private$.paths$projectPath)
           }

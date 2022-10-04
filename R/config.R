@@ -35,7 +35,9 @@ useConfig <- function(projectName = NULL, projectPath = NULL, ...) {
     tolower(projectName),
     landweb = landwebConfig$new(projectPath = projectPath, ...),
     projConfig$new(projectName = projectName, projectPath = projectPath, ...) ## default
-  )$update()$validate()
+  )
+  config$update()
+  config$validate()
 
   return(config)
 }
@@ -114,6 +116,8 @@ projConfig <- R6::R6Class(
           modifyList2(params_[[x]], self$params[[x]]) ## TODO: check that dot params are being seen/read
         })
         names(params_) <- self$modules
+
+        self$modules <- params_
       }
 
       ## check that known options using paths are correct ------------------------------------------
