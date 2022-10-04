@@ -345,6 +345,7 @@ landwebConfig <- R6::R6Class(
         ## update paths
         updatedPaths <- modifyList2(private$.paths, value)
 
+        ## ensure paths are kept relative to projectPath except for scratch
         pathNames <- names(updatedPaths)
         updatedPaths <- lapply(pathNames, function(pthnm) {
           if (pthnm %in% c("projectPath", "scratchPath")) {

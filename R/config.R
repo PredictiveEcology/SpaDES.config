@@ -212,9 +212,9 @@ projConfig <- R6::R6Class(
         pathNames <- names(updatedPaths)
         updatedPaths <- lapply(pathNames, function(pthnm) {
           if (pthnm %in% c("projectPath", "scratchPath")) {
-            private$.paths[[pthnm]]
+            updatedPaths[[pthnm]]
           } else {
-            .updateRelativePath(private$.paths[[pthnm]], private$.paths$projectPath)
+            .updateRelativePath(updatedPaths[[pthnm]], private$.paths$projectPath)
           }
         })
         names(updatedPaths) <- pathNames
