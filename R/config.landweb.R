@@ -55,7 +55,7 @@ landwebConfig <- R6::R6Class(
         LandMine = "LandMine",
         LandWeb_output = "LandWeb_output",
         LandWeb_preamble = "LandWeb_preamble",
-        LandWeb_summary = "LandWeb_summary",
+        #LandWeb_summary = "LandWeb_summary", ## used for postprocess, not devel nor production
         timeSinceFire = "timeSinceFire"
       )
 
