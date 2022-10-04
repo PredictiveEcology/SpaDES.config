@@ -70,7 +70,7 @@ projConfig <- R6::R6Class(
       self$context <- useContext(projectName, projectPath, ...)
 
       ## do paths first as these may be used below
-      private$.paths = list(
+      private[[".paths"]] = list(
         cachePath = "cache",
         inputPath = "inputs",
         modulePath = "modules",
@@ -78,10 +78,10 @@ projConfig <- R6::R6Class(
         projectPath = normPath(projectPath)
       )
 
-      private$.args = list()
-      private$.modules = list()
-      private$.options = list()
-      private$.params = list(.globals = list())
+      private[[".args"]] = list()
+      private[[".modules"]] = list()
+      private[[".options"]] = list()
+      private[[".params"]] = list(.globals = list())
 
       invisible(self)
     },
@@ -97,10 +97,10 @@ projConfig <- R6::R6Class(
     #' @importFrom Require modifyList2
     validate = function() {
       ## check all modules exist in project --------------------------------------------------------
-      fullModulePath <- normPath(file.path(self$paths$projectPath, self$paths$modulePath))
+      fullModulePath <- normPath(file.path(self$paths[["projectPath"]], self$paths[["modulePath"]]))
       modsInPrj <- list.dirs(fullModulePath, recursive = FALSE, full.names = FALSE)
       if (!all(self$modules %in% modsInPrj)) {
-        warning("modules list contains modules not found in modulePath ", self$paths$modulePath)
+        warning("modules list contains modules not found in modulePath ", self$paths[["modulePath"]])
       }
 
       ## check user-specified params against module metadata ---------------------------------------
@@ -122,9 +122,9 @@ projConfig <- R6::R6Class(
 
       ## check that known options using paths are correct ------------------------------------------
       stopifnot(
-        normPath(self$options$map.dataPath) == normPath(self$paths$inputPath),
-        normPath(self$options$map.tilePath) == normPath(self$paths$tilePath),
-        normPath(self$options$reproducible.destinationPath) == normPath(self$paths$inputPath)
+        normPath(self$options[["map.dataPath"]]) == normPath(self$paths[["inputPath"]]),
+        normPath(self$options[["map.tilePath"]]) == normPath(self$paths[["tilePath"]]),
+        normPath(self$options[["reproducible.destinationPath"]]) == normPath(self$paths[["inputPath"]])
       )
 
       invisible(self)
@@ -135,19 +135,19 @@ projConfig <- R6::R6Class(
     #' @field args   Named list of additional project arguments.
     args = function(value) {
       if (missing(value)) {
-        return(private$.args)
+        return(private[[".args"]])
       } else {
-        private$.args <- modifyList2(private$.args, as.list(value))
+        private[[".args"]] <- modifyList2(private[[".args"]], as.list(value))
       }
     },
 
     #' @field modules List of module names, which should correspond to the names in `params`.
     modules = function(value) {
       if (missing(value)) {
-        return(private$.modules)
+        return(private[[".modules"]])
       } else {
         ## allow passing partial list to exclude modules, instead of simply using:
-        ## private$.modules <- modifyList2(self$modules, modules)
+        ## private[[".modules"]] <- modifyList2(self$modules, modules)
 
         updatedModules <- as.list(value) ## ensure it's a list
 
@@ -155,16 +155,16 @@ projConfig <- R6::R6Class(
           names(updatedModules) <- updatedModules ## ensure it's a named list
         }
 
-        private$.modules <- updatedModules
+        private[[".modules"]] <- updatedModules
       }
     },
 
     #' @field options Named list of R and R package options to be set.
     options = function(value) {
       if (missing(value)) {
-        return(private$.options)
+        return(private[[".options"]])
       } else {
-        private$.options <- modifyList2(private$.options, as.list(value))
+        private[[".options"]] <- modifyList2(private[[".options"]], as.list(value))
       }
     },
 
@@ -173,7 +173,7 @@ projConfig <- R6::R6Class(
     #'               (and may also include `.global`).
     params = function(value) {
       if (missing(value)) {
-        return(private$.params)
+        return(private[[".params"]])
       } else {
         ## check for params being passed to modules not listed in self$modules
         moduleNames <- names(self$modules)
@@ -186,7 +186,7 @@ projConfig <- R6::R6Class(
         }
 
         mods2keep <- c(".globals", moduleNames)
-        params_ <- subset(private$.params, names(private$.params) %in% mods2keep)
+        params_ <- subset(private[[".params"]], names(private[[".params"]]) %in% mods2keep)
         params_ <- lapply(mods2keep, function(x) {
           tmp <- modifyList2(params_[[x]], value[[x]])
           if (x != ".globals") {
@@ -198,7 +198,7 @@ projConfig <- R6::R6Class(
         })
         names(params_) <- mods2keep
 
-        private$.params <- params_
+        private[[".params"]] <- params_
       }
     },
 
@@ -206,10 +206,10 @@ projConfig <- R6::R6Class(
     #'              the paths in `SpaDES.core::setPaths`.
     paths = function(value) {
       if (missing(value)) {
-        return(private$.paths)
+        return(private[[".paths"]])
       } else {
         ## update paths
-        updatedPaths <- modifyList2(private$.paths, value)
+        updatedPaths <- modifyList2(private[[".paths"]], value)
 
         ## ensure paths are kept relative to projectPath except for scratch
         pathNames <- names(updatedPaths)
@@ -217,29 +217,29 @@ projConfig <- R6::R6Class(
           if (pthnm %in% c("projectPath", "scratchPath")) {
             updatedPaths[[pthnm]]
           } else {
-            .updateRelativePath(updatedPaths[[pthnm]], private$.paths$projectPath)
+            .updateRelativePath(updatedPaths[[pthnm]], private[[".paths"]][["projectPath"]])
           }
         })
         names(updatedPaths) <- pathNames
 
-        updatedPaths$tilePath <- file.path(updatedPaths$outputPath, "tiles")
+        updatedPaths[["tilePath"]] <- file.path(updatedPaths[["outputPath"]], "tiles")
 
-        private$.paths <- updatedPaths
+        private[[".paths"]] <- updatedPaths
 
         ## update known paths in options
         if ("map.dataPath" %in% names(self$options)) {
-          private$.options$map.dataPath <- private$.paths$inputPath
-          attr(private$.options$map.dataPath, "auto") <- TRUE
+          private[[".options"]][["map.dataPath"]] <- private[[".paths"]][["inputPath"]]
+          attr(private[[".options"]][["map.dataPath"]], "auto") <- TRUE
         }
 
         if ("map.tilePath" %in% names(self$options)) {
-          private$.options$map.tilePath <- private$.paths$tilePath
-          attr(private$.options$map.tilePath, "auto") <- TRUE
+          private[[".options"]][["map.tilePath"]] <- private[[".paths"]][["tilePath"]]
+          attr(private[[".options"]][["map.tilePath"]], "auto") <- TRUE
         }
 
         if ("reproducible.destinationPath" %in% names(self$options)) {
-          private$.options$reproducible.destinationPath <- private$.paths$inputPath
-          attr(private$.options$reproducible.destinationPath, "auto") <- TRUE
+          private[[".options"]][["reproducible.destinationPath"]] <- private[[".paths"]][["inputPath"]]
+          attr(private[[".options"]][["reproducible.destinationPath"]], "auto") <- TRUE
         }
       }
     }

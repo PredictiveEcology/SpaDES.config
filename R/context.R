@@ -67,12 +67,12 @@ projContext <- R6::R6Class(
     #' @param studyAreaName Character string identifying a study area (see `LandWeb_preamble`
     #'                      module for up-to-date descriptions of each study area label).
     initialize = function(projectPath, mode = "development", rep = 1L, studyAreaName = "default") {
-      private$.mode <- NA_character_
-      private$.projectPath <- normPath(projectPath)
-      private$.studyAreaName <- NA_character_
-      private$.rep <- NA_integer_
-      private$.runName <- NA_character_
-      attr(private$.runName, "auto") <- TRUE
+      private[[".mode"]] <- NA_character_
+      private[[".projectPath"]] <- normPath(projectPath)
+      private[[".studyAreaName"]] <- NA_character_
+      private[[".rep"]] <- NA_integer_
+      private[[".runName"]] <- NA_character_
+      attr(private[[".runName"]], "auto") <- TRUE
 
       self$machine <- Sys.info()[["nodename"]]
       self$user <- Sys.info()[["user"]]
@@ -89,12 +89,12 @@ projContext <- R6::R6Class(
     #'              e.g., when writing the context info to a file for humans.
     print = function() {
       cntxt <- list(
-        mode = private$.mode,
+        mode = private[[".mode"]],
         machine = self$machine,
         user = self$user,
-        studyAreaName = private$.studyAreaName,
-        rep = private$.rep,
-        runName = private$.runName
+        studyAreaName = private[[".studyAreaName"]],
+        rep = private[[".rep"]],
+        runName = private[[".runName"]]
       )
 
       info <- .context2md(cntxt)
@@ -111,44 +111,44 @@ projContext <- R6::R6Class(
     #'              "development", or "postprocessing" runs.
     mode = function(value) {
       if (missing(value)) {
-        return(private$.mode)
+        return(private[[".mode"]])
       } else {
-        private$.mode <- tolower(value)
+        private[[".mode"]] <- tolower(value)
       }
     },
 
     #' @field studyAreaName  Character string giving the name of current study area.
     studyAreaName = function(value) {
       if (missing(value)) {
-        return(private$.studyAreaName)
+        return(private[[".studyAreaName"]])
       } else {
         ## TODO: issues getting relative paths when studyAreaName == projDir
         ## workaround is to append some suffix to the studyAreaName
-        private$.studyAreaName <- if (identical(value, basename(private$.projectPath))) {
+        private[[".studyAreaName"]] <- if (identical(value, basename(private[[".projectPath"]]))) {
           paste0(value, "_full")
         } else {
           value
         }
-        private$.runName <- sprintf("%s_rep%02d", private$.studyAreaName, private$.rep)
+        private[[".runName"]] <- sprintf("%s_rep%02d", private[[".studyAreaName"]], private[[".rep"]])
       }
     },
 
     #' @field rep  replicate id (integer)
     rep = function(value) {
       if (missing(value)) {
-        return(private$.rep)
+        return(private[[".rep"]])
       } else {
-        private$.rep <- as.integer(value)
-        private$.runName <- sprintf("%s_rep%02d", private$.studyAreaName, private$.rep)
+        private[[".rep"]] <- as.integer(value)
+        private[[".runName"]] <- sprintf("%s_rep%02d", private[[".studyAreaName"]], private[[".rep"]])
       }
     },
 
     #' @field runName  get or set the current runName
     runName = function(value) {
       if (missing(value)) {
-        return(private$.runName)
+        return(private[[".runName"]])
       } else {
-        private$.runName <- value
+        private[[".runName"]] <- value
       }
     }
   ),

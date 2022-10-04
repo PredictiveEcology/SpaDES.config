@@ -73,7 +73,7 @@ landwebConfig <- R6::R6Class(
         rasterTmpDir = file.path(dirname(tempdir()), "scratch", "raster"),
         reproducible.cacheSaveFormat = "rds", ## can be "qs" or "rds"
         reproducible.conn = dbConnCache("sqlite"), ## "sqlite" or "postgresql"
-        reproducible.destinationPath = normPath(self$paths$inputPath),
+        reproducible.destinationPath = normPath(self$paths[["inputPath"]]),
         reproducible.inputPaths = NULL,
         reproducible.nThreads = 2,
         reproducible.overwrite = TRUE,
@@ -181,12 +181,12 @@ landwebConfig <- R6::R6Class(
     #'              Must be called anytime the context is updated.
     update = function() {
       ## mode ---------------------------------------
-      if (self$context$mode %in% c("development", "production")) {
+      if (self$context[["mode"]] %in% c("development", "production")) {
         self$args <- list(
           cloud = list(
             useCloud = TRUE
           ),
-          delayStart = if (self$context$mode == "development") 0L else sample(5L:15L, 1), # 5-15 minutes
+          delayStart = if (self$context[["mode"]] == "development") 0L else sample(5L:15L, 1), # 5-15 minutes
           endTime = 1000,
           successionTimestep = 10,
           summaryPeriod = c(700, 1000),
@@ -199,7 +199,7 @@ landwebConfig <- R6::R6Class(
             .plots = c("object", "png", "raw") ## don't plot to screen
           )
         )
-      } else if (self$context$mode == "profile") {
+      } else if (self$context[["mode"]] == "profile") {
         self$args <- list(
           delayStart = 0,
           endTime = 20,
@@ -212,7 +212,7 @@ landwebConfig <- R6::R6Class(
         self$params <- list(
           .globals = list(
             .plotInitialTime = 0,
-            .studyAreaName = self$context$studyAreaName
+            .studyAreaName = self$context[["studyAreaName"]]
           )
         )
       } else if (self$context$mode == "postprocess") {
@@ -222,30 +222,30 @@ landwebConfig <- R6::R6Class(
       ## study area + run info ----------------------
       self$params <- list(
         .globals = list(
-          .studyAreaName = self$context$studyAreaName
+          .studyAreaName = self$context[["studyAreaName"]]
         ),
         Biomass_borealDataPrep = list(
-          pixelGroupBiomassClass = 1000 / (250 / self$context$pixelSize)^2 ## 1000 / mapResFact^2; can be coarse because initial conditions are irrelevant
+          pixelGroupBiomassClass = 1000 / (250 / self$context[["pixelSize"]])^2 ## 1000 / mapResFact^2; can be coarse because initial conditions are irrelevant
         ),
         LandMine = list(
-          ROSother = switch(self$context$ROStype, equal = 1L, log = log(30L), 30L)
+          ROSother = switch(self$context[["ROStype"]], equal = 1L, log = log(30L), 30L)
         ),
         LandWeb_preamble = list(
-          dispersalType = self$context$dispersalType,
-          forceResprout = self$context$forceResprout,
-          friMultiple = self$context$friMultiple,
-          pixelSize = self$context$pixelSize,
-          ROStype = self$context$ROStype
+          dispersalType = self$context[["dispersalType"]],
+          forceResprout = self$context[["forceResprout"]],
+          friMultiple = self$context[["friMultiple"]],
+          pixelSize = self$context[["pixelSize"]],
+          ROStype = self$context[["ROStype"]]
         )
       )
 
-      if (grepl("FMU", self$context$studyAreaName)) {
+      if (grepl("FMU", self$context[["studyAreaName"]])) {
         self$params <- list(
           Biomass_borealDataPrep = list(
             biomassModel = quote(lme4::lmer(B ~ logAge * speciesCode + cover * speciesCode + (1 | ecoregionGroup)))
           )
         )
-      } else if (grepl("provMB", self$context$studyAreaName)) {
+      } else if (grepl("provMB", self$context[["studyAreaName"]])) {
         self$params <- list(
           Biomass_speciesData = list(
             types = c("KNN", "CASFRI", "Pickell", "MBFRI")
@@ -253,15 +253,15 @@ landwebConfig <- R6::R6Class(
         )
       }
 
-      if (isFALSE(self$context$succession)) {
+      if (isFALSE(self$context[["succession"]])) {
         self$modules <- list("LandWeb_preamble", "Biomass_speciesData",
                              "LandMine", "LandWeb_output", "timeSinceFire")
       }
 
       ## paths --------------------------------------
       self$paths <- list(
-        outputPath = .updateOutputPath(self$paths$outputPath, self$context),
-        tilePath = file.path(.updateOutputPath(self$paths$outputPath, self$context), "tiles")
+        outputPath = .updateOutputPath(self$paths[["outputPath"]], self$context),
+        tilePath = file.path(.updateOutputPath(self$paths[["outputPath"]], self$context), "tiles")
       )
 
       return(invisible(self))
@@ -270,9 +270,9 @@ landwebConfig <- R6::R6Class(
 
   private = list(
     finalize = function() {
-      if (!is.null(self$options$reproducible.conn)) {
+      if (!is.null(self$options[["reproducible.conn"]])) {
         if (requireNamespace("DBI", quietly = TRUE)) {
-          DBI::dbDisconnect(self$options$reproducible.conn)
+          DBI::dbDisconnect(self$options[["reproducible.conn"]])
         }
       }
     }
@@ -286,6 +286,6 @@ landwebConfig <- R6::R6Class(
   if (context$mode == "postprocess") {
     file.path(outputPath, .runName)
   } else {
-    file.path(outputPath, .runName, sprintf("rep%02d", context$rep))
+    file.path(outputPath, .runName, sprintf("rep%02d", context[["rep"]]))
   }
 }

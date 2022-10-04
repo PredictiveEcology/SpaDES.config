@@ -47,14 +47,14 @@ landwebContext <- R6::R6Class(
     initialize = function(projectPath, mode = "development", rep = 1L, studyAreaName = "random", version = 3) {
       stopifnot(version %in% c(2, 3))
 
-      private$.dispersalType <- if (version == 2) "high" else if (version == 3) "default"
-      private$.forceResprout <- if (version == 2) TRUE else if (version == 3) FALSE
-      private$.friMultiple <- 1L
-      private$.pixelSize <- 250
-      private$.projectPath <- normPath(projectPath)
-      private$.ROStype <- if (version == 2) "log" else if (version == 3) "default"
-      private$.succession <- TRUE
-      private$.version <- as.integer(version)
+      private[[".dispersalType"]] <- if (version == 2) "high" else if (version == 3) "default"
+      private[[".forceResprout"]] <- if (version == 2) TRUE else if (version == 3) FALSE
+      private[[".friMultiple"]] <- 1L
+      private[[".pixelSize"]] <- 250
+      private[[".projectPath"]] <- normPath(projectPath)
+      private[[".ROStype"]] <- if (version == 2) "log" else if (version == 3) "default"
+      private[[".succession"]] <- TRUE
+      private[[".version"]] <- as.integer(version)
 
       self$machine <- Sys.info()[["nodename"]]
       self$user <- Sys.info()[["user"]]
@@ -100,12 +100,12 @@ landwebContext <- R6::R6Class(
     #'              One of 'production', 'development', 'postprocess', or 'profile'.
     mode = function(value) {
       if (missing(value)) {
-        return(private$.mode)
+        return(private[[".mode"]])
       } else {
         stopifnot(tolower(value) %in% c("production", "development", "postprocess", "profile"))
-        private$.mode <- tolower(value)
+        private[[".mode"]] <- tolower(value)
 
-        if (private$.mode == "postprocess") {
+        if (private[[".mode"]] == "postprocess") {
           self$rep <- NA_integer_
         }
       }
@@ -114,23 +114,23 @@ landwebContext <- R6::R6Class(
     #' @field studyAreaName  Character string giving the name of current study area.
     studyAreaName = function(value) {
       if (missing(value)) {
-        return(private$.studyAreaName)
+        return(private[[".studyAreaName"]])
       } else {
         ## TODO: issues getting relative paths when studyAreaName == projDir
         ## workaround is to append some suffix to the studyAreaName (e.g., LandWeb_full)
-        newValue <- if (identical(value, basename(private$.projectPath))) {
+        newValue <- if (identical(value, basename(private[[".projectPath"]]))) {
           paste0(value, "_full")
         } else {
           value
         }
 
-        newValue <- if (private$.version == 2) {
+        newValue <- if (private[[".version"]] == 2) {
           newValue
         } else {
-          paste0(newValue, "_v", private$.version)
+          paste0(newValue, "_v", private[[".version"]])
         }
 
-        private$.studyAreaName <- newValue
+        private[[".studyAreaName"]] <- newValue
         self$runName <- .landwebRunName(self)
       }
     },
@@ -138,12 +138,12 @@ landwebContext <- R6::R6Class(
     #' @field rep  replicate id (integer)
     rep = function(value) {
       if (missing(value)) {
-        return(private$.rep)
+        return(private[[".rep"]])
       } else {
-        if (private$.mode == "postprocess" && !is.na(value)) {
+        if (private[[".mode"]] == "postprocess" && !is.na(value)) {
           warning("unable to set context$rep because context$mode == 'postprocess'")
         } else {
-          private$.rep <- as.integer(value)
+          private[[".rep"]] <- as.integer(value)
           self$runName <- .landwebRunName(self)
         }
       }
@@ -153,10 +153,10 @@ landwebContext <- R6::R6Class(
     #'                      One of 'default', 'aspen', 'high', 'none'.
     dispersalType = function(value) {
       if (missing(value)) {
-        return(private$.dispersalType)
+        return(private[[".dispersalType"]])
       } else {
         stopifnot(value %in% c("default", "aspen", "high", "none"))
-        private$.dispersalType <- value
+        private[[".dispersalType"]] <- value
         self$runName <- .landwebRunName(self)
       }
     },
@@ -164,9 +164,9 @@ landwebContext <- R6::R6Class(
     #' @field forceResprout Logical
     forceResprout = function(value) {
       if (missing(value)) {
-        return(private$.forceResprout)
+        return(private[[".forceResprout"]])
       } else {
-        private$.forceResprout <- value
+        private[[".forceResprout"]] <- value
         self$runName <- .landwebRunName(self)
       }
     },
@@ -174,9 +174,9 @@ landwebContext <- R6::R6Class(
     #' @field friMultiple Numeric indicating a factor by which to scale the fire return intervals
     friMultiple = function(value) {
       if (missing(value)) {
-        return(private$.friMultiple)
+        return(private[[".friMultiple"]])
       } else {
-        private$.friMultiple <- value
+        private[[".friMultiple"]] <- value
         self$runName <- .landwebRunName(self)
       }
     },
@@ -184,10 +184,10 @@ landwebContext <- R6::R6Class(
     #' @field pixelSize raster pixel resolution (in metres) to use for simulations
     pixelSize = function(value) {
       if (missing(value)) {
-        return(private$.pixelSize)
+        return(private[[".pixelSize"]])
       } else {
         stopifnot(value %in% c(250, 125, 50))
-        private$.pixelSize <- value
+        private[[".pixelSize"]] <- value
         self$runName <- .landwebRunName(self)
       }
     },
@@ -197,10 +197,10 @@ landwebContext <- R6::R6Class(
     #'                 One of 'default' (i.e., none), 'equal' (i.e., all 1), 'log'.
     ROStype = function(value) {
       if (missing(value)) {
-        return(private$.ROStype)
+        return(private[[".ROStype"]])
       } else {
         stopifnot(value %in% c("default", "equal", "log"))
-        private$.ROStype <- value
+        private[[".ROStype"]] <- value
         self$runName <- .landwebRunName(self)
       }
     },
@@ -208,9 +208,9 @@ landwebContext <- R6::R6Class(
     #' @field succession  logical
     succession = function(value) {
       if (missing(value)) {
-        return(private$.succession)
+        return(private[[".succession"]])
       } else {
-        private$.succession <- value
+        private[[".succession"]] <- value
         self$runName <- .landwebRunName(self)
       }
     }
