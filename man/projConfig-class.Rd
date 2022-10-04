@@ -8,6 +8,54 @@ Project configuration class
 
 Project configuration class
 }
+\note{
+Several fields use a update their list values when assigning to them,
+rather than replacing the entire list as might be expected with traditional R assignment.
+This can make updating lists easier (don't need to worry about copy existing values
+or otherwise worry about appending/updating the list; or accidentally dropping elements),
+and allows for checking or validation of values upon assignment.
+Thus, the user should assign a list containing the (named) sub-element to be updated rather
+than attempting to assign to a sub-element directly.
+See examples.
+Fields with list-update assignment mechanics include:
+\code{args}, \code{options}, \code{params}, and \code{paths}, but notably \strong{not} \code{modules}.
+}
+\examples{
+\dontrun{
+  ## let's assume the config's arg list contains 3 values:
+  ## config$args$arg1 == value1
+  ## config$args$arg2 == value2
+  ## config$args$arg3 == value3
+
+  ## update an arg element by assigning a (partial) list
+  config$args <- list(arg1 = newValue1, arg2 = newValue2)
+
+  ## now args looks like this:
+  ## config$args$arg1 == newValue1
+  ## config$args$arg2 == newValue2
+  ## config$args$arg3 == value3
+
+  ## the following may work (traditional R assignment)
+  ## but might also fail silently
+  config$args$arg3 <- newValue3  ## works; arg3 update
+  config$args$arg3 <- NULL       ## dosen't work; arg3 not removed
+
+  ## the following will work
+  config$args <- list(arg3 = newValue3) ## arg3 updated
+  config$args <- list(arg3 = NULL)      ## arg3 removed
+
+  ## note, however, that modules list behaves more traditionally:
+  ## let's assume config$modules lists 3 modules: mod1, mod2, mod3
+  config$modules <- append(config$modules, list(mod4 = "mod4")) ## adds mod4
+  config$modules <- list(mod4 = "mod4") ## **replaces** the previous list!
+
+  ## it's a good idea to `update` and `validate` your project config
+  ## whenever you manually update a `projConfig` object:
+  config$update()    ## required when config$context has changed
+  config$validate()
+}
+
+}
 \author{
 Alex Chubaty and Eliot McIntire
 }

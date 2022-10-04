@@ -16,7 +16,7 @@ else will return a default context.}
 \item{...}{additional context arguments used by individual projects.}
 }
 \value{
-named list
+a \code{projConfig} object
 }
 \description{
 Use a pre-defined project run context

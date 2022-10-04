@@ -12,6 +12,10 @@ LandWeb project configuration class
 This extends the \code{projConfig} class by setting various LandWeb config defaults,
 and implements custom validation and finalizer methods.
 }
+\note{
+See note in \code{?projConfig} describing the list-update mechanism of assignment to
+certain fields.
+}
 \section{Super class}{
 \code{\link[SpaDES.config:projConfig]{SpaDES.config::projConfig}} -> \code{landwebConfig}
 }

@@ -3,6 +3,9 @@
 #' This extends the `projConfig` class by setting various LandWeb config defaults,
 #' and implements custom validation and finalizer methods.
 #'
+#' @note See note in `?projConfig` describing the list-update mechanism of assignment to
+#' certain fields.
+#'
 #' @export
 #' @importFrom R6 R6Class
 #' @rdname landwebConfig-class
