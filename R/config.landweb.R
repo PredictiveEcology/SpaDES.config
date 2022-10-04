@@ -96,6 +96,7 @@ landwebConfig <- R6::R6Class(
           fireTimestep = 1L,
           sppEquivCol = "LandWeb",
           successionTimestep = 10,
+          summaryPeriod = c(700, 1000),
           vegLeadingProportion = 0.8,
           .plotInitialTime = 0,
           .plots = c("object", "png", "raw", "screen"),
@@ -162,11 +163,12 @@ landwebConfig <- R6::R6Class(
           ageClassMaxAge = 400L, ## was `maxAge` previously
           reps = 1L:15L, ## TODO: used elsewhere to setup runs (expt table)?
           simOutputPath = self$paths$outputPath,
-          summaryPeriod = c(700, 1000), ## TODO: this as also used in 09-pre-sim.R for outputs
+          summaryPeriod = c(700, 1000), ## also in .globals
           summaryInterval = 100,
           timeSeriesTimes = 601:650,
           upload = FALSE,
-          uploadTo = "" ## TODO: use google-ids.csv to define these per WBI?
+          uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
+          version = 3L
         ),
         timeSinceFire = list(
           startTime = 1L,
