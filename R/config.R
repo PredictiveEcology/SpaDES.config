@@ -81,7 +81,7 @@ projConfig <- R6::R6Class(
       private$.args = list()
       private$.modules = list()
       private$.options = list()
-      private$.params = list()
+      private$.params = list(.globals = list())
 
       invisible(self)
     },
@@ -185,15 +185,15 @@ projConfig <- R6::R6Class(
                   paste(unknownModules, collapse = "\n"))
         }
 
-        ## TODO: if user updates global params, propagate this change to corresponding module params.
-        ##       should user be warned if trying to update module pram that would be overridden by global?
-
         mods2keep <- c(".globals", moduleNames)
-        params_ <- subset(private$.$params, names(private$.$params) %in% mods2keep)
+        params_ <- subset(private$.params, names(private$.params) %in% mods2keep)
         params_ <- lapply(mods2keep, function(x) {
           modifyList2(params_[[x]], value[[x]])
         })
         names(params_) <- mods2keep
+
+        ## TODO: if user updates global params, propagate this change to corresponding module params.
+        ##       should user be warned if trying to update module pram that would be overridden by global?
 
         private$.params <- params_
       }
@@ -246,7 +246,7 @@ projConfig <- R6::R6Class(
     .args = list(),
     .modules = list(),
     .options = list(),
-    .params = list(),
+    .params = list(.globals = list()),
     .paths = list()
   )
 )

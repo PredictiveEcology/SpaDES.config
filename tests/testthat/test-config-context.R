@@ -24,6 +24,7 @@ test_that("LandWeb config + context setup is working", {
 
   expect_equal(config.lw$args$delayStart, 0L)
 
+  expect_identical(names(config.lw$params), c(".globals", names(config.lw$modules)))
   expect_identical(config.lw$params$.globals$.studyAreaName, "LandWeb_full_v3")
   expect_identical(config.lw$params$Biomass_speciesData$types, c("KNN", "CASFRI", "Pickell", "ForestInventory"))
 

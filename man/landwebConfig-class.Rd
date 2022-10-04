@@ -15,24 +15,6 @@ and implements custom validation and finalizer methods.
 \section{Super class}{
 \code{\link[SpaDES.config:projConfig]{SpaDES.config::projConfig}} -> \code{landwebConfig}
 }
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{args}}{Named list of additional project arguments.}
-
-\item{\code{modules}}{List of module names, which should correspond to the names in \code{params}.}
-
-\item{\code{options}}{Named list of R and R package options to be set.}
-
-\item{\code{params}}{Named list of named lists specifying simulation parameters.
-The names of the outermost list must correspond to modules
-(and may also include \code{.global}).}
-
-\item{\code{paths}}{Named list of paths, which should include (at minimum) the
-the paths in \code{SpaDES.core::setPaths}.}
-}
-\if{html}{\out{</div>}}
-}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
