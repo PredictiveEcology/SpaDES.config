@@ -110,6 +110,7 @@ test_that("LandWeb config + context setup is working", {
   ## params
   expect_identical(config.pp.tolko$params[[".globals"]][[".studyAreaName"]], "Tolko_AB_N")
   expect_identical(config.pp.tolko$params[["Biomass_speciesData"]][["types"]], c("KNN", "CASFRI", "Pickell", "ForestInventory"))
+  expect_identical(config.pp.tolko$params[["LandWeb_summary"]][["reps"]], 1L:15L)
 
   expect_identical(
     .getRelativePath(config.pp.tolko$paths[["tilePath"]], prjDir),

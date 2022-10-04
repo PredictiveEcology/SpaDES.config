@@ -35,9 +35,7 @@ useConfig <- function(projectName = NULL, projectPath = NULL, ...) {
     tolower(projectName),
     landweb = landwebConfig$new(projectPath = projectPath, ...),
     projConfig$new(projectName = projectName, projectPath = projectPath, ...) ## default
-  )
-  config$update()
-  config$validate()
+  )$update()$validate()
 
   return(config)
 }
@@ -83,6 +81,9 @@ projConfig <- R6::R6Class(
       private[[".options"]] = list()
       private[[".params"]] = list(.globals = list())
 
+      ## need to keep copy of all default params for when modules updated
+      private[[".params_full"]] = list(.globals = list())
+
       invisible(self)
     },
 
@@ -113,7 +114,13 @@ projConfig <- R6::R6Class(
         names(params_) <- self$modules
 
         params_ <- lapply(names(params_), function(x) {
-          modifyList2(params_[[x]], self$params[[x]]) ## TODO: check that dot params are being seen/read
+          if (length(self$params[[x]]) == 0) {
+            ## missing parameters likely means the module was not originally in the list
+            ## pull in the param values from the full list
+            modifyList2(params_[[x]], private[[".params_full"]][[x]])
+          } else {
+            modifyList2(params_[[x]], self$params[[x]])
+          }
         })
         names(params_) <- self$modules
 
@@ -198,6 +205,10 @@ projConfig <- R6::R6Class(
         })
         names(params_) <- mods2keep
 
+        ## keep track of parameter changes in the complete list
+        private[[".params_full"]] <- modifyList2(private[[".params_full"]], params_)
+
+        ## set current params to only be the subset of those in config$modules
         private[[".params"]] <- params_
       }
     },
@@ -250,6 +261,7 @@ projConfig <- R6::R6Class(
     .modules = list(),
     .options = list(),
     .params = list(.globals = list()),
+    .params_full = list(.globals = list()),
     .paths = list()
   )
 )

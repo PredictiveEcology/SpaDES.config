@@ -91,7 +91,7 @@ landwebConfig <- R6::R6Class(
       )
 
       # parameters ---------------------------------------------------------------------------------
-      self$params <- list(
+      private[[".params_full"]] <- list(
         .globals = list(
           fireTimestep = 1L,
           sppEquivCol = "LandWeb",
@@ -175,6 +175,8 @@ landwebConfig <- R6::R6Class(
           .useCache = c(".inputObjects") ## faster without caching for "init"
         )
       )
+
+      self$params <- private[[".params_full"]]
 
       invisible(self)
     },
