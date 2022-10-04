@@ -6,6 +6,7 @@
 #'         (invisibly returns a list of the previously set options)
 #'
 #' @export
+#' @importFrom utils osVersion
 setProjectOptions <- function(config) {
   stopifnot(is(config, "projConfig"))
 
@@ -24,6 +25,15 @@ setProjectOptions <- function(config) {
             " from from certain websites.")
   } else {
     .needPkg("httr", "stop")
+  }
+
+  if (requireNamespace("tiler", quietly = TRUE)) {
+    os <- strsplit(utils::osVersion, " ")[[1]][1]
+    osVersion <- numeric_version(strsplit(utils::osVersion, " ")[[1]][2])
+    if (isTRUE(os == "Ubuntu") && isTRUE(osVersion >= "20.04")) {
+      tiler::tiler_options(python = Sys.which("python3"))
+      message("Additonally setting tiler option `python = python3`.")
+    }
   }
 
   return(invisible(opts))
