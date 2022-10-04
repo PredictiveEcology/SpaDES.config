@@ -221,10 +221,6 @@ projConfig <- R6::R6Class(
 
         updatedPaths$tilePath <- file.path(updatedPaths$outputPath, "tiles")
 
-        updatedPaths <- lapply(updatedPaths, function(pth) {
-          if (!is.null(pth)) normPath(pth) else NULL ## don't create paths here
-        })
-
         private$.paths <- updatedPaths
 
         ## update known paths in options

@@ -27,6 +27,9 @@ test_that("LandWeb config + context setup is working", {
   expect_identical(config.lw$params$.globals$.studyAreaName, "LandWeb_full_v3")
   expect_identical(config.lw$params$Biomass_speciesData$types, c("KNN", "CASFRI", "Pickell", "ForestInventory"))
 
+  expect_identical(.isAbsolutePath(unlist(config.lw$paths)),
+                   c(cachePath = FALSE, inputPath = FALSE, modulePath = FALSE, outputPath = FALSE,
+                     projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
   expect_identical(
     .getRelativePath(config.lw$paths$tilePath, prjDir),
     file.path("outputs", "LandWeb_full_v3", "rep01", "tiles")
