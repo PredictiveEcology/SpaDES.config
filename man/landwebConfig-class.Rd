@@ -15,17 +15,35 @@ and implements custom validation and finalizer methods.
 \section{Super class}{
 \code{\link[SpaDES.config:projConfig]{SpaDES.config::projConfig}} -> \code{landwebConfig}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{args}}{Named list of additional project arguments.}
+
+\item{\code{modules}}{List of module names, which should correspond to the names in \code{params}.}
+
+\item{\code{options}}{Named list of R and R package options to be set.}
+
+\item{\code{params}}{Named list of named lists specifying simulation parameters.
+The names of the outermost list must correspond to modules
+(and may also include \code{.global}).}
+
+\item{\code{paths}}{Named list of paths, which should include (at minimum) the
+the paths in \code{SpaDES.core::setPaths}.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-landwebConfig-new}{\code{landwebConfig$new()}}
+\item \href{#method-landwebConfig-update}{\code{landwebConfig$update()}}
 \item \href{#method-landwebConfig-clone}{\code{landwebConfig$clone()}}
 }
 }
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="SpaDES.config" data-topic="projConfig" data-id="update"><a href='../../SpaDES.config/html/projConfig.html#method-projConfig-update'><code>SpaDES.config::projConfig$update()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="SpaDES.config" data-topic="projConfig" data-id="validate"><a href='../../SpaDES.config/html/projConfig.html#method-projConfig-validate'><code>SpaDES.config::projConfig$validate()</code></a></span></li>
 </ul>
 </details>
@@ -36,7 +54,27 @@ and implements custom validation and finalizer methods.
 \subsection{Method \code{new()}}{
 Create an new \code{landwebConfig} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{landwebConfig$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{landwebConfig$new(projectPath, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{projectPath}}{character string giving the path to the project directory.}
+
+\item{\code{...}}{Additional arguments passed to \code{useContext()}}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-landwebConfig-update"></a>}}
+\if{latex}{\out{\hypertarget{method-landwebConfig-update}{}}}
+\subsection{Method \code{update()}}{
+Update a \code{LandWebConfig} object from its context.
+Must be called anytime the context is updated.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{landwebConfig$update()}\if{html}{\out{</div>}}
 }
 
 }

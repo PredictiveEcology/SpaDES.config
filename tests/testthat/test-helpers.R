@@ -27,7 +27,7 @@ test_that("working with relative paths behaves sensibly", {
     newRelPaths[i] <- .updateRelativePath(paths1[i], paths2[i])
   }
 
-  expect_true(all(newRelPaths == file.path(paths2, "outputs")))
+  expect_true(all(newRelPaths == "outputs"))
 
   ## ----------------------------------------------------------------
 
@@ -59,5 +59,5 @@ test_that("working with relative paths behaves sensibly", {
     newRelPaths2[i] <- .updateRelativePath(paths3[i], paths4[i])
   }
 
-  expect_true(all(newRelPaths2 == file.path(paths4, "outputs/LandWeb_v3/rep01/tiles")))
+  expect_true(all(newRelPaths2 == "outputs/LandWeb_v3/rep01/tiles"))
 })

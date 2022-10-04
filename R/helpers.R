@@ -102,7 +102,7 @@
       path <- .getRelativePath(path, relativeToPath)
     }
 
-    file.path(relativeToPath, path)
+    path
   }
 }
 
@@ -168,22 +168,27 @@ paths4spades <- function(paths) {
 #'         but invisibly returns the message string so it can e.g., be written to a file by the user.
 #' @export
 printRunInfo <- function(context) {
-  col1width <- max(nchar(names(context)))
-  col2width <- max(nchar(context))
+  context$print()
+}
 
-  info <- c(
+#' @keywords internal
+.context2md <- function(cntxt) {
+  stopifnot(is(cntxt, "list"))
+
+  col1width <- max(nchar(names(cntxt)))
+  col2width <- max(nchar(cntxt), na.rm = TRUE)
+
+  info <- paste0(c(
     "# Run info\n\n",
     "| ", rep("-", col1width), " | ", rep("-", col2width), " |\n",
-    sapply(names(context), function(x) {
+    sapply(names(cntxt), function(x) {
       col1text <- formatC(x, width = col1width, format = "s")
-      col2text <- formatC(as.character(context[[x]]), width = col2width, format = "s")
+      col2text <- formatC(as.character(cntxt[[x]]), width = col2width, format = "s")
 
       paste("|", col1text, "|", col2text, "|\n")
     }),
     "| ", rep("-", col1width), " | ", rep("-", col2width), " |\n"
-  )
-
-  message(info)
+  ))
 
   return(invisible(info))
 }

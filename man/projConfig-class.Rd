@@ -14,6 +14,13 @@ Alex Chubaty and Eliot McIntire
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
+\item{\code{context}}{a \code{projContext} object.}
+}
+\if{html}{\out{</div>}}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
 \item{\code{args}}{Named list of additional project arguments.}
 
 \item{\code{modules}}{List of module names, which should correspond to the names in \code{params}.}
@@ -44,44 +51,33 @@ the paths in \code{SpaDES.core::setPaths}.}
 \subsection{Method \code{new()}}{
 Create an new \code{projConfig} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{projConfig$new()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-projConfig-update"></a>}}
-\if{latex}{\out{\hypertarget{method-projConfig-update}{}}}
-\subsection{Method \code{update()}}{
-Update the fields in a \code{projConfig} object
-
-The objects passed as arguments should match the fields of the \code{projConfig} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{projConfig$update(
-  args = NULL,
-  modules = NULL,
-  options = NULL,
-  params = NULL,
-  paths = NULL
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{projConfig$new(projectName, projectPath, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{args}}{named list; see \link{projConfig}.}
+\item{\code{projectName}}{character string of length 1 giving the name of the project.
+Can be one of "LandWeb",
+else will return a default context.}
 
-\item{\code{modules}}{named list; see \link{projConfig}.}
+\item{\code{projectPath}}{character string giving the path to the project directory.}
 
-\item{\code{options}}{named list; see \link{projConfig}.}
-
-\item{\code{params}}{named list; see \link{projConfig}.}
-
-\item{\code{paths}}{named list; see \link{projConfig}.}
-
-\item{\code{methods}}{named list; see \link{projConfig}.}
+\item{\code{...}}{Additional arguments passed to \code{useContext()}}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-projConfig-update"></a>}}
+\if{latex}{\out{\hypertarget{method-projConfig-update}{}}}
+\subsection{Method \code{update()}}{
+Update a \code{LandWebConfig} object from its context.
+Must be called anytime the context is updated.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{projConfig$update()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-projConfig-validate"></a>}}

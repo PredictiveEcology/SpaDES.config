@@ -3,7 +3,7 @@
 #' This extends the `projConfig` class by setting various LandWeb config defaults,
 #' and implements custom validation and finalizer methods.
 #'
-#' @export landwebConfig
+#' @export
 #' @importFrom R6 R6Class
 #' @rdname landwebConfig-class
 landwebConfig <- R6::R6Class(
@@ -11,15 +11,23 @@ landwebConfig <- R6::R6Class(
   inherit = projConfig,
   public = list(
     #' @description Create an new `landwebConfig` object
-    initialize = function() {
-      # paths --------------------------------------------------------------------------------------
-      self$paths = list(
+    #'
+    #' @param projectPath character string giving the path to the project directory.
+    #'
+    #' @param ... Additional arguments passed to `useContext()`
+    #'
+    initialize = function(projectPath, ...) {
+      self$context <- useContext("LandWeb", projectPath = projectPath, ...)
+
+      ## do paths first as these may be used below
+      # paths ---------------------------------------------------------------------------------------
+      private$.paths = list(
         cachePath = "cache",
         inputPath = "inputs",
         inputPaths = NULL, ## aka dataCachePath
         modulePath = "m",
         outputPath = "outputs",
-        projectPath = ".",
+        projectPath = normPath(projectPath),
         scratchPath = file.path(dirname(tempdir()), "scratch", "LandWeb"),
         tilePath = file.path("outputs", "tiles")
       )
@@ -167,8 +175,213 @@ landwebConfig <- R6::R6Class(
       )
 
       invisible(self)
+    },
+
+    #' @description Update a `LandWebConfig` object from its context.
+    #'              Must be called anytime the context is updated.
+    update = function() {
+      ## mode ---------------------------------------
+      if (self$context$mode %in% c("development", "production")) {
+        self$args <- list(
+          cloud = list(
+            useCloud = TRUE
+          ),
+          delayStart = if (self$context$mode == "development") 0L else sample(5L:15L, 1), # 5-15 minutes
+          endTime = 1000,
+          successionTimestep = 10,
+          summaryPeriod = c(700, 1000),
+          summaryInterval = 100,
+          timeSeriesTimes = 601:650
+        )
+
+        self$params = list(
+          .globals = list(
+            .plots = c("object", "png", "raw") ## don't plot to screen
+          )
+        )
+      } else if (self$context$mode == "profile") {
+        self$args <- list(
+          delayStart = 0,
+          endTime = 20,
+          successionTimestep = 10,
+          summaryPeriod = c(10, 20),
+          summaryInterval = 10,
+          timeSeriesTimes = 10
+        )
+
+        self$params <- list(
+          .globals = list(
+            .plotInitialTime = 0,
+            .studyAreaName = self$context$studyAreaName
+          )
+        )
+      } else if (self$context$mode == "postprocess") {
+        self$modules <- list("LandWeb_preamble", "Biomass_speciesData", "LandWeb_summary")
+      }
+
+      ## study area + run info ----------------------
+      self$params <- list(
+        .globals = list(
+          .studyAreaName = self$context$studyAreaName
+        ),
+        Biomass_borealDataPrep = list(
+          pixelGroupBiomassClass = 1000 / (250 / self$context$pixelSize)^2 ## 1000 / mapResFact^2; can be coarse because initial conditions are irrelevant
+        ),
+        LandMine = list(
+          ROSother = switch(self$context$ROStype, equal = 1L, log = log(30L), 30L)
+        ),
+        LandWeb_preamble = list(
+          dispersalType = self$context$dispersalType,
+          forceResprout = self$context$forceResprout,
+          friMultiple = self$context$friMultiple,
+          pixelSize = self$context$pixelSize,
+          ROStype = self$context$ROStype
+        )
+      )
+
+      if (grepl("FMU", self$context$studyAreaName)) {
+        self$params = list(
+          Biomass_borealDataPrep = list(
+            biomassModel = quote(lme4::lmer(B ~ logAge * speciesCode + cover * speciesCode + (1 | ecoregionGroup)))
+          )
+        )
+      } else if (grepl("provMB", self$context$studyAreaName)) {
+        self$params <- list(
+          Biomass_speciesData = list(
+            types = c("KNN", "CASFRI", "Pickell", "MBFRI")
+          )
+        )
+      }
+
+      if (isFALSE(self$context$succession)) {
+        self$modules <- list("LandWeb_preamble", "Biomass_speciesData",
+                             "LandMine", "LandWeb_output", "timeSinceFire")
+      }
+
+      ## paths --------------------------------------
+      self$paths <- list(
+        outputPath = .updateOutputPath(self$paths$outputPath, self$context),
+        tilePath = file.path(.updateOutputPath(self$paths$outputPath, self$context), "tiles")
+      )
+
+      return(invisible(self))
     }
   ),
+
+  active = list(
+    #' @field args   Named list of additional project arguments.
+    args = function(value) {
+      if (missing(value)) {
+        return(private$.args)
+      } else {
+        private$.args <- modifyList2(private$.args, as.list(value))
+      }
+    },
+
+    #' @field modules List of module names, which should correspond to the names in `params`.
+    modules = function(value) {
+      if (missing(value)) {
+        return(private$.modules)
+      } else {
+        ## allow passing partial list to exclude modules, instead of simply using:
+        ## private$.modules <- modifyList2(self$modules, modules)
+
+        updatedModules <- as.list(value) ## ensure it's a list
+
+        if (is.null(names(updatedModules))) {
+          names(updatedModules) <- updatedModules ## ensure it's a named list
+        }
+
+        private$.modules <- updatedModules
+      }
+    },
+
+    #' @field options Named list of R and R package options to be set.
+    options = function(value) {
+      if (missing(value)) {
+        return(private$.options)
+      } else {
+        private$.options <- modifyList2(private$.options, as.list(value))
+      }
+    },
+
+    #' @field params  Named list of named lists specifying simulation parameters.
+    #'               The names of the outermost list must correspond to modules
+    #'               (and may also include `.global`).
+    params = function(value) {
+      if (missing(value)) {
+        return(private$.params)
+      } else {
+        ## check for params being passed to modules not listed in self$modules
+        moduleNames <- names(self$modules)
+        passedParamNames <- names(value)
+        unknownModules <- passedParamNames[which(!passedParamNames %in% moduleNames)]
+        unknownModules <- unknownModules[!unknownModules %in% c(".globals")]
+        if (length(unknownModules) > 0) {
+          warning("Parameters specified for modules not found in `modules` and will be ignored:\n",
+                  paste(unknownModules, collapse = "\n"))
+        }
+
+        ## TODO: if user updates global params, propagate this change to corresponding module params.
+        ##       should user be warned if trying to update module pram that would be overridden by global?
+
+        mods2keep <- c(".globals", moduleNames)
+        params_ <- subset(private$.params, names(private$.params) %in% mods2keep)
+        params_ <- lapply(mods2keep, function(x) {
+          modifyList2(params_[[x]], value[[x]])
+        })
+        names(params_) <- mods2keep
+
+        private$.params <- params_
+      }
+    },
+
+    #' @field paths  Named list of paths, which should include (at minimum) the
+    #'              the paths in `SpaDES.core::setPaths`.
+    paths = function(value) {
+      if (missing(value)) {
+        return(private$.paths)
+      } else {
+        ## update paths
+        updatedPaths <- modifyList2(private$.paths, value)
+
+        pathNames <- names(updatedPaths)
+        updatedPaths <- lapply(pathNames, function(pthnm) {
+          if (pthnm %in% c("projectPath", "scratchPath")) {
+            private$.paths[[pthnm]]
+          } else {
+            .updateRelativePath(updatedPaths[[pthnm]], private$.paths$projectPath)
+          }
+        })
+        names(updatedPaths) <- pathNames
+
+        updatedPaths$tilePath <- file.path(updatedPaths$outputPath, "tiles")
+
+        updatedPaths <- lapply(updatedPaths, function(pth) {
+          if (!is.null(pth)) normPath(pth) else NULL ## don't create paths here
+        })
+
+        private$.paths <- updatedPaths
+
+        ## update known paths in options
+        if ("map.dataPath" %in% names(self$options)) {
+          private$.options$map.dataPath <- private$.paths$inputPath
+          attr(private$.options$map.dataPath, "auto") <- TRUE
+        }
+
+        if ("map.tilePath" %in% names(self$options)) {
+          private$.options$map.tilePath <- private$.paths$tilePath
+          attr(private$.options$map.tilePath, "auto") <- TRUE
+        }
+
+        if ("reproducible.destinationPath" %in% names(self$options)) {
+          private$.options$reproducible.destinationPath <- private$.paths$inputPath
+          attr(private$.options$reproducible.destinationPath, "auto") <- TRUE
+        }
+      }
+    }
+  ),
+
   private = list(
     finalize = function() {
       if (!is.null(self$options$reproducible.conn)) {
@@ -181,147 +394,12 @@ landwebConfig <- R6::R6Class(
 )
 
 #' @keywords internal
-.appendOutputPath = function(outputPath, context) {
-  runName <- paste0(
-    context$studyAreaName,
-    if (context$dispersalType == "default") "" else paste0("_", context$dispersalType, "Dispersal"),
-    if (context$ROStype == "default") "" else paste0("_", context$ROStype, "ROS"),
-    if (isTRUE(context$succession)) "" else "_noSuccession",
-    if (context$friMultiple == 1) "" else paste0("_fri", context$friMultiple),
-    if (context$pixelSize == 250) "" else paste0("_res", context$pixelSize)
-  )
+.updateOutputPath <- function(outputPath, context) {
+  .runName <- .landwebRunName(context, withRep = FALSE)
 
-  newOutputPath <- if (context$mode == "postprocess") {
-    file.path(outputPath, runName)
+  if (context$mode == "postprocess") {
+    file.path(outputPath, .runName)
   } else {
-    if (is.na(context$rep)) warning("context$postProcessOnly is TRUE but rep is not NA")
-    file.path(outputPath, runName, sprintf("rep%02d", context$rep))
+    file.path(outputPath, .runName, sprintf("rep%02d", context$rep))
   }
-
-  return(newOutputPath)
-}
-
-#' Update LandWeb project configuration based on context
-#'
-#' @param config a `landwebConfig` class object
-#' @param context a named list
-#'
-#' @export
-#' @importFrom Require normPath
-updateLandWebConfig <- function(config, context) {
-  cnfg <- config$clone() ## TODO: what is recommended practice - work on copy of object?
-
-  ## TODO: problems getting relative paths when studyAreaName == projectPath
-  ## workaround is to specify "LandWeb" study area with suffix, e.g. "LandWeb_full"
-  if (identical(context$studyAreaName, basename(config$paths$projectPath))) {
-    context$studyAreaName <- paste0(context$studyAreaName, "_full")
-  }
-
-  ## mode ---------------------------------------
-  if (context$mode %in% c("development", "production")) {
-    cnfg$update(
-      args = list(
-        cloud = list(
-          useCloud = TRUE
-        ),
-        delayStart = if (context$mode == "development") 0L else sample(5L:15L, 1), # 5-15 minutes
-        endTime = 1000,
-        successionTimestep = 10,
-        summaryPeriod = c(700, 1000),
-        summaryInterval = 100,
-        timeSeriesTimes = 601:650
-      ),
-      params = list(
-        .globals = list(
-          .plots = c("object", "png", "raw") ## don't plot to screen
-        )
-      )
-    )
-  } else if (context$mode == "profile") {
-    ## use specific study area if profiling
-    context$studyAreaName <- "Tolko_SK" ## "random"
-
-    cnfg$update(
-      args = list(
-        delayStart = 0,
-        endTime = 20,
-        successionTimestep = 10,
-        summaryPeriod = c(10, 20),
-        summaryInterval = 10,
-        timeSeriesTimes = 10
-      ),
-      params = list(
-        .globals = list(
-          .plotInitialTime = 0,
-          .studyAreaName = context$studyAreaName
-        )
-      )
-    )
-  } else if (context$mode == "postprocess") {
-    cnfg$update(
-      modules = list("LandWeb_preamble", "Biomass_speciesData", "LandWeb_summary")
-    )
-  }
-
-  ## study area + run info ----------------------
-  cnfg$update(
-    params = list(
-      .globals = list(
-        .studyAreaName = context$studyAreaName
-      ),
-      Biomass_borealDataPrep = list(
-        pixelGroupBiomassClass = 1000 / (250 / context$pixelSize)^2 ## 1000 / mapResFact^2; can be coarse because initial conditions are irrelevant
-      ),
-      LandMine = list(
-        ROSother = switch(context$ROStype, equal = 1L, log = log(30L), 30L)
-      ),
-      LandWeb_preamble = list(
-        dispersalType = context$dispersalType,
-        forceResprout = context$forceResprout,
-        friMultiple = context$friMultiple,
-        pixelSize = context$pixelSize,
-        ROStype = context$ROStype
-      )
-    )
-  )
-
-  if (grepl("FMU", context$studyAreaName)) {
-    cnfg$update(
-      params = list(
-        Biomass_borealDataPrep = list(
-          biomassModel = quote(lme4::lmer(B ~ logAge * speciesCode + cover * speciesCode + (1 | ecoregionGroup)))
-        )
-      )
-    )
-  } else if (grepl("provMB", context$studyAreaName)) {
-    cnfg$update(
-      params = list(
-        Biomass_speciesData = list(
-          types = c("KNN", "CASFRI", "Pickell", "MBFRI")
-        )
-      )
-    )
-  }
-
-  if (isFALSE(context$succession)) {
-    cnfg$update(
-      modules = list("LandWeb_preamble", "Biomass_speciesData",
-                     "LandMine", "LandWeb_output", "timeSinceFire")
-    )
-  }
-
-  ## NOTE: set user and machine contexts in the project to avoid hardcoding things
-  ##       here, which will also make it easier to add users + machines as needed.
-
-  ## paths --------------------------------------
-  relOutputPath <- .getRelativePath(cnfg$paths$outputPath, cnfg$paths$projectPath)
-  cnfg$update(
-    paths = list(
-      outputPath = .appendOutputPath(relOutputPath, context)
-    )
-  )
-
-  cnfg$validate()
-
-  return(cnfg$clone()) ## TODO: return a copy?
 }
