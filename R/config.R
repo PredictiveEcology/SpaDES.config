@@ -188,12 +188,15 @@ projConfig <- R6::R6Class(
         mods2keep <- c(".globals", moduleNames)
         params_ <- subset(private$.params, names(private$.params) %in% mods2keep)
         params_ <- lapply(mods2keep, function(x) {
-          modifyList2(params_[[x]], value[[x]])
+          tmp <- modifyList2(params_[[x]], value[[x]])
+          if (x != ".globals") {
+            ## if user updates global params, propagate this change to corresponding module params
+            globals_ <- subset(params_[[".globals"]], names(params_[[".globals"]]) %in% names(tmp))
+            tmp <- modifyList2(tmp, globals_)
+          }
+          tmp
         })
         names(params_) <- mods2keep
-
-        ## TODO: if user updates global params, propagate this change to corresponding module params.
-        ##       should user be warned if trying to update module pram that would be overridden by global?
 
         private$.params <- params_
       }
