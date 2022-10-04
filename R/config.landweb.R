@@ -168,7 +168,7 @@ landwebConfig <- R6::R6Class(
           timeSeriesTimes = 601:650,
           upload = FALSE,
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
-          version = 3L
+          version = private[[".version"]]
         ),
         timeSinceFire = list(
           startTime = 1L,
