@@ -21,7 +21,7 @@ landwebConfig <- R6::R6Class(
 
       ## do paths first as these may be used below
       # paths ---------------------------------------------------------------------------------------
-      self$.paths <- list(
+      self$paths <- list(
         cachePath = "cache",
         inputPath = "inputs",
         inputPaths = NULL, ## aka dataCachePath
