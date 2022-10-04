@@ -38,7 +38,7 @@ test_that("LandWeb config + context setup is working", {
   config.mb <- useConfig(projectName = "LandWeb", projectPath = prjDir,
                          mode = "production", rep = 5, studyAreaName = "provMB", version = 3)
 
-  expect_true(!is.null(context.mb$runName))
+  expect_true(!is.null(config.mb$context$runName))
 
   expect_gt(config.mb$args$delayStart, 0L)
 

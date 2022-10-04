@@ -117,7 +117,7 @@ projConfig <- R6::R6Class(
         })
         names(params_) <- self$modules
 
-        self$modules <- params_
+        self$params <- params_
       }
 
       ## check that known options using paths are correct ------------------------------------------
