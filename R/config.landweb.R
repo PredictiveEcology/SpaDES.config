@@ -21,7 +21,7 @@ landwebConfig <- R6::R6Class(
 
       ## do paths first as these may be used below
       # paths ---------------------------------------------------------------------------------------
-      private$.paths = list(
+      self$.paths <- list(
         cachePath = "cache",
         inputPath = "inputs",
         inputPaths = NULL, ## aka dataCachePath
@@ -33,7 +33,7 @@ landwebConfig <- R6::R6Class(
       )
 
       # arguments -----------------------------------------------------------------------------------
-      self$args = list(
+      self$args <- list(
         cloud = list(
           cacheDir = "LandWeb_cloudCache",
           googleUser = "",
@@ -47,7 +47,7 @@ landwebConfig <- R6::R6Class(
       )
 
       # modules ------------------------------------------------------------------------------------
-      self$modules = list(
+      self$modules <- list(
         Biomass_borealDataPrep = "Biomass_borealDataPrep",
         Biomass_core = "Biomass_core",
         Biomass_regeneration = "Biomass_regeneration",
@@ -60,7 +60,7 @@ landwebConfig <- R6::R6Class(
       )
 
       # options ------------------------------------------------------------------------------------
-      self$options = list(
+      self$options <- list(
         fftempdir = file.path(dirname(tempdir()), "scratch", "LandWeb", "ff"),
         future.globals.maxSize = 1000*1024^2,
         LandR.assertions = FALSE,
@@ -91,7 +91,7 @@ landwebConfig <- R6::R6Class(
       )
 
       # parameters ---------------------------------------------------------------------------------
-      self$params = list(
+      self$params <- list(
         .globals = list(
           fireTimestep = 1L,
           sppEquivCol = "LandWeb",
@@ -194,7 +194,7 @@ landwebConfig <- R6::R6Class(
           timeSeriesTimes = 601:650
         )
 
-        self$params = list(
+        self$params <- list(
           .globals = list(
             .plots = c("object", "png", "raw") ## don't plot to screen
           )
@@ -240,7 +240,7 @@ landwebConfig <- R6::R6Class(
       )
 
       if (grepl("FMU", self$context$studyAreaName)) {
-        self$params = list(
+        self$params <- list(
           Biomass_borealDataPrep = list(
             biomassModel = quote(lme4::lmer(B ~ logAge * speciesCode + cover * speciesCode + (1 | ecoregionGroup)))
           )
