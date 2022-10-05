@@ -57,7 +57,7 @@ Create an new \code{landwebConfig} object
 \if{html}{\out{<a id="method-landwebConfig-update"></a>}}
 \if{latex}{\out{\hypertarget{method-landwebConfig-update}{}}}
 \subsection{Method \code{update()}}{
-Update a \code{LandWebConfig} object from its context.
+Update a \code{landwebConfig} object from its context.
 Must be called anytime the context is updated.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{landwebConfig$update()}\if{html}{\out{</div>}}

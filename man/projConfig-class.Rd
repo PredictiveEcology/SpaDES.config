@@ -120,7 +120,7 @@ else will return a default context.}
 \if{html}{\out{<a id="method-projConfig-update"></a>}}
 \if{latex}{\out{\hypertarget{method-projConfig-update}{}}}
 \subsection{Method \code{update()}}{
-Update a \code{LandWebConfig} object from its context.
+Update a \code{projConfig} object from its context.
 Must be called anytime the context is updated.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{projConfig$update()}\if{html}{\out{</div>}}

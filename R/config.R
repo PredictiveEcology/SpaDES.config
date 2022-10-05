@@ -116,10 +116,11 @@ projConfig <- R6::R6Class(
 
       ## do paths first as these may be used below
       private[[".paths"]] = list(
-        cachePath = "cache",
-        inputPath = "inputs",
-        modulePath = "modules",
-        outputPath = "outputs",
+        cachePath = .baseCachePath,
+        inputPath = .baseInputPath,
+        inputPaths = .baseDataCachePath,
+        modulePath = .baseModulePath,
+        outputPath = .baseOutputPath,
         projectPath = normPath(projectPath)
       )
 
@@ -134,7 +135,7 @@ projConfig <- R6::R6Class(
       invisible(self)
     },
 
-    #' @description Update a `LandWebConfig` object from its context.
+    #' @description Update a `projConfig` object from its context.
     #'              Must be called anytime the context is updated.
     update = function() {
       return(invisible(self))

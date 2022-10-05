@@ -95,9 +95,13 @@ test_that("LandWeb config + context setup is working", {
     useConfig(projectName = "LandWeb", projectPath = prjDir,
               mode = "postprocess", rep = NA_integer_, studyAreaName = "Tolko_AB_N", version = 2)
   }) ## TODO: currently warns about params specified for "missing" modules not used in postprocess
+  config.pp.tolko$context[["dispersalType"]] <- "aspen"
+  suppressWarnings({
+    config.pp.tolko$update() ## required after context changes
+  })
 
   ## context
-  expect_equal(config.pp.tolko$context[["runName"]], "Tolko_AB_N_highDispersal_logROS", ignore_attr = TRUE)
+  expect_equal(config.pp.tolko$context[["runName"]], "Tolko_AB_N_aspenDispersal_logROS", ignore_attr = TRUE)
 
   ## args
   expect_equal(config.pp.tolko$args[["delayStart"]], 0L)
@@ -114,8 +118,8 @@ test_that("LandWeb config + context setup is working", {
 
   expect_identical(
     .getRelativePath(config.pp.tolko$paths[["tilePath"]], prjDir),
-    file.path("outputs", "Tolko_AB_N_highDispersal_logROS", "tiles")
-  )
+    file.path("outputs", "Tolko_AB_N_aspenDispersal_logROS", "tiles")
+  ) ## TODO: currently fails
 
   rm(config.pp.tolko)
 })

@@ -25,14 +25,14 @@ landwebConfig <- R6::R6Class(
       ## do paths first as these may be used below
       # paths ---------------------------------------------------------------------------------------
       self$paths <- list(
-        cachePath = "cache",
-        inputPath = "inputs",
-        inputPaths = NULL, ## aka dataCachePath
-        modulePath = "m",
-        outputPath = "outputs",
+        cachePath = .baseCachePath,
+        inputPath = .baseInputPath,
+        inputPaths = .baseDataCachePath,
+        modulePath = "m", ## non-standard (historical reasons: max path lengths on shinyapps.io)
+        outputPath = .baseOutputPath,
         projectPath = normPath(projectPath),
         scratchPath = file.path(dirname(tempdir()), "scratch", "LandWeb"),
-        tilePath = file.path("outputs", "tiles")
+        tilePath = file.path(.baseOutputPath, "tiles")
       )
 
       # arguments -----------------------------------------------------------------------------------
@@ -184,7 +184,7 @@ landwebConfig <- R6::R6Class(
       invisible(self)
     },
 
-    #' @description Update a `LandWebConfig` object from its context.
+    #' @description Update a `landwebConfig` object from its context.
     #'              Must be called anytime the context is updated.
     update = function() {
       ## mode ---------------------------------------
@@ -267,8 +267,8 @@ landwebConfig <- R6::R6Class(
 
       ## paths --------------------------------------
       self$paths <- list(
-        outputPath = .updateOutputPath(self$paths[["outputPath"]], self$context),
-        tilePath = file.path(.updateOutputPath(self$paths[["outputPath"]], self$context), "tiles")
+        outputPath = .updateLandWebOutputPath(self),
+        tilePath = file.path(.updateLandWebOutputPath(self), "tiles")
       )
 
       return(invisible(self))
@@ -285,14 +285,3 @@ landwebConfig <- R6::R6Class(
     }
   )
 )
-
-#' @keywords internal
-.updateOutputPath <- function(outputPath, context) {
-  .runName <- .landwebRunName(context, withRep = FALSE)
-
-  if (context$mode == "postprocess") {
-    file.path(outputPath, .runName)
-  } else {
-    file.path(outputPath, .runName, sprintf("rep%02d", context[["rep"]]))
-  }
-}
