@@ -28,6 +28,7 @@ landwebConfig <- R6::R6Class(
         cachePath = .baseCachePath,
         inputPath = .baseInputPath,
         inputPaths = .baseDataCachePath,
+        logPath = .baseLogPath,
         modulePath = "m", ## non-standard (historical reasons: max path lengths on shinyapps.io)
         outputPath = .baseOutputPath,
         projectPath = normPath(projectPath),

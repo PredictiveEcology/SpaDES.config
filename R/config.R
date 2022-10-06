@@ -119,6 +119,7 @@ projConfig <- R6::R6Class(
         cachePath = .baseCachePath,
         inputPath = .baseInputPath,
         inputPaths = .baseDataCachePath,
+        logPath = .baseLogPath,
         modulePath = .baseModulePath,
         outputPath = .baseOutputPath,
         projectPath = normPath(projectPath)
@@ -281,6 +282,7 @@ projConfig <- R6::R6Class(
         })
         names(updatedPaths) <- pathNames
 
+        updatedPaths[["logPath"]] <- file.path(updatedPaths[["outputPath"]], "log")
         updatedPaths[["tilePath"]] <- file.path(updatedPaths[["outputPath"]], "tiles")
 
         private[[".paths"]] <- updatedPaths

@@ -20,6 +20,10 @@
 #' @rdname dot-basePaths
 .baseOutputPath <- "outputs"
 
+#' @keywords internal
+#' @rdname dot-basePaths
+.baseLogPath <- file.path(.baseOutputPath, "log")
+
 #' @rdname imports-internal
 .isAbsolutePath <- function(pathnames) {
   keep <- is.character(pathnames)

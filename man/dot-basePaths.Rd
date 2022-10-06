@@ -7,11 +7,14 @@
 \alias{.baseModulePath}
 \alias{.baseInputPath}
 \alias{.baseOutputPath}
+\alias{.baseLogPath}
 \title{Default project paths}
 \format{
 An object of class \code{character} of length 1.
 
 An object of class \code{NULL} of length 0.
+
+An object of class \code{character} of length 1.
 
 An object of class \code{character} of length 1.
 
@@ -29,6 +32,8 @@ An object of class \code{character} of length 1.
 .baseInputPath
 
 .baseOutputPath
+
+.baseLogPath
 }
 \description{
 Default project paths

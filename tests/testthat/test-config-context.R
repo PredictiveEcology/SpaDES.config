@@ -47,8 +47,12 @@ test_that("LandWeb config + context setup is working", {
 
   ## paths
   expect_identical(.isAbsolutePath(unlist(config.lw$paths)),
-                   c(cachePath = FALSE, inputPath = FALSE, modulePath = FALSE, outputPath = FALSE,
+                   c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE, modulePath = FALSE, outputPath = FALSE,
                      projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
+  expect_identical(
+    .getRelativePath(config.lw$paths[["logPath"]], prjDir),
+    file.path("outputs", "LandWeb_full_v3", "rep01", "log")
+  )
   expect_identical(
     .getRelativePath(config.lw$paths[["tilePath"]], prjDir),
     file.path("outputs", "LandWeb_full_v3", "rep01", "tiles")
@@ -82,6 +86,10 @@ test_that("LandWeb config + context setup is working", {
   expect_identical(config.mb$params[["Biomass_speciesData"]][["types"]], c("KNN", "CASFRI", "Pickell", "MBFRI"))
 
   ## paths
+  expect_identical(
+    .getRelativePath(config.mb$paths[["logPath"]], prjDir),
+    file.path("outputs", "provMB_v3", "rep05", "log")
+  )
   expect_identical(
     .getRelativePath(config.mb$paths[["tilePath"]], prjDir),
     file.path("outputs", "provMB_v3", "rep05", "tiles")
@@ -117,9 +125,13 @@ test_that("LandWeb config + context setup is working", {
   expect_identical(config.pp.tolko$params[["LandWeb_summary"]][["reps"]], 1L:15L)
 
   expect_identical(
+    .getRelativePath(config.pp.tolko$paths[["logPath"]], prjDir),
+    file.path("outputs", "Tolko_AB_N_aspenDispersal_logROS", "log")
+  )
+  expect_identical(
     .getRelativePath(config.pp.tolko$paths[["tilePath"]], prjDir),
     file.path("outputs", "Tolko_AB_N_aspenDispersal_logROS", "tiles")
-  ) ## TODO: currently fails
+  )
 
   rm(config.pp.tolko)
 })
