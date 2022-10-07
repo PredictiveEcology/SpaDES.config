@@ -70,9 +70,10 @@ landwebConfig <- R6::R6Class(
         LandR.assertions = FALSE,
         LandR.verbose = 1,
         map.dataPath = self$paths$inputPath, # not used yet
+        map.maxNumCores = pemisc::optimalClusterNum(20000, parallel::detectCores() / 2),
         map.overwrite = TRUE,
-        map.tilePath = self$paths$tilePath,
-        map.useParallel = FALSE, ## TODO: parallel processing in map needs to be fixed!
+        map.tilePath = FALSE, ## TODO: use self$paths$tilePath once parallel tile creation works
+        map.useParallel = TRUE,
         rasterMaxMemory = 5e+9,
         rasterTmpDir = file.path(dirname(tempdir()), "scratch", "raster"),
         reproducible.cacheSaveFormat = "rds", ## can be "qs" or "rds"
@@ -166,13 +167,14 @@ landwebConfig <- R6::R6Class(
           ageClassCutOffs = c(0, 40, 80, 120),                  ## LandWebUtils:::.ageClassCutOffs
           ageClassMaxAge = 400L, ## was `maxAge` previously
           reps = 1L:15L, ## TODO: used elsewhere to setup runs (expt table)?
-          simOutputPath = self$paths$outputPath,
+          simOutputPath = self$paths[["outputPath"]],
           summaryPeriod = c(700, 1000), ## also in .globals
           summaryInterval = 100,
           timeSeriesTimes = 601:650,
           upload = FALSE,
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
-          version = private[[".version"]]
+          version = private[[".version"]],
+          .useParallel = self$options[["map.maxNumCores"]]
         ),
         timeSinceFire = list(
           startTime = 1L,
