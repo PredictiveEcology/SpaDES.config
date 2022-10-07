@@ -31,6 +31,7 @@ Suggests:
     knitr,
     LandR,
     lme4,
+    pemisc,
     raster,
     rmarkdown,
     roxygen2,
@@ -41,6 +42,7 @@ Suggests:
     tiler
 Remotes:
     PredictiveEcology/LandR@development,
+    PredictiveEcology/pemisc@development,
     PredictiveEcology/Require@development,
     PredictiveEcology/SpaDES.core@development,
     PredictiveEcology/SpaDES.project@transition
