@@ -174,6 +174,7 @@ landwebConfig <- R6::R6Class(
           upload = FALSE,
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
           version = private[[".version"]],
+          .makeTiles = FALSE, ## no tiles until parallel tile creation resolved (ropensci/tiler#18)
           .useParallel = self$options[["map.maxNumCores"]]
         ),
         timeSinceFire = list(
