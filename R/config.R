@@ -319,6 +319,7 @@ projConfig <- R6::R6Class(
       ## check user-specified params against module metadata ---------------------------------------
       if (requireNamespace("SpaDES.core", quietly = TRUE)) {
         params_ <- lapply(self$modules, function(m) {
+          message("Validating parameters for module ", m, " ...")
           pdt <- SpaDES.core::moduleParams(m, fullModulePath)
           p <- structure(.Data = pdt$default, names = pdt$paramName) ## named list
         })
