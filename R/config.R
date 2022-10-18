@@ -317,7 +317,6 @@ projConfig <- R6::R6Class(
       }
 
       ## check user-specified params against module metadata ---------------------------------------
-      ## TODO: what to do with defaults using e.g., `start(sim)`
       if (requireNamespace("SpaDES.core", quietly = TRUE)) {
         params_ <- lapply(self$modules, function(m) {
           pdt <- SpaDES.core::moduleParams(m, fullModulePath)
@@ -333,6 +332,18 @@ projConfig <- R6::R6Class(
           } else {
             modifyList2(params_[[x]], self$params[[x]])
           }
+        })
+        names(params_) <- self$modules
+
+        ## TODO: deal with defaults using e.g., `start(sim)`
+        ## but for now, warn the user to supply actual values
+        params_ <- lapply(names(params_), function(x) {
+          if (any(grepl("sim", params_[[x]]))) {
+            ids <- which(grepl("\\(sim\\)", params_[[x]]))
+            message("NOTE: parameters in module ", x, " contain `sim`: ",
+                    paste(names(params_[[x]][ids]), collapse = ", "), ".")
+          }
+          params_[[x]]
         })
         names(params_) <- self$modules
 
@@ -413,6 +424,7 @@ projConfig <- R6::R6Class(
             globals_ <- subset(params_[[".globals"]], names(params_[[".globals"]]) %in% names(tmp))
             tmp <- modifyList2(tmp, globals_)
           }
+
           tmp
         })
         names(params_) <- mods2keep
@@ -434,7 +446,7 @@ projConfig <- R6::R6Class(
         ## update paths
         updatedPaths <- modifyList2(private[[".paths"]], value)
 
-        ## ensure paths are kept relative to projectPath except for scratch
+        ## ensure paths are kept relative to projectPath except for scratch dirs
         pathNames <- names(updatedPaths)
         updatedPaths <- lapply(pathNames, function(pthnm) {
           if (pthnm %in% c("projectPath", "scratchPath")) {

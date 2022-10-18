@@ -304,7 +304,7 @@ landwebConfig <- R6::R6Class(
         map.tilePath = FALSE, ## TODO: use self$paths$tilePath once parallel tile creation works
         map.useParallel = TRUE,
         rasterMaxMemory = 5e+9,
-        rasterTmpDir = file.path(dirname(tempdir()), "scratch", "raster"),
+        rasterTmpDir = normPath(self$paths[["rasterPath"]]),
         reproducible.cacheSaveFormat = "rds", ## can be "qs" or "rds"
         reproducible.conn = dbConnCache("sqlite"), ## "sqlite" or "postgresql"
         reproducible.destinationPath = normPath(self$paths[["inputPath"]]),
@@ -330,6 +330,7 @@ landwebConfig <- R6::R6Class(
           fireTimestep = 1L,
           sppEquivCol = "LandWeb",
           successionTimestep = 10,
+          summaryInterval = 100,
           summaryPeriod = c(700, 1000),
           vegLeadingProportion = 0.8,
           .plotInitialTime = 0,
@@ -356,15 +357,19 @@ landwebConfig <- R6::R6Class(
             quote(LandR::speciesTableUpdate(sim$species, sim$speciesTable, sim$sppEquiv, P(sim)$sppEquivCol)),
             quote(LandR::updateSpeciesTable(sim$species, sim$speciesParams))
           ),
-          useCloudForStats = TRUE
+          useCloudForStats = TRUE,
+          .plotInitialTime = 0 ## sim(start)
         ),
         Biomass_core = list(
+          growthInitialTime = 0, ## start(sim)
           initialBiomassSource = "cohortData",
           seedingAlgorithm = "wardDispersal",
-          .maxMemory = if (format(pemisc::availableMemory(), units = "GiB") > 130) 5 else 2 ## GB
+          .maxMemory = if (format(pemisc::availableMemory(), units = "GiB") > 130) 5 else 2, ## GB
+          .plotInitialTime = 0 ## sim(start)
         ),
         Biomass_regeneration = list(
-          ## use module defaults (unless specified in .globals)
+          fireInitialTime = 1, ## start(sim, "year") + 1
+          .plotInitialTime = 0 ## sim(start)
         ),
         Biomass_speciesData = list(
           omitNonVegPixels = TRUE,
@@ -377,10 +382,12 @@ landwebConfig <- R6::R6Class(
           maxRetriesPerID = 4L,
           minPropBurn = 0.90,
           ROSother = 30L,
-          useSeed = NULL ## NULL to avoid setting a seed, which makes all simulation identical!
+          useSeed = NULL, ## NULL to avoid setting a seed
+          .plotInitialTime = 0 ## sim(start)
         ),
         LandWeb_output = list(
-          summaryInterval = 100
+          summaryInterval = 100, ## also set in .globals
+          .plotInitialTime = 0 ## sim(start)
         ),
         LandWeb_preamble = list(
           bufferDist = 20000,        ## 20 km buffer
@@ -390,7 +397,8 @@ landwebConfig <- R6::R6Class(
           pixelSize = 250,
           minFRI = 25L,
           ROStype = "default",
-          treeClassesLCC = c(1:15, 20, 32, 34:36) ## should match B_bDP's forestedLCCClasses
+          treeClassesLCC = c(1:15, 20, 32, 34:36), ## should match B_bDP's forestedLCCClasses
+          .plotInitialTime = 0 ## sim(start)
         ),
         LandWeb_summary = list(
           ageClasses = c("Young", "Immature", "Mature", "Old"), ## LandWebUtils:::.ageClasses
@@ -398,8 +406,8 @@ landwebConfig <- R6::R6Class(
           ageClassMaxAge = 400L, ## was `maxAge` previously
           reps = 1L:15L, ## TODO: used elsewhere to setup runs (expt table)?
           simOutputPath = self$paths[["outputPath"]],
+          summaryInterval = 100,        ## also in .globals
           summaryPeriod = c(700, 1000), ## also in .globals
-          summaryInterval = 100,
           timeSeriesTimes = 601:650,
           upload = FALSE,
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
