@@ -34,6 +34,7 @@ Suggests:
     lme4,
     pemisc,
     raster,
+    reproducible,
     rmarkdown,
     roxygen2,
     RPostgres,
@@ -44,6 +45,7 @@ Suggests:
 Remotes:
     PredictiveEcology/LandR@development,
     PredictiveEcology/pemisc@development,
+    PredictiveEcology/reproducible@development,
     PredictiveEcology/Require@development,
     PredictiveEcology/SpaDES.core@development,
     PredictiveEcology/SpaDES.project@transition
