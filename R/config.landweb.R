@@ -296,7 +296,7 @@ landwebConfig <- R6::R6Class(
       self$options <- list(
         fftempdir = file.path(dirname(tempdir()), "scratch", "LandWeb", "ff"),
         future.globals.maxSize = 1000*1024^2,
-        LandR.assertions = FALSE,
+        LandR.assertions = TRUE,
         LandR.verbose = 1,
         map.dataPath = self$paths$inputPath, # not used yet
         map.maxNumCores = pemisc::optimalClusterNum(20000, parallel::detectCores() / 2),
@@ -318,7 +318,7 @@ landwebConfig <- R6::R6Class(
         spades.futurePlan = "callr",
         spades.memoryUseInterval = 10, ## track memory use every 10 seconds
         spades.messagingNumCharsModule = 36,
-        spades.moduleCodeChecks = FALSE,
+        spades.moduleCodeChecks = TRUE,
         spades.qsThreads = 4,
         spades.recoveryMode = FALSE,
         spades.useRequire = FALSE # Don't use Require... meaning assume all pkgs installed
@@ -467,6 +467,12 @@ landwebConfig <- R6::R6Class(
       } else if (self$context$mode == "postprocess") {
         self$modules <- list("LandWeb_preamble", "Biomass_speciesData", "LandWeb_summary")
       }
+
+      ## options -- based on mode
+      self$options <- list(
+        LandR.assertions = if (self$context[["mode"]] == "production") FALSE else TRUE,
+        spades.moduleCodeChecks = if (self$context[["mode"]] == "production") FALSE else TRUE
+      )
 
       ## study area + run info ----------------------
       self$params <- list(
