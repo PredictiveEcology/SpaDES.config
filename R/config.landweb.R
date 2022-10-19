@@ -377,7 +377,7 @@ landwebConfig <- R6::R6Class(
         ),
         LandMine = list(
           biggestPossibleFireSizeHa = 5e5,
-          burnInitialTime = 1L,
+          burnInitialTime = 1L, ## start(sim, "year") + 1; same as fireInitialTime
           maxReburns = 20L,
           maxRetriesPerID = 4L,
           minPropBurn = 0.90,
