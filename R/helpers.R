@@ -159,3 +159,12 @@ hasToken <- function(name) {
   token <- findToken(name) ## TODO: path argument
   all(isTRUE(length(token) == 1), !is.na(token))
 }
+
+#' Delay subsequent code execution by random interval
+#'
+#' @param t integer vector from which to randomly draw a time (in minutes) to delay for
+#'
+#' @export
+delay_rnd <- function(t = 1L:15L) {
+  sample(t, 1)
+}

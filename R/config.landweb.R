@@ -438,7 +438,7 @@ landwebConfig <- R6::R6Class(
           cloud = list(
             useCloud = TRUE
           ),
-          delayStart = if (self$context[["mode"]] == "production") sample(5L:15L, 1) else 0L, # 5-15 minutes
+          delayStart = if (self$context[["mode"]] == "production") delay_rnd(5L:15L) else 0L, # 5-15 minutes
           endTime = 1000,
           successionTimestep = 10,
           summaryPeriod = c(700, 1000),
@@ -453,7 +453,6 @@ landwebConfig <- R6::R6Class(
         )
       } else if (self$context[["mode"]] == "profile") {
         self$args <- list(
-          delayStart = 0,
           endTime = 20,
           successionTimestep = 10,
           summaryPeriod = c(10, 20),
