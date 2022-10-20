@@ -33,6 +33,7 @@ useContext <- function(projectName = NULL, projectPath = NULL, ...) {
 
   switch(
     tolower(projectName),
+    bc_nrv = bcnrvContext$new(projectPath = projectPath, ...),
     landweb = landwebContext$new(projectPath = projectPath, ...),
     projContext$new(projectPath = projectPath, ...) ## default
   )
@@ -60,12 +61,11 @@ projContext <- R6::R6Class(
     #' @param projectPath Character string giving the path to the project directory.
     #'
     #' @param mode Character string. One of 'production', 'development', 'postprocess',
-    #'             or 'profile.
+    #'             or 'profile'.
     #'
     #' @param rep Integer denoting the replicate ID for the current run.
     #'
-    #' @param studyAreaName Character string identifying a study area (see `LandWeb_preamble`
-    #'                      module for up-to-date descriptions of each study area label).
+    #' @param studyAreaName Character string identifying a study area.
     initialize = function(projectPath, mode = "development", rep = 1L, studyAreaName = "default") {
       private[[".mode"]] <- NA_character_
       private[[".projectPath"]] <- normPath(projectPath)
@@ -196,6 +196,7 @@ useConfig <- function(projectName = NULL, projectPath = NULL, ...) {
   ## additional project types can be added here
   config <- switch(
     tolower(projectName),
+    bc_nrv = bcnrvConfig$new(projectPath = projectPath, ...),
     landweb = landwebConfig$new(projectPath = projectPath, ...),
     projConfig$new(projectName = projectName, projectPath = projectPath, ...) ## default
   )$update()$validate()
@@ -278,7 +279,7 @@ projConfig <- R6::R6Class(
       self$context <- useContext(projectName, projectPath, ...)
 
       ## do paths first as these may be used below
-      private[[".paths"]] = list(
+      private[[".paths"]] <- list(
         cachePath = .baseCachePath,
         inputPath = .baseInputPath,
         inputPaths = .baseDataCachePath,
@@ -288,13 +289,14 @@ projConfig <- R6::R6Class(
         projectPath = normPath(projectPath)
       )
 
-      private[[".args"]] = list()
-      private[[".modules"]] = list()
-      private[[".options"]] = list()
-      private[[".params"]] = list(.globals = list())
+      private[[".args"]] <- list()
+      private[[".modules"]] <- list()
+      private[[".options"]] <- list()
 
       ## need to keep copy of all default params for when modules updated
-      private[[".params_full"]] = list(.globals = list())
+      private[[".params_full"]] <- list(.globals = list())
+
+      self$params <- private[[".params_full"]]
 
       invisible(self)
     },
@@ -311,6 +313,7 @@ projConfig <- R6::R6Class(
     validate = function() {
       ## check all modules exist in project --------------------------------------------------------
       fullModulePath <- normPath(file.path(self$paths[["projectPath"]], self$paths[["modulePath"]]))
+
       modsInPrj <- list.dirs(fullModulePath, recursive = FALSE, full.names = FALSE)
       if (!all(self$modules %in% modsInPrj)) {
         warning("modules list contains modules not found in modulePath ", self$paths[["modulePath"]])

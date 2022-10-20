@@ -70,7 +70,7 @@ One of 'default' (i.e., none), 'equal' (i.e., all 1), 'log'.}
 \item{\code{projectPath}}{Character string giving the path to the project directory.}
 
 \item{\code{mode}}{Character string. One of 'production', 'development', 'postprocess',
-or 'profile.}
+or 'profile'.}
 
 \item{\code{rep}}{Integer denoting the replicate ID for the current run.}
 

@@ -63,12 +63,11 @@ Create a new \code{projContext} object
 \item{\code{projectPath}}{Character string giving the path to the project directory.}
 
 \item{\code{mode}}{Character string. One of 'production', 'development', 'postprocess',
-or 'profile.}
+or 'profile'.}
 
 \item{\code{rep}}{Integer denoting the replicate ID for the current run.}
 
-\item{\code{studyAreaName}}{Character string identifying a study area (see \code{LandWeb_preamble}
-module for up-to-date descriptions of each study area label).}
+\item{\code{studyAreaName}}{Character string identifying a study area.}
 }
 \if{html}{\out{</div>}}
 }

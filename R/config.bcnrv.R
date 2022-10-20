@@ -1,11 +1,7 @@
 #' @keywords internal
-.landwebRunName <- function(context, withRep = TRUE) {
+.bcnrvRunName <- function(context, withRep = TRUE) {
   .runName <- paste0(
     context$studyAreaName,
-    if (context$dispersalType == "default") "" else paste0("_", context$dispersalType, "Dispersal"),
-    if (context$ROStype == "default") "" else paste0("_", context$ROStype, "ROS"),
-    if (isTRUE(context$succession)) "" else "_noSuccession",
-    if (context$friMultiple == 1) "" else paste0("_fri", context$friMultiple),
     if (context$pixelSize == 250) "" else paste0("_res", context$pixelSize),
     if (isTRUE(withRep)) {
       if (context$mode == "postprocess") "" else sprintf("_rep%02d", context$rep)
@@ -18,52 +14,43 @@
   return(.runName)
 }
 
-#' LandWeb project context class
+#' BC NRV project context class
 #'
-#' This extends the `projContext` class by setting various LandWeb defaults and
-#' employing custom fied validation.
+#' This extends the `projContext` class by setting various defaults for BC NRV
+#' and employing custom field validation.
 #'
 #' @export
 #' @importFrom R6 R6Class
-#' @rdname landwebContext-class
-landwebContext <- R6::R6Class(
-  "landwebContext",
+#' @rdname bcnrvContext-class
+bcnrvContext <- R6::R6Class(
+  "bcnrvContext",
   inherit = projContext,
 
   public = list(
     #' @param projectPath Character string giving the path to the project directory.
     #'
-    #' @param mode Character string. One of 'production', 'development', 'postprocess',
-    #'             or 'profile'.
+    #' @param mode Character string. One of 'production', 'development', or 'postprocess'.
     #'
     #' @param rep Integer denoting the replicate ID for the current run.
     #'
-    #' @param studyAreaName Character string identifying a study area (see `LandWeb_preamble`
+    #' @param studyAreaName Character string identifying a study area (see `BC_HRV_preamble`
     #'                      module for up-to-date descriptions of each study area label).
     #'
     #' @param version Integer. Shorthand denoting whether vegetation parameter forcings (`version = 2`)
     #'                should be used as they were for the ca. 2018 runs.
     #'                Version 3 uses the default LandR Biomass parameters (i.e., no forcings).
-    initialize = function(projectPath, mode = "development", rep = 1L, studyAreaName = "random", version = 3) {
-      stopifnot(version %in% c(2, 3))
-
-      private[[".dispersalType"]] <- if (version == 2) "high" else if (version == 3) "default"
-      private[[".forceResprout"]] <- if (version == 2) TRUE else if (version == 3) FALSE
-      private[[".friMultiple"]] <- 1L
+    initialize = function(projectPath, mode = "development", rep = 1L, studyAreaName = "Chine") {
       private[[".pixelSize"]] <- 250
       private[[".projectPath"]] <- normPath(projectPath)
-      private[[".ROStype"]] <- if (version == 2) "log" else if (version == 3) "default"
-      private[[".succession"]] <- TRUE
-      private[[".version"]] <- as.integer(version)
 
       self$machine <- Sys.info()[["nodename"]]
       self$user <- Sys.info()[["user"]]
 
       self$mode <- mode
       self$rep <- rep
-      self$studyAreaName <- studyAreaName
+      self$studyAreaName <- studyAreaName ## will set studyAreaHash
 
-      self$runName <- .landwebRunName(self)
+      self$runName <- .bcnrvRunName(self)
 
       return(invisible(self))
     },
@@ -78,12 +65,7 @@ landwebContext <- R6::R6Class(
         user = self$user,
         studyAreaName = self$studyAreaName,
         rep = self$rep,
-        dispersalType = self$dispersalType, ## additional for landweb
-        forceResprout = self$forceResprout, ## additional for landweb
-        friMultiple = self$friMultiple,     ## additional for landweb
-        pixelSize = self$pixelSize,         ## additional for landweb
-        ROStype = self$ROStype,             ## additional for landweb
-        succession = self$succession,       ## additional for landweb
+        pixelSize = self$pixelSize,
         runName = self$runName
       )
 
@@ -97,12 +79,12 @@ landwebContext <- R6::R6Class(
 
   active = list(
     #' @field mode  Character string giving the project run mode.
-    #'              One of 'production', 'development', 'postprocess', or 'profile'.
+    #'              One of 'production', 'development', or 'postprocess'.
     mode = function(value) {
       if (missing(value)) {
         return(private[[".mode"]])
       } else {
-        stopifnot(tolower(value) %in% c("production", "development", "postprocess", "profile"))
+        stopifnot(tolower(value) %in% c("production", "development", "postprocess"))
         private[[".mode"]] <- tolower(value)
 
         if (private[[".mode"]] == "postprocess") {
@@ -111,27 +93,28 @@ landwebContext <- R6::R6Class(
       }
     },
 
+    #' @field studyAreaHash  Character string giving the hash of current study area (read-only).
+    studyAreaHash = function(value) {
+      if (missing(value)) {
+        return(private[[".studyAreaHash"]])
+      } else {
+        stop("studyAreaHash cannot be set directly. ",
+             "It is automatically updated with studyAreaName.")
+      }
+    },
+
     #' @field studyAreaName  Character string giving the name of current study area.
     studyAreaName = function(value) {
       if (missing(value)) {
         return(private[[".studyAreaName"]])
       } else {
-        ## TODO: issues getting relative paths when studyAreaName == projDir
-        ## workaround is to append some suffix to the studyAreaName (e.g., LandWeb_full)
-        newValue <- if (identical(value, basename(private[[".projectPath"]]))) {
-          paste0(value, "_full")
+        private[[".studyAreaHash"]] <- if (requireNamespace("reproducible", quietly = TRUE)) {
+          reproducible::studyAreaName(value)
         } else {
-          value
+          .needPkg("reproducible", "stop")
         }
-
-        newValue <- if (private[[".version"]] == 2) {
-          newValue
-        } else {
-          paste0(newValue, "_v", private[[".version"]])
-        }
-
-        private[[".studyAreaName"]] <- newValue
-        self$runName <- .landwebRunName(self)
+        private[[".studyAreaName"]] <- sprintf("multiple_LUs_n%02d_%s", length(value), self$studyAreaHash)
+        self$runName <- .bcnrvRunName(self)
       }
     },
 
@@ -144,40 +127,8 @@ landwebContext <- R6::R6Class(
           warning("unable to set context$rep because context$mode == 'postprocess'")
         } else {
           private[[".rep"]] <- as.integer(value)
-          self$runName <- .landwebRunName(self)
+          self$runName <- .bcnrvRunName(self)
         }
-      }
-    },
-
-    #' @field dispersalType Character string describing the seed dispersal type to use.
-    #'                      One of 'default', 'aspen', 'high', 'none'.
-    dispersalType = function(value) {
-      if (missing(value)) {
-        return(private[[".dispersalType"]])
-      } else {
-        stopifnot(value %in% c("default", "aspen", "high", "none"))
-        private[[".dispersalType"]] <- value
-        self$runName <- .landwebRunName(self)
-      }
-    },
-
-    #' @field forceResprout Logical
-    forceResprout = function(value) {
-      if (missing(value)) {
-        return(private[[".forceResprout"]])
-      } else {
-        private[[".forceResprout"]] <- value
-        self$runName <- .landwebRunName(self)
-      }
-    },
-
-    #' @field friMultiple Numeric indicating a factor by which to scale the fire return intervals
-    friMultiple = function(value) {
-      if (missing(value)) {
-        return(private[[".friMultiple"]])
-      } else {
-        private[[".friMultiple"]] <- value
-        self$runName <- .landwebRunName(self)
       }
     },
 
@@ -188,48 +139,20 @@ landwebContext <- R6::R6Class(
       } else {
         stopifnot(value %in% c(250, 125, 50))
         private[[".pixelSize"]] <- value
-        self$runName <- .landwebRunName(self)
-      }
-    },
-
-    #' @field ROStype  Character string describing the scaling of the LandMine fire model's
-    #'                 'rate of spread' parameters.
-    #'                 One of 'default' (i.e., none), 'equal' (i.e., all 1), 'log'.
-    ROStype = function(value) {
-      if (missing(value)) {
-        return(private[[".ROStype"]])
-      } else {
-        stopifnot(value %in% c("default", "equal", "log"))
-        private[[".ROStype"]] <- value
-        self$runName <- .landwebRunName(self)
-      }
-    },
-
-    #' @field succession  logical
-    succession = function(value) {
-      if (missing(value)) {
-        return(private[[".succession"]])
-      } else {
-        private[[".succession"]] <- value
-        self$runName <- .landwebRunName(self)
+        self$runName <- .bcnrvRunName(self)
       }
     }
   ),
 
   private = list(
-    .dispersalType = NA_character_,
-    .forceResprout = NA,
-    .friMultiple = 1,
     .pixelSize = 250,
-    .ROStype = NA_character_,
-    .succession = NA,
-    .version = NA_integer_
+    .studyAreaHash = NA_character_
   )
 )
 
-#' LandWeb project configuration class
+#' BC NRV project configuration class
 #'
-#' This extends the `projConfig` class by setting various LandWeb config defaults,
+#' This extends the `projConfig` class by setting various BC NRV config defaults,
 #' and implements custom validation and finalizer methods.
 #'
 #' @note See note in `?projConfig` describing the list-update mechanism of assignment to
@@ -237,19 +160,21 @@ landwebContext <- R6::R6Class(
 #'
 #' @export
 #' @importFrom R6 R6Class
-#' @rdname landwebConfig-class
-landwebConfig <- R6::R6Class(
-  "landwebConfig",
+#' @rdname bcnrvConfig-class
+bcnrvConfig <- R6::R6Class(
+  "bcnrvConfig",
   inherit = projConfig,
   public = list(
-    #' @description Create an new `landwebConfig` object
+    #' @description Create an new `bcnrvConfig` object
     #'
     #' @param projectPath character string giving the path to the project directory.
     #'
     #' @param ... Additional arguments passed to `useContext()`
     #'
     initialize = function(projectPath, ...) {
-      self$context <- useContext(projectName = "LandWeb", projectPath = projectPath, ...)
+      dots <- list(...)
+
+      self$context <- useContext(projectName = "BC_NRV", projectPath = projectPath, ...)
 
       ## do paths first as these may be used below
       # paths ---------------------------------------------------------------------------------------
@@ -258,17 +183,17 @@ landwebConfig <- R6::R6Class(
         inputPath = .baseInputPath,
         inputPaths = .baseDataCachePath,
         logPath = .baseLogPath,
-        modulePath = "m", ## non-standard (historical reasons: max path lengths on shinyapps.io)
+        modulePath = c(.baseModulePath, file.path(.baseModulePath, "scfm", .baseModulePath)),
         outputPath = .baseOutputPath,
         projectPath = normPath(projectPath),
-        scratchPath = file.path(dirname(tempdir()), "scratch", "LandWeb"),
+        scratchPath = file.path(dirname(tempdir()), "scratch", "BC_HRV"),
         tilePath = file.path(.baseOutputPath, "tiles")
       )
 
       # arguments -----------------------------------------------------------------------------------
       private[[".args"]] <- list(
         cloud = list(
-          cacheDir = "LandWeb_cloudCache",
+          cacheDir = "BC_HRV_cloudCache",
           googleUser = "",
           useCloud = FALSE
         ),
@@ -281,20 +206,27 @@ landwebConfig <- R6::R6Class(
 
       # modules ------------------------------------------------------------------------------------
       private[[".modules"]] <- list(
+        ageModule = "ageModule", ## with scfm
+        BC_HRV_preamble = "BC_HRV_preamble",
         Biomass_borealDataPrep = "Biomass_borealDataPrep",
         Biomass_core = "Biomass_core",
         Biomass_regeneration = "Biomass_regeneration",
         Biomass_speciesData = "Biomass_speciesData",
-        LandMine = "LandMine",
         LandWeb_output = "LandWeb_output",
-        LandWeb_preamble = "LandWeb_preamble",
         #LandWeb_summary = "LandWeb_summary", ## used for postprocess, not devel nor production
+        scfmDriver = "scfmDriver",
+        scfmEscape = "scfmEscape",
+        scfmIgnition = "scfmIgnition",
+        scfmLandcoverInit = "scfmLandcoverInit",
+        scfmRegime = "scfmRegime",
+        scfmSpread = "scfmSpread",
         timeSinceFire = "timeSinceFire"
+        #visualize_LandR_output = "visualize_LandR_output" ## TODO: use for postprocessing
       )
 
       # options ------------------------------------------------------------------------------------
       private[[".options"]] <- list(
-        fftempdir = file.path(dirname(tempdir()), "scratch", "LandWeb", "ff"),
+        fftempdir = file.path(dirname(tempdir()), "scratch", "BC_HRV", "ff"),
         future.globals.maxSize = 1000*1024^2,
         LandR.assertions = TRUE,
         LandR.verbose = 1,
@@ -329,32 +261,44 @@ landwebConfig <- R6::R6Class(
       private[[".params_full"]] <- list(
         .globals = list(
           fireTimestep = 1L,
-          initialB = NA, ## TODO: added 2022-10-19 -- rerun all recent runs
-          sppEquivCol = "LandWeb",
+          sppEquivCol = "LandR",
           successionTimestep = 10,
-          summaryInterval = 100,
-          summaryPeriod = c(700, 1000),
+          summaryInterval = 50,
+          summaryPeriod = c(600, 1000),
           vegLeadingProportion = 0.8,
           .plotInitialTime = 0,
           .plots = c("object", "png", "raw", "screen"),
           .sslVerify = 0L, ## TODO: temporary to deal with NFI server SSL issues
-          .studyAreaName = "random",
+          .studyAreaName = self$context$studyAreaName,
           .useCache = c(".inputObjects", "init"),
           .useParallel = 2 ## doesn't benefit from more DT threads
+        ),
+        ageModule = list(
+          startTime = 0 ## sim(start)
+        ),
+        BC_HRV_preamble = list(
+          bufferDist = 20000,        ## 20 km buffer
+          bufferDistLarge = 50000,   ## 50 km buffer
+          dispersalType = "default",
+          friMultiple = 1L,
+          landscapeUnits = dots$studyAreaName, ## the un-hashed vector of studyAreaNames
+          minFRI = 25L,
+          pixelSize = 250,
+          treeClassesLCC = c(1:15, 20, 32, 34:36), ## should match B_bDP's forestedLCCClasses
+          .plotInitialTime = 0 ## sim(start)
         ),
         Biomass_borealDataPrep = list(
           biomassModel = quote(lme4::lmer(B ~ logAge * speciesCode + cover * speciesCode +
                                             (logAge + cover | ecoregionGroup))),
-          ecoregionLayerField = "ECOREGION", # "ECODISTRIC"
-          forestedLCCClasses = c(1:15, 20, 32, 34:36), ## should match preamble's treeClassesLCC
-          LCCClassesToReplaceNN = 34:36,
-          # next two are used when assigning pixelGroup membership; what resolution for
-          #   age and biomass
+          dataYear = 2011,
+          ecoregionLayerField = "ECOREGION", # "ECODISTRIC" ## TODO: use BEC classifications???
+          forestedLCCClasses = 1:6, ## LCC2010 default
+          LCCClassesToReplaceNN = numeric(0), ## LCC2010 default
           pixelGroupAgeClass = 2 * 10,  ## twice the successionTimestep; can be coarse because initial conditions are irrelevant
           pixelGroupBiomassClass = 1000, ## 1000 / mapResFact^2; can be coarse because initial conditions are irrelevant
           subsetDataAgeModel = 100,
           subsetDataBiomassModel = 100,
-          speciesTableAreas = c("BSW", "BP", "MC"), ## TODO: should we remove BP? MC?
+          speciesTableAreas = c("BSW", "BP", "MC"), ## TODO: revisit spp traits
           speciesUpdateFunction = list(
             quote(LandR::speciesTableUpdate(sim$species, sim$speciesTable, sim$sppEquiv, P(sim)$sppEquivCol)),
             quote(LandR::updateSpeciesTable(sim$species, sim$speciesParams))
@@ -374,42 +318,24 @@ landwebConfig <- R6::R6Class(
           .plotInitialTime = 0 ## sim(start)
         ),
         Biomass_speciesData = list(
+          dataYear = 2011,
           omitNonVegPixels = TRUE,
-          types = c("KNN", "CASFRI", "Pickell", "ForestInventory")
-        ),
-        LandMine = list(
-          biggestPossibleFireSizeHa = 5e5,
-          burnInitialTime = 1L, ## start(sim, "year") + 1; same as fireInitialTime
-          maxReburns = 20L,
-          maxRetriesPerID = 4L,
-          minPropBurn = 0.90,
-          ROSother = 30L,
-          useSeed = NULL, ## NULL to avoid setting a seed
-          .plotInitialTime = 0 ## sim(start)
+          types = NULL, # using "BCVRI2011" from preamble
+          .plotInitialTime = 0, ## sim(start)
+          .useCache = FALSE ## TODO: temporary while testing
         ),
         LandWeb_output = list(
-          summaryInterval = 100, ## also set in .globals
-          .plotInitialTime = 0 ## sim(start)
-        ),
-        LandWeb_preamble = list(
-          bufferDist = 20000,        ## 20 km buffer
-          bufferDistLarge = 50000,   ## 50 km buffer
-          dispersalType = "default",
-          friMultiple = 1L,
-          pixelSize = 250,
-          minFRI = 25L,
-          ROStype = "default",
-          treeClassesLCC = c(1:15, 20, 32, 34:36), ## should match B_bDP's forestedLCCClasses
+          summaryInterval = 50, ## also set in .globals
           .plotInitialTime = 0 ## sim(start)
         ),
         LandWeb_summary = list(
-          ageClasses = c("Young", "Immature", "Mature", "Old"), ## LandWebUtils:::.ageClasses
-          ageClassCutOffs = c(0, 40, 80, 120),                  ## LandWebUtils:::.ageClassCutOffs
+          ageClasses = c("Young1", "Young2", "Immature1", "Immature2", "Mature1", "Mature2", "Old", "Old2"),
+          ageClassCutOffs = seq(0, 140, 20),
           ageClassMaxAge = 400L, ## was `maxAge` previously
           reps = 1L:15L, ## TODO: used elsewhere to setup runs (expt table)?
           simOutputPath = self$paths[["outputPath"]],
-          summaryInterval = 100,        ## also in .globals
-          summaryPeriod = c(700, 1000), ## also in .globals
+          summaryInterval = 50,        ## also in .globals
+          summaryPeriod = c(600, 1000), ## also in .globals
           timeSeriesTimes = 601:650,
           upload = FALSE,
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
@@ -417,6 +343,36 @@ landwebConfig <- R6::R6Class(
           .makeTiles = FALSE, ## no tiles until parallel tile creation resolved (ropensci/tiler#18)
           .plotInitialTime = 0, ## sim(start)
           .useParallel = self$options[["map.maxNumCores"]]
+        ),
+        scfmDriver = list(
+          pMax = 0.27,
+          targetN = 1000, ## increase targetN for more robust estimates, longer run-time
+          .useCache = ".inputObjects",
+          .useCloud = FALSE,
+          .useParallel = pemisc::optimalClusterNum(1000, 6) ## TODO: find 'sweet spot'
+        ),
+        scfmEscape = list(
+          startTime = 1, ## sim(start) + 1
+          .useCache = FALSE # c(".inputObjects")
+        ),
+        scfmIgnition = list(
+          startTime = 1, ## sim(start) + 1
+          .useCache = FALSE # c(".inputObjects")
+        ),
+        scfmLandcoverInit = list(
+          sliverThreshold = 1e8, ## polygons <100 km2 are merged with closest non-sliver neighbour
+          .plotInitialTime = 1, ## sim(start) + 1
+          .useCache = FALSE # c(".inputObjects")
+        ),
+        scfmRegime = list(
+          fireEpoch = c(1971, 2000), ## TODO: use longer epoch for areas too small w/ not enough fire data
+          .useCache = FALSE # c(".inputObjects")
+        ),
+        scfmSpread = list(
+          startTime = 1, ## sim(start) + 1
+          .plotInitialTime = 1, ## sim(start) + 1
+          .plotInterval = 5,
+          .useCache = FALSE # c(".inputObjects")
         ),
         timeSinceFire = list(
           startTime = 1L,
@@ -429,7 +385,7 @@ landwebConfig <- R6::R6Class(
       invisible(self)
     },
 
-    #' @description Update a `landwebConfig` object from its context.
+    #' @description Update a `bcnrvConfig` object from its context.
     #'              Must be called anytime the context is updated.
     update = function() {
       ## mode ---------------------------------------
@@ -441,8 +397,8 @@ landwebConfig <- R6::R6Class(
           delayStart = if (self$context[["mode"]] == "development") 0L else sample(5L:15L, 1), # 5-15 minutes
           endTime = 1000,
           successionTimestep = 10,
-          summaryPeriod = c(700, 1000),
-          summaryInterval = 100,
+          summaryPeriod = c(600, 1000),
+          summaryInterval = 50,
           timeSeriesTimes = 601:650
         )
 
@@ -451,24 +407,8 @@ landwebConfig <- R6::R6Class(
             .plots = c("object", "png", "raw") ## don't plot to screen
           )
         )
-      } else if (self$context[["mode"]] == "profile") {
-        self$args <- list(
-          delayStart = 0,
-          endTime = 20,
-          successionTimestep = 10,
-          summaryPeriod = c(10, 20),
-          summaryInterval = 10,
-          timeSeriesTimes = 10
-        )
-
-        self$params <- list(
-          .globals = list(
-            .plotInitialTime = 0,
-            .studyAreaName = self$context[["studyAreaName"]]
-          )
-        )
       } else if (self$context$mode == "postprocess") {
-        self$modules <- list("LandWeb_preamble", "Biomass_speciesData", "LandWeb_summary")
+        self$modules <- list("BC_HRV_preamble", "Biomass_speciesData", "LandWeb_summary") ## TODO: additional postprocessing modules
       }
 
       ## options -- based on mode
@@ -484,42 +424,13 @@ landwebConfig <- R6::R6Class(
         ),
         Biomass_borealDataPrep = list(
           pixelGroupBiomassClass = 1000 / (250 / self$context[["pixelSize"]])^2 ## 1000 / mapResFact^2; can be coarse because initial conditions are irrelevant
-        ),
-        LandMine = list(
-          ROSother = switch(self$context[["ROStype"]], equal = 1L, log = log(30L), 30L)
-        ),
-        LandWeb_preamble = list(
-          dispersalType = self$context[["dispersalType"]],
-          forceResprout = self$context[["forceResprout"]],
-          friMultiple = self$context[["friMultiple"]],
-          pixelSize = self$context[["pixelSize"]],
-          ROStype = self$context[["ROStype"]]
         )
       )
 
-      if (grepl("FMU", self$context[["studyAreaName"]])) {
-        self$params <- list(
-          Biomass_borealDataPrep = list(
-            biomassModel = quote(lme4::lmer(B ~ logAge * speciesCode + cover * speciesCode + (1 | ecoregionGroup)))
-          )
-        )
-      } else if (grepl("provMB", self$context[["studyAreaName"]])) {
-        self$params <- list(
-          Biomass_speciesData = list(
-            types = c("KNN", "CASFRI", "Pickell", "MBFRI")
-          )
-        )
-      }
-
-      if (isFALSE(self$context[["succession"]])) {
-        self$modules <- list("LandWeb_preamble", "Biomass_speciesData",
-                             "LandMine", "LandWeb_output", "timeSinceFire")
-      }
-
       ## paths --------------------------------------
       self$paths <- list(
-        outputPath = .updateOutputPath(self, .landwebRunName),
-        tilePath = file.path(.updateOutputPath(self, .landwebRunName), "tiles")
+        outputPath = .updateOutputPath(self, .bcnrvRunName),
+        tilePath = file.path(.updateOutputPath(self, .bcnrvRunName), "tiles")
       )
 
       return(invisible(self))

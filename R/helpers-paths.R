@@ -48,6 +48,7 @@
     return(FALSE)
   (components[1L] == "")
 }
+.isAbsolutePath <- Vectorize(.isAbsolutePath) ## keep names
 
 #' @keywords internal
 .getRelativePath <- function(path, relativeToPath) {
@@ -67,6 +68,7 @@
     relPath <- path
   }
 }
+.getRelativePath <- Vectorize(.getRelativePath, USE.NAMES = FALSE)
 
 #' @keywords internal
 .updateRelativePath <- function(path, relativeToPath) {
@@ -80,10 +82,11 @@
     path
   }
 }
+.updateRelativePath <- Vectorize(.updateRelativePath, USE.NAMES = FALSE)
 
 #' @keywords internal
-.updateLandWebOutputPath <- function(config) {
-  .runName <- .landwebRunName(config$context, withRep = FALSE)
+.updateOutputPath <- function(config, runNameFun) {
+  .runName <- runNameFun(config$context, withRep = FALSE)
 
   if (config$context$mode == "postprocess") {
     file.path(.baseOutputPath, .runName)

@@ -15,18 +15,10 @@ test_that("working with relative paths behaves sensibly", {
 
   expect_identical(length(paths1), length(paths2))
 
-  relPaths <- character(length(paths1))
-  for (i in 1:length(paths1)) {
-    relPaths[i] <- .getRelativePath(paths1[i], paths2[i])
-  }
-
+  relPaths <- .getRelativePath(paths1, paths2)
   expect_true(all(relPaths == "outputs"))
 
-  newRelPaths <- character(length(paths1))
-  for (i in 1:length(paths1)) {
-    newRelPaths[i] <- .updateRelativePath(paths1[i], paths2[i])
-  }
-
+  newRelPaths <- .updateRelativePath(paths1, paths2)
   expect_true(all(newRelPaths == "outputs"))
 
   ## ----------------------------------------------------------------
@@ -47,17 +39,9 @@ test_that("working with relative paths behaves sensibly", {
 
   expect_identical(length(paths3), length(paths4))
 
-  relPaths2 <- character(length(paths3))
-  for (i in 1:length(paths3)) {
-    relPaths2[i] <- .getRelativePath(paths3[i], paths4[i])
-  }
-
+  relPaths2 <- .getRelativePath(paths3, paths4)
   expect_true(all(relPaths2 == "outputs/LandWeb_v3/rep01/tiles"))
 
-  newRelPaths2 <- character(length(paths3))
-  for (i in 1:length(paths3)) {
-    newRelPaths2[i] <- .updateRelativePath(paths3[i], paths4[i])
-  }
-
+  newRelPaths2 <- .updateRelativePath(paths3, paths4)
   expect_true(all(newRelPaths2 == "outputs/LandWeb_v3/rep01/tiles"))
 })
