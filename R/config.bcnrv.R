@@ -394,7 +394,7 @@ bcnrvConfig <- R6::R6Class(
           cloud = list(
             useCloud = TRUE
           ),
-          delayStart = if (self$context[["mode"]] == "development") 0L else sample(5L:15L, 1), # 5-15 minutes
+          delayStart = if (self$context[["mode"]] == "production") sample(5L:15L, 1) else 0L, # 5-15 minutes
           endTime = 1000,
           successionTimestep = 10,
           summaryPeriod = c(600, 1000),
