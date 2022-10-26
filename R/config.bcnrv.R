@@ -263,7 +263,7 @@ bcnrvConfig <- R6::R6Class(
       private[[".params_full"]] <- list(
         .globals = list(
           fireTimestep = 1L,
-          sppEquivCol = "LandR",
+          sppEquivCol = "BC_HRV",
           successionTimestep = 10,
           summaryInterval = 50,
           summaryPeriod = c(600, 1000),
