@@ -351,7 +351,7 @@ bcnrvConfig <- R6::R6Class(
           targetN = 1000, ## increase targetN for more robust estimates, longer run-time
           .useCache = ".inputObjects",
           .useCloud = FALSE,
-          .useParallel = TRUE ## TODO: being overridden by .useParallel in .globals
+          .useParallelFireRegimePolys = TRUE
         ),
         scfmEscape = list(
           startTime = 1, ## sim(start) + 1
