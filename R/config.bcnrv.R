@@ -201,7 +201,8 @@ bcnrvConfig <- R6::R6Class(
         endTime = 1000,
         notifications = list(
           slackChannel = ""
-        )
+        ),
+        useCache = FALSE ## simulation caching
       )
 
       # modules ------------------------------------------------------------------------------------
@@ -234,7 +235,8 @@ bcnrvConfig <- R6::R6Class(
         map.maxNumCores = pemisc::optimalClusterNum(20000, parallel::detectCores() / 2),
         map.overwrite = TRUE,
         map.tilePath = FALSE, ## TODO: use self$paths$tilePath once parallel tile creation works
-        map.useParallel = TRUE,
+        map.useParallel = TRUE, ## TODO: streamline useParallel: used directly for post-processing
+        pemisc.useParallel = TRUE, ## TODO: streamline useParallel: used directly by scfm
         rasterMaxMemory = 5e+9,
         rasterTmpDir = normPath(file.path(self$paths[["scratchPath"]], "raster")),
         reproducible.cacheSaveFormat = "rds", ## can be "qs" or "rds"
@@ -349,7 +351,7 @@ bcnrvConfig <- R6::R6Class(
           targetN = 1000, ## increase targetN for more robust estimates, longer run-time
           .useCache = ".inputObjects",
           .useCloud = FALSE,
-          .useParallel = pemisc::optimalClusterNum(1000, 6) ## TODO: find 'sweet spot'
+          .useParallel = TRUE ## TODO: being overridden by .useParallel in .globals
         ),
         scfmEscape = list(
           startTime = 1, ## sim(start) + 1

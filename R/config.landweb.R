@@ -276,7 +276,8 @@ landwebConfig <- R6::R6Class(
         endTime = 1000,
         notifications = list(
           slackChannel = ""
-        )
+        ),
+        useCache = FALSE ## simulation caching
       )
 
       # modules ------------------------------------------------------------------------------------
@@ -443,7 +444,8 @@ landwebConfig <- R6::R6Class(
           successionTimestep = 10,
           summaryPeriod = c(700, 1000),
           summaryInterval = 100,
-          timeSeriesTimes = 601:650
+          timeSeriesTimes = 601:650,
+          useCache = if (self$context[["mode"]] == "production") TRUE else FALSE,
         )
 
         self$params <- list(
