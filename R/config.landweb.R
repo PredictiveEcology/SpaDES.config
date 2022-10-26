@@ -360,7 +360,7 @@ landwebConfig <- R6::R6Class(
             quote(LandR::speciesTableUpdate(sim$species, sim$speciesTable, sim$sppEquiv, P(sim)$sppEquivCol)),
             quote(LandR::updateSpeciesTable(sim$species, sim$speciesParams))
           ),
-          useCloudForStats = TRUE,
+          useCloudCacheForStats = FALSE, ## TODO: re-enable once errors in species levels resolved
           .plotInitialTime = 0 ## sim(start)
         ),
         Biomass_core = list(
