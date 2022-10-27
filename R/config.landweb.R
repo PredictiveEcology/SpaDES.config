@@ -386,7 +386,9 @@ landwebConfig <- R6::R6Class(
           minPropBurn = 0.90,
           ROSother = 30L,
           useSeed = NULL, ## NULL to avoid setting a seed
-          .plotInitialTime = 0 ## sim(start)
+          .plotInitialTime = 1, ## sim(start) + 1
+          .plotInterval = 1,
+          .unitTest = TRUE
         ),
         LandWeb_output = list(
           summaryInterval = 100, ## also set in .globals
@@ -487,7 +489,8 @@ landwebConfig <- R6::R6Class(
           pixelGroupBiomassClass = 1000 / (250 / self$context[["pixelSize"]])^2 ## 1000 / mapResFact^2; can be coarse because initial conditions are irrelevant
         ),
         LandMine = list(
-          ROSother = switch(self$context[["ROStype"]], equal = 1L, log = log(30L), 30L)
+          ROSother = switch(self$context[["ROStype"]], equal = 1L, log = log(30L), 30L),
+          .unitTest = if (self$context[["mode"]] == "production") FALSE else TRUE
         ),
         LandWeb_preamble = list(
           dispersalType = self$context[["dispersalType"]],
