@@ -445,7 +445,7 @@ landwebConfig <- R6::R6Class(
           summaryPeriod = c(700, 1000),
           summaryInterval = 100,
           timeSeriesTimes = 601:650,
-          useCache = if (self$context[["mode"]] == "production") TRUE else FALSE,
+          useCache = if (self$context[["mode"]] == "production") TRUE else FALSE
         )
 
         self$params <- list(
