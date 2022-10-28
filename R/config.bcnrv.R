@@ -33,14 +33,21 @@ bcnrvContext <- R6::R6Class(
     #'
     #' @param rep Integer denoting the replicate ID for the current run.
     #'
+    #' @param res Numeric indicating the map resolution (pixel size) to use.
+    #'            Must be one of 50, 125 (default), 250.
+    #'
     #' @param studyAreaName Character string identifying a study area (see `BC_HRV_preamble`
     #'                      module for up-to-date descriptions of each study area label).
     #'
     #' @param version Integer. Shorthand denoting whether vegetation parameter forcings (`version = 2`)
     #'                should be used as they were for the ca. 2018 runs.
     #'                Version 3 uses the default LandR Biomass parameters (i.e., no forcings).
-    initialize = function(projectPath, mode = "development", rep = 1L, studyAreaName = "Chine") {
-      private[[".pixelSize"]] <- 250
+    initialize = function(projectPath, mode = "development", rep = 1L, res = 125, studyAreaName = "Chine") {
+      stopifnot(
+        res %in% c(50, 125, 250)
+      )
+
+      private[[".pixelSize"]] <- res
       private[[".projectPath"]] <- normPath(projectPath)
 
       self$machine <- Sys.info()[["nodename"]]
@@ -145,7 +152,7 @@ bcnrvContext <- R6::R6Class(
   ),
 
   private = list(
-    .pixelSize = 250,
+    .pixelSize = 125,
     .studyAreaHash = NA_character_
   )
 )
@@ -285,7 +292,7 @@ bcnrvConfig <- R6::R6Class(
           friMultiple = 1L,
           landscapeUnits = dots$studyAreaName, ## the un-hashed vector of studyAreaNames
           minFRI = 25L,
-          pixelSize = 250,
+          pixelSize = 125,
           treeClassesLCC = c(1:15, 20, 32, 34:36), ## should match B_bDP's forestedLCCClasses
           .plotInitialTime = 0 ## sim(start)
         ),

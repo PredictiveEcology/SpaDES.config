@@ -48,6 +48,7 @@ One of 'production', 'development', or 'postprocess'.}
   projectPath,
   mode = "development",
   rep = 1L,
+  res = 125,
   studyAreaName = "Chine"
 )}\if{html}{\out{</div>}}
 }
@@ -60,6 +61,9 @@ One of 'production', 'development', or 'postprocess'.}
 \item{\code{mode}}{Character string. One of 'production', 'development', or 'postprocess'.}
 
 \item{\code{rep}}{Integer denoting the replicate ID for the current run.}
+
+\item{\code{res}}{Numeric indicating the map resolution (pixel size) to use.
+Must be one of 50, 125 (default), 250.}
 
 \item{\code{studyAreaName}}{Character string identifying a study area (see \code{BC_HRV_preamble}
 module for up-to-date descriptions of each study area label).}

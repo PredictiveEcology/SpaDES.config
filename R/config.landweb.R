@@ -39,7 +39,7 @@ landwebContext <- R6::R6Class(
     #' @param rep Integer denoting the replicate ID for the current run.
     #'
     #' @param res Numeric indicating the map resolution (pixel size) to use.
-    #'            Must be one of 50, 100, 250 (default).
+    #'            Must be one of 50, 125, 250 (default).
     #'
     #' @param studyAreaName Character string identifying a study area (see `LandWeb_preamble`
     #'                      module for up-to-date descriptions of each study area label).
