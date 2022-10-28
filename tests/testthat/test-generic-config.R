@@ -1,4 +1,6 @@
 test_that("generic config + context setup is working", {
+  skip("run manually")
+
   ## project: default ------------------------------------------------------------------------------
   foo <- useContext("fooProj")
   info <- printRunInfo(foo)
