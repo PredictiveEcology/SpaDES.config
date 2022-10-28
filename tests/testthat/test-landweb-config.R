@@ -1,17 +1,6 @@
 test_that("LandWeb config + context setup is working", {
   skip("Run manually with latest version of LandWeb Project on test machine")
 
-  ## project: default ------------------------------------------------------------------------------
-  foo <- useContext("fooProj")
-  info <- printRunInfo(foo)
-  foo[["studyAreaName"]] <- "BCR6_NT1"
-  expect_identical(foo[["runName"]], "BCR6_NT1_rep01")
-  foo[["rep"]] <- 10
-  expect_identical(foo[["rep"]], 10L)
-  expect_identical(foo[["runName"]], "BCR6_NT1_rep10")
-
-  rm(foo, info)
-
   ## project: landweb ------------------------------------------------------------------------------
   prjDir <- "~/GitHub/LandWeb"
 

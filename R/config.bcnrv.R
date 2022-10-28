@@ -222,6 +222,7 @@ bcnrvConfig <- R6::R6Class(
         Biomass_speciesData = "Biomass_speciesData",
         LandWeb_output = "LandWeb_output",
         #LandWeb_summary = "LandWeb_summary", ## used for postprocess, not devel nor production
+        #NRV_summary = "NRV_summary", ## used for postprocess, not devel nor production
         scfmDriver = "scfmDriver",
         scfmEscape = "scfmEscape",
         scfmIgnition = "scfmIgnition",
@@ -229,7 +230,7 @@ bcnrvConfig <- R6::R6Class(
         scfmRegime = "scfmRegime",
         scfmSpread = "scfmSpread",
         timeSinceFire = "timeSinceFire"
-        #visualize_LandR_output = "visualize_LandR_output" ## TODO: use for postprocessing
+        #visualize_LandR_output = "visualize_LandR_output" ## used for postprocess, not devel nor production
       )
 
       # options ------------------------------------------------------------------------------------
@@ -353,6 +354,19 @@ bcnrvConfig <- R6::R6Class(
           .plotInitialTime = 0, ## sim(start)
           .useParallel = self$options[["map.maxNumCores"]]
         ),
+        NRV_summary = list(
+          ageClasses = c("Young1", "Young2", "Immature1", "Immature2", "Mature1", "Mature2", "Old", "Old2"),
+          ageClassCutOffs = seq(0, 140, 20),
+          ageClassMaxAge = 400L, ## was `maxAge` previously
+          reps = 1L:15L, ## TODO: used elsewhere to setup runs (expt table)?
+          #simOutputPath = self$paths[["outputPath"]],
+          summaryInterval = 50,        ## also in .globals
+          summaryPeriod = c(600, 1000), ## also in .globals
+          timeSeriesTimes = 601:650,
+          upload = FALSE,
+          uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
+          .plotInitialTime = 0 ## sim(start)
+        ),
         scfmDriver = list(
           pMax = 0.27,
           targetN = 1000, ## increase targetN for more robust estimates, longer run-time
@@ -417,7 +431,8 @@ bcnrvConfig <- R6::R6Class(
           )
         )
       } else if (self$context$mode == "postprocess") {
-        self$modules <- list("BC_HRV_preamble", "Biomass_speciesData", "LandWeb_summary") ## TODO: additional postprocessing modules
+        ## TODO: additional postprocessing modules
+        self$modules <- list("BC_HRV_preamble", "Biomass_speciesData", "LandWeb_summary", "NRV_summary")
       }
 
       ## options -- based on mode
