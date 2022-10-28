@@ -49,11 +49,15 @@ landwebContext <- R6::R6Class(
     #'                Version 3 uses the default LandR Biomass parameters (i.e., no forcings).
     initialize = function(projectPath, mode = "development", rep = 1L, res = 250,
                           studyAreaName = "random", version = 3) {
-      stopifnot(version %in% c(2, 3))
+      stopifnot(
+        res %in% c(50, 125, 250),
+        version %in% c(2, 3)
+      )
 
       private[[".dispersalType"]] <- if (version == 2) "high" else if (version == 3) "default"
       private[[".forceResprout"]] <- if (version == 2) TRUE else if (version == 3) FALSE
       private[[".friMultiple"]] <- 1L
+      private[[".pixelSize"]] <- res
       private[[".projectPath"]] <- normPath(projectPath)
       private[[".ROStype"]] <- if (version == 2) "log" else if (version == 3) "default"
       private[[".succession"]] <- TRUE
@@ -63,7 +67,6 @@ landwebContext <- R6::R6Class(
       self$user <- Sys.info()[["user"]]
 
       self$mode <- mode
-      self$pixelSize <- res
       self$rep <- rep
       self$studyAreaName <- studyAreaName
 
