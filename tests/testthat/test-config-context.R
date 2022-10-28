@@ -15,6 +15,15 @@ test_that("LandWeb config + context setup is working", {
   ## project: landweb ------------------------------------------------------------------------------
   prjDir <- "~/GitHub/LandWeb"
 
+  pr_mods <- list("Biomass_borealDataPrep", "Biomass_core", "Biomass_regeneration",
+                  "Biomass_speciesData",  "LandMine", "LandWeb_output", "LandWeb_preamble",
+                  "timeSinceFire")
+  names(pr_mods) <- pr_mods
+  dv_mods <- pr_mods
+  pp_mods <- list("LandWeb_preamble", "Biomass_speciesData", "LandWeb_summary")
+  names(pp_mods) <- pp_mods
+
+  ## study area: LandWeb ---------------------------------------------------------------------------
   config.lw <- suppressWarnings({
     useConfig(projectName = "LandWeb", projectPath = prjDir,
               mode = "development", rep = 1L, studyAreaName = "LandWeb", version = 3)
@@ -27,10 +36,6 @@ test_that("LandWeb config + context setup is working", {
   expect_equal(config.lw$args[["delayStart"]], 0L)
 
   ## modules
-  pr_mods <- list("Biomass_borealDataPrep", "Biomass_core", "Biomass_regeneration",
-                  "Biomass_speciesData",  "LandMine", "LandWeb_output", "LandWeb_preamble",
-                  "timeSinceFire")
-  names(pr_mods) <- pr_mods
   expect_identical(config.lw$modules, pr_mods)
 
   ## options
@@ -73,7 +78,6 @@ test_that("LandWeb config + context setup is working", {
   expect_gt(config.mb$args[["delayStart"]], 0L)
 
   ## modules
-  dv_mods <- pr_mods
   expect_identical(config.mb$modules, dv_mods)
 
   ## options
@@ -134,4 +138,41 @@ test_that("LandWeb config + context setup is working", {
   )
 
   rm(config.pp.tolko)
+
+  ## study area: FMU E14 ---------------------------------------------------------------------------
+  ## mode:       production
+  config.pp.e14 <- suppressWarnings({
+    useConfig(projectName = "LandWeb", projectPath = prjDir,
+              mode = "production", rep = 10, studyAreaName = "FMU_E14", version = 2)
+  }) ## TODO: currently warns about params specified for "missing" modules not used in postprocess
+
+  ## context
+  expect_equal(config.pp.e14$context[["pixelSize"]], 250)
+
+  config.pp.e14$context[["pixelSize"]] <- 125
+  suppressWarnings({
+    config.pp.e14$update() ## required after context changes
+  })
+  expect_equal(config.pp.e14$context[["pixelSize"]], 125)
+
+  ## args
+  expect_gt(config.pp.e14$args[["delayStart"]], 0L)
+
+  ## modules
+  expect_identical(config.pp.e14$modules, pr_mods)
+
+  ## params
+  expect_identical(config.pp.e14$params[[".globals"]][[".studyAreaName"]], "FMU_E14")
+  expect_identical(config.pp.e14$params[["Biomass_speciesData"]][["types"]], c("KNN", "CASFRI", "Pickell", "ForestInventory"))
+
+  expect_identical(
+    .getRelativePath(config.pp.e14$paths[["logPath"]], prjDir),
+    file.path("outputs", "FMU_E14_highDispersal_logROS_res125", "rep10", "log")
+  )
+  expect_identical(
+    .getRelativePath(config.pp.e14$paths[["tilePath"]], prjDir),
+    file.path("outputs", "FMU_E14_highDispersal_logROS_res125", "rep10", "tiles")
+  )
+
+  rm(config.pp.e14)
 })

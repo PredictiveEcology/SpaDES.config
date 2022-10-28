@@ -59,6 +59,7 @@ One of 'default' (i.e., none), 'equal' (i.e., all 1), 'log'.}
   projectPath,
   mode = "development",
   rep = 1L,
+  res = 250,
   studyAreaName = "random",
   version = 3
 )}\if{html}{\out{</div>}}
@@ -73,6 +74,9 @@ One of 'default' (i.e., none), 'equal' (i.e., all 1), 'log'.}
 or 'profile'.}
 
 \item{\code{rep}}{Integer denoting the replicate ID for the current run.}
+
+\item{\code{res}}{Numeric indicating the map resolution (pixel size) to use.
+Must be one of 50, 100, 250 (default).}
 
 \item{\code{studyAreaName}}{Character string identifying a study area (see \code{LandWeb_preamble}
 module for up-to-date descriptions of each study area label).}

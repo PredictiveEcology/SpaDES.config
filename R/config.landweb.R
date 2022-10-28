@@ -38,19 +38,22 @@ landwebContext <- R6::R6Class(
     #'
     #' @param rep Integer denoting the replicate ID for the current run.
     #'
+    #' @param res Numeric indicating the map resolution (pixel size) to use.
+    #'            Must be one of 50, 100, 250 (default).
+    #'
     #' @param studyAreaName Character string identifying a study area (see `LandWeb_preamble`
     #'                      module for up-to-date descriptions of each study area label).
     #'
     #' @param version Integer. Shorthand denoting whether vegetation parameter forcings (`version = 2`)
     #'                should be used as they were for the ca. 2018 runs.
     #'                Version 3 uses the default LandR Biomass parameters (i.e., no forcings).
-    initialize = function(projectPath, mode = "development", rep = 1L, studyAreaName = "random", version = 3) {
+    initialize = function(projectPath, mode = "development", rep = 1L, res = 250,
+                          studyAreaName = "random", version = 3) {
       stopifnot(version %in% c(2, 3))
 
       private[[".dispersalType"]] <- if (version == 2) "high" else if (version == 3) "default"
       private[[".forceResprout"]] <- if (version == 2) TRUE else if (version == 3) FALSE
       private[[".friMultiple"]] <- 1L
-      private[[".pixelSize"]] <- 250
       private[[".projectPath"]] <- normPath(projectPath)
       private[[".ROStype"]] <- if (version == 2) "log" else if (version == 3) "default"
       private[[".succession"]] <- TRUE
@@ -60,6 +63,7 @@ landwebContext <- R6::R6Class(
       self$user <- Sys.info()[["user"]]
 
       self$mode <- mode
+      self$pixelSize <- res
       self$rep <- rep
       self$studyAreaName <- studyAreaName
 
