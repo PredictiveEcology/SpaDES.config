@@ -236,7 +236,7 @@ bcnrvConfig <- R6::R6Class(
       # options ------------------------------------------------------------------------------------
       private[[".options"]] <- list(
         fftempdir = file.path(dirname(tempdir()), "scratch", "BC_HRV", "ff"),
-        future.globals.maxSize = 1000*1024^2,
+        future.globals.maxSize = 1000*1024^2, ## 1000 MiB (0.98 GiB)
         LandR.assertions = TRUE,
         LandR.verbose = 1,
         map.dataPath = self$paths$inputPath, # not used yet
@@ -342,7 +342,7 @@ bcnrvConfig <- R6::R6Class(
           ageClasses = c("Young1", "Young2", "Immature1", "Immature2", "Mature1", "Mature2", "Old", "Old2"),
           ageClassCutOffs = seq(0, 140, 20),
           ageClassMaxAge = 400L, ## was `maxAge` previously
-          reps = 1L:15L, ## TODO: used elsewhere to setup runs (expt table)?
+          reps = 1L:10L, ## TODO: used elsewhere to setup runs (expt table)?
           simOutputPath = self$paths[["outputPath"]],
           summaryInterval = 50,        ## also in .globals
           summaryPeriod = c(600, 1000), ## also in .globals
@@ -358,7 +358,7 @@ bcnrvConfig <- R6::R6Class(
           ageClasses = c("Young1", "Young2", "Immature1", "Immature2", "Mature1", "Mature2", "Old", "Old2"),
           ageClassCutOffs = seq(0, 140, 20),
           ageClassMaxAge = 400L, ## was `maxAge` previously
-          reps = 1L:15L, ## TODO: used elsewhere to setup runs (expt table)?
+          reps = 1L:10L, ## TODO: used elsewhere to setup runs (expt table)?
           #simOutputPath = self$paths[["outputPath"]],
           summaryInterval = 50,        ## also in .globals
           summaryPeriod = c(600, 1000), ## also in .globals
