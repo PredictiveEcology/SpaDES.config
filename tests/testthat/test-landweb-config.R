@@ -30,6 +30,7 @@ test_that("LandWeb config + context setup is working", {
   ## options
   expect_equal(config.lw$options[["map.dataPath"]], config.lw$paths[["inputPath"]], ignore_attr = TRUE)
   expect_equal(config.lw$options[["map.tilePath"]], config.lw$paths[["tilePath"]], ignore_attr = TRUE)
+  expect_equal(config.lw$options[["rasterMaxMemory"]], 1e12)
   expect_equal(config.lw$options[["reproducible.destinationPath"]], config.lw$paths[["inputPath"]], ignore_attr = TRUE)
 
   ## params
@@ -72,6 +73,7 @@ test_that("LandWeb config + context setup is working", {
   ## options
   expect_equal(config.mb$options[["map.dataPath"]], config.mb$paths[["inputPath"]], ignore_attr = TRUE)
   expect_equal(config.mb$options[["map.tilePath"]], config.mb$paths[["tilePath"]], ignore_attr = TRUE)
+  expect_equal(config.lw$options[["rasterMaxMemory"]], 5e9)
   expect_equal(config.mb$options[["reproducible.destinationPath"]], config.mb$paths[["inputPath"]], ignore_attr = TRUE)
 
   ## params
