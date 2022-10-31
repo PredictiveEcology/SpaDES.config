@@ -481,9 +481,10 @@ landwebConfig <- R6::R6Class(
         self$modules <- list("LandWeb_preamble", "Biomass_speciesData", "LandWeb_summary")
       }
 
-      ## options -- based on mode
+      ## options -- update based on context
       self$options <- list(
         LandR.assertions = if (self$context[["mode"]] == "production") FALSE else TRUE,
+        rasterMaxMemory = if (grepl(self$context[["studyAreaName"]], "LandWeb")) 1e12 else 1e9,
         spades.moduleCodeChecks = if (self$context[["mode"]] == "production") FALSE else TRUE
       )
 
