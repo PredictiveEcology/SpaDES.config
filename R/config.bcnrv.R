@@ -360,6 +360,7 @@ bcnrvConfig <- R6::R6Class(
           ageClassMaxAge = 400L, ## was `maxAge` previously
           reps = 1L:10L, ## TODO: used elsewhere to setup runs (expt table)?
           #simOutputPath = self$paths[["outputPath"]],
+          studyAreaNamesCol = "LU_NAME",
           summaryInterval = 50,        ## also in .globals
           summaryPeriod = c(600, 1000), ## also in .globals
           timeSeriesTimes = 601:650,
