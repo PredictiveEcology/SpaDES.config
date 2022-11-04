@@ -36,6 +36,7 @@ test_that("LandWeb config + context setup is working", {
   ## params
   expect_identical(names(config.lw$params), c(".globals", names(config.lw$modules)))
   expect_identical(config.lw$params$.globals$.studyAreaName, "LandWeb_full_v3")
+  expect_identical(config.lw$params$Biomass_core$initialB, 10)
   expect_identical(config.lw$params$Biomass_borealDataPrep$.studyAreaName, config.lw$params$.globals$.studyAreaName)
   expect_identical(config.lw$params$Biomass_borealDataPrep$.plots, config.lw$params$.globals$.plots)
   expect_identical(config.lw$params$Biomass_speciesData$types, c("KNN", "CASFRI", "Pickell", "ForestInventory"))
@@ -116,6 +117,7 @@ test_that("LandWeb config + context setup is working", {
 
   ## params
   expect_identical(config.pp.tolko$params[[".globals"]][[".studyAreaName"]], "Tolko_AB_N")
+  expect_identical(config.pp.tolko$params[[".globals"]][["initialB"]], NA_real_)
   expect_identical(config.pp.tolko$params[["Biomass_speciesData"]][["types"]], c("KNN", "CASFRI", "Pickell", "ForestInventory"))
   expect_identical(config.pp.tolko$params[["LandWeb_summary"]][["reps"]], 1L:15L)
 
@@ -154,6 +156,7 @@ test_that("LandWeb config + context setup is working", {
 
   ## params
   expect_identical(config.pp.e14$params[[".globals"]][[".studyAreaName"]], "FMU_E14")
+  expect_identical(config.pp.e14[["params"]][["Biomass_core"]][["initialB"]], NA_real_)
   expect_identical(config.pp.e14$params[["Biomass_speciesData"]][["types"]], c("KNN", "CASFRI", "Pickell", "ForestInventory"))
 
   expect_identical(

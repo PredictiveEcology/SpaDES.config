@@ -258,6 +258,8 @@ landwebConfig <- R6::R6Class(
     initialize = function(projectPath, ...) {
       self$context <- useContext(projectName = "LandWeb", projectPath = projectPath, ...)
 
+      .version <- if (grepl("v3$", self$context[["studyAreaName"]])) 3L else 2L ## TODO: clunky
+
       ## do paths first as these may be used below
       # paths ---------------------------------------------------------------------------------------
       private[[".paths"]] <- list(
@@ -337,7 +339,7 @@ landwebConfig <- R6::R6Class(
       private[[".params_full"]] <- list(
         .globals = list(
           fireTimestep = 1L,
-          initialB = NA, ## TODO: added 2022-10-19 -- rerun all recent runs
+          initialB = if (.version == 2) NA_real_ else 10,
           sppEquivCol = "LandWeb",
           successionTimestep = 10,
           summaryInterval = 100,
@@ -423,7 +425,7 @@ landwebConfig <- R6::R6Class(
           timeSeriesTimes = 601:650,
           upload = FALSE,
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
-          version = private[[".version"]],
+          version = .version,
           .makeTiles = FALSE, ## no tiles until parallel tile creation resolved (ropensci/tiler#18)
           .plotInitialTime = 0, ## sim(start)
           .useParallel = self$options[["map.maxNumCores"]]
