@@ -339,6 +339,19 @@ bcnrvConfig <- R6::R6Class(
           summaryInterval = 50, ## also set in .globals
           .plotInitialTime = 0 ## sim(start)
         ),
+        HSI_PineMarten = list(
+          ageClasses = c("Young1", "Young2", "Immature1", "Immature2", "Mature1", "Mature2", "Old", "Old2"),
+          ageClassCutOffs = seq(0, 140, 20),
+          ageClassMaxAge = 400L, ## was `maxAge` previously
+          reps = 1L:10L, ## TODO: used elsewhere to setup runs (expt table)?
+          studyAreaNamesCol = "LU_NAME",
+          summaryInterval = 50,        ## also in .globals
+          summaryPeriod = c(600, 1000), ## also in .globals
+          timeSeriesTimes = 601:650,
+          upload = FALSE,
+          uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
+          .plotInitialTime = 0 ## sim(start)
+        ),
         LandWeb_summary = list(
           ageClasses = c("Young1", "Young2", "Immature1", "Immature2", "Mature1", "Mature2", "Old", "Old2"),
           ageClassCutOffs = seq(0, 140, 20),
@@ -434,7 +447,8 @@ bcnrvConfig <- R6::R6Class(
         )
       } else if (self$context$mode == "postprocess") {
         ## TODO: additional postprocessing modules
-        self$modules <- list("BC_HRV_preamble", "Biomass_speciesData", "LandWeb_summary", "NRV_summary")
+        self$modules <- list("BC_HRV_preamble", "Biomass_speciesData", "HSI_PineMarten",
+                             "LandWeb_summary", "NRV_summary")
       }
 
       ## options -- based on mode
