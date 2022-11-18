@@ -214,15 +214,16 @@ bcnrvConfig <- R6::R6Class(
 
       # modules ------------------------------------------------------------------------------------
       private[[".modules"]] <- list(
-        ageModule = "ageModule", ## with scfm
+        # ageModule = "ageModule", ## with scfm ## removed 2022-11; not needed with LandR
         BC_HRV_preamble = "BC_HRV_preamble",
         Biomass_borealDataPrep = "Biomass_borealDataPrep",
         Biomass_core = "Biomass_core",
         Biomass_regeneration = "Biomass_regeneration",
         Biomass_speciesData = "Biomass_speciesData",
+        # HSI_PineMarten = "HSI_PineMarten", ## used for postprocess, not devel nor production
         LandWeb_output = "LandWeb_output",
-        #LandWeb_summary = "LandWeb_summary", ## used for postprocess, not devel nor production
-        #NRV_summary = "NRV_summary", ## used for postprocess, not devel nor production
+        # LandWeb_summary = "LandWeb_summary", ## used for postprocess, not devel nor production
+        # NRV_summary = "NRV_summary", ## used for postprocess, not devel nor production
         scfmDriver = "scfmDriver",
         scfmEscape = "scfmEscape",
         scfmIgnition = "scfmIgnition",
@@ -284,9 +285,10 @@ bcnrvConfig <- R6::R6Class(
           .useCache = c(".inputObjects", "init"),
           .useParallel = 2 ## doesn't benefit from more DT threads
         ),
-        ageModule = list(
-          startTime = 0 ## sim(start)
-        ),
+        # ageModule = list(
+        #   maxAge = 400L, ## was `maxAge` previously
+        #   startTime = 0 ## sim(start)
+        # ),
         BC_HRV_preamble = list(
           bufferDist = 20000,        ## 20 km buffer
           bufferDistLarge = 50000,   ## 50 km buffer

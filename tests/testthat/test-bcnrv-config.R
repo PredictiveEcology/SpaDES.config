@@ -4,14 +4,13 @@ test_that("BC NRV config + context setup is working", {
   ## project: BC_HRV ------------------------------------------------------------------------------
   prjDir <- "~/GitHub/BC_HRV"
 
-  pr_mods <- list("ageModule", "BC_HRV_preamble", "Biomass_borealDataPrep", "Biomass_core",
+  pr_mods <- list("BC_HRV_preamble", "Biomass_borealDataPrep", "Biomass_core",
                   "Biomass_regeneration", "Biomass_speciesData", "LandWeb_output",
                   "scfmDriver", "scfmEscape", "scfmIgnition", "scfmLandcoverInit",
                   "scfmRegime", "scfmSpread", "timeSinceFire")
   names(pr_mods) <- pr_mods
   dv_mods <- pr_mods
-  pp_mods <- list("BC_HRV_preamble", "Biomass_speciesData", "HSI_PineMarten",
-                  "LandWeb_summary", "NRV_summary")
+  pp_mods <- list("BC_HRV_preamble", "Biomass_speciesData", "LandWeb_summary", "NRV_summary")
   names(pp_mods) <- pp_mods
 
   .studyAreaName <- c("Corkscrew", "Christenson Creek", "Downton", "Punky Moore")
