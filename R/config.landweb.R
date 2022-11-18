@@ -309,7 +309,7 @@ landwebConfig <- R6::R6Class(
         LandR.assertions = TRUE,
         LandR.verbose = 1,
         map.dataPath = self$paths$inputPath, # not used yet
-        map.maxNumCores = pemisc::optimalClusterNum(20000, parallel::detectCores() / 2),
+        map.maxNumCores = pemisc::optimalClusterNum(40000, parallel::detectCores() / 2),
         map.overwrite = TRUE,
         map.tilePath = FALSE, ## TODO: use self$paths$tilePath once parallel tile creation works
         map.useParallel = TRUE,
