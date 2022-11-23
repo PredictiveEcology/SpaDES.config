@@ -293,6 +293,7 @@ bcnrvConfig <- R6::R6Class(
           bufferDist = 20000,        ## 20 km buffer
           bufferDistLarge = 50000,   ## 50 km buffer
           dispersalType = "default",
+          fireRegimePolysType = "BECZONE",
           friMultiple = 1L,
           landscapeUnits = dots$studyAreaName, ## the un-hashed vector of studyAreaNames
           minFRI = 25L,
