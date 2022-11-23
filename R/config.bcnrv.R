@@ -349,6 +349,7 @@ bcnrvConfig <- R6::R6Class(
           ageClasses = c("Young1", "Young2", "Immature1", "Immature2", "Mature1", "Mature2", "Old", "Old2"),
           ageClassCutOffs = seq(0, 140, 20),
           ageClassMaxAge = 400L, ## was `maxAge` previously
+          disturbanceAgeCutoff = 10L, ## TODO: what makes sense as default here?
           reps = 1L:10L, ## TODO: used elsewhere to setup runs (expt table)?
           studyAreaNamesCol = "LU_NAME",
           summaryInterval = 50,        ## also in .globals
