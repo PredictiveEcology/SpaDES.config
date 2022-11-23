@@ -349,7 +349,6 @@ landwebConfig <- R6::R6Class(
           .plots = c("object", "png", "raw", "screen"),
           .sslVerify = 0L, ## TODO: temporary to deal with NFI server SSL issues
           .studyAreaName = "random",
-          .useCache = c(".inputObjects", "init"),
           .useParallel = 2 ## doesn't benefit from more DT threads
         ),
         Biomass_borealDataPrep = list(
@@ -370,22 +369,26 @@ landwebConfig <- R6::R6Class(
             quote(LandR::updateSpeciesTable(sim$species, sim$speciesParams))
           ),
           useCloudCacheForStats = FALSE, ## TODO: re-enable once errors in species levels resolved
-          .plotInitialTime = 0 ## sim(start)
+          .plotInitialTime = 0, ## sim(start)
+          .useCache = c(".inputObjects", "init")
         ),
         Biomass_core = list(
           growthInitialTime = 0, ## start(sim)
           initialBiomassSource = "cohortData",
           seedingAlgorithm = "wardDispersal",
           .maxMemory = if (format(pemisc::availableMemory(), units = "GiB") > 130) 5 else 2, ## GB
-          .plotInitialTime = 0 ## sim(start)
+          .plotInitialTime = 0, ## sim(start)
+          .useCache = c(".inputObjects", "init")
         ),
         Biomass_regeneration = list(
           fireInitialTime = 1, ## start(sim, "year") + 1
-          .plotInitialTime = 0 ## sim(start)
+          .plotInitialTime = 0, ## sim(start)
+          .useCache = c(".inputObjects", "init")
         ),
         Biomass_speciesData = list(
           omitNonVegPixels = TRUE,
-          types = c("KNN", "CASFRI", "Pickell", "ForestInventory")
+          types = c("KNN", "CASFRI", "Pickell", "ForestInventory"),
+          .useCache = c(".inputObjects", "init")
         ),
         LandMine = list(
           biggestPossibleFireSizeHa = 5e5,
@@ -397,11 +400,13 @@ landwebConfig <- R6::R6Class(
           useSeed = NULL, ## NULL to avoid setting a seed
           .plotInitialTime = 1, ## sim(start) + 1
           .plotInterval = 1,
-          .unitTest = TRUE
+          .unitTest = TRUE,
+          .useCache = c(".inputObjects", "init")
         ),
         LandWeb_output = list(
           summaryInterval = 100, ## also set in .globals
-          .plotInitialTime = 0 ## sim(start)
+          .plotInitialTime = 0, ## sim(start)
+          .useCache = c(".inputObjects", "init")
         ),
         LandWeb_preamble = list(
           bufferDist = 20000,        ## 20 km buffer
@@ -412,7 +417,8 @@ landwebConfig <- R6::R6Class(
           minFRI = 25L,
           ROStype = "default",
           treeClassesLCC = c(1:15, 20, 32, 34:36), ## should match B_bDP's forestedLCCClasses
-          .plotInitialTime = 0 ## sim(start)
+          .plotInitialTime = 0, ## sim(start)
+          .useCache = c(".inputObjects") ## faster without caching for "init"
         ),
         LandWeb_summary = list(
           ageClasses = c("Young", "Immature", "Mature", "Old"), ## LandWebUtils:::.ageClasses
@@ -428,6 +434,7 @@ landwebConfig <- R6::R6Class(
           version = .version,
           .makeTiles = FALSE, ## no tiles until parallel tile creation resolved (ropensci/tiler#18)
           .plotInitialTime = 0, ## sim(start)
+          .useCache = c(".inputObjects", "animation", "postprocess"), ## don't cache 'init'
           .useParallel = self$options[["map.maxNumCores"]]
         ),
         timeSinceFire = list(

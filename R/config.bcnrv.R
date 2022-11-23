@@ -282,7 +282,6 @@ bcnrvConfig <- R6::R6Class(
           .plots = c("object", "png", "raw", "screen"),
           .sslVerify = 0L, ## TODO: temporary to deal with NFI server SSL issues
           .studyAreaName = self$context$studyAreaName,
-          .useCache = c(".inputObjects", "init"),
           .useParallel = 2 ## doesn't benefit from more DT threads
         ),
         # ageModule = list(
@@ -299,7 +298,8 @@ bcnrvConfig <- R6::R6Class(
           minFRI = 25L,
           pixelSize = 125,
           treeClassesLCC = c(1:15, 20, 32, 34:36), ## should match B_bDP's forestedLCCClasses
-          .plotInitialTime = 0 ## sim(start)
+          .plotInitialTime = 0, ## sim(start),
+          .useCache = c(".inputObjects") ## faster without caching for "init"
         ),
         Biomass_borealDataPrep = list(
           biomassModel = quote(lme4::lmer(B ~ logAge * speciesCode + cover * speciesCode +
@@ -318,25 +318,28 @@ bcnrvConfig <- R6::R6Class(
             quote(LandR::updateSpeciesTable(sim$species, sim$speciesParams))
           ),
           useCloudCacheForStats = FALSE, ## TODO: re-enable once errors in species levels resolved
-          .plotInitialTime = 0 ## sim(start)
+          .plotInitialTime = 0, ## sim(start)
+          .useCache = c(".inputObjects", "init")
         ),
         Biomass_core = list(
           growthInitialTime = 0, ## start(sim)
           initialBiomassSource = "cohortData",
           seedingAlgorithm = "wardDispersal",
           .maxMemory = if (format(pemisc::availableMemory(), units = "GiB") > 130) 5 else 2, ## GB
-          .plotInitialTime = 0 ## sim(start)
+          .plotInitialTime = 0, ## sim(start)
+          .useCache = c(".inputObjects", "init")
         ),
         Biomass_regeneration = list(
           fireInitialTime = 1, ## start(sim, "year") + 1
-          .plotInitialTime = 0 ## sim(start)
+          .plotInitialTime = 0, ## sim(start)
+          .useCache = c(".inputObjects", "init")
         ),
         Biomass_speciesData = list(
           dataYear = 2011,
           omitNonVegPixels = TRUE,
           types = NULL, # using "BCVRI2011" from preamble
           .plotInitialTime = 0, ## sim(start)
-          .useCache = FALSE ## TODO: temporary while testing
+          .useCache = c(".inputObjects", "init")
         ),
         LandWeb_output = list(
           summaryInterval = 50, ## also set in .globals
@@ -353,7 +356,8 @@ bcnrvConfig <- R6::R6Class(
           timeSeriesTimes = 601:650,
           upload = FALSE,
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
-          .plotInitialTime = 0 ## sim(start)
+          .plotInitialTime = 0, ## sim(start)
+          .useCache = c(".inputObjects", "init")
         ),
         LandWeb_summary = list(
           ageClasses = c("Young1", "Young2", "Immature1", "Immature2", "Mature1", "Mature2", "Old", "Old2"),
@@ -369,6 +373,7 @@ bcnrvConfig <- R6::R6Class(
           version = private[[".version"]],
           .makeTiles = FALSE, ## no tiles until parallel tile creation resolved (ropensci/tiler#18)
           .plotInitialTime = 0, ## sim(start)
+          .useCache = c(".inputObjects", "animation", "postprocess"), ## don't cache 'init'
           .useParallel = self$options[["map.maxNumCores"]]
         ),
         NRV_summary = list(
@@ -383,41 +388,42 @@ bcnrvConfig <- R6::R6Class(
           timeSeriesTimes = 601:650,
           upload = FALSE,
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
-          .plotInitialTime = 0 ## sim(start)
+          .plotInitialTime = 0, ## sim(start)
+          .useCache = c(".inputObjects", "init")
         ),
         scfmDriver = list(
           pMax = 0.27,
           targetN = 1000, ## increase targetN for more robust estimates, longer run-time
-          .useCache = ".inputObjects",
+          .useCache = ".inputObjects", ## don't cache 'init'
           .useCloud = FALSE,
           .useParallelFireRegimePolys = TRUE
         ),
         scfmEscape = list(
           startTime = 1, ## sim(start) + 1
-          .useCache = FALSE # c(".inputObjects")
+          .useCache = ".inputObjects", ## don't cache 'init'
         ),
         scfmIgnition = list(
           startTime = 1, ## sim(start) + 1
-          .useCache = FALSE # c(".inputObjects")
+          .useCache = ".inputObjects", ## don't cache 'init'
         ),
         scfmLandcoverInit = list(
           sliverThreshold = 1e8, ## polygons <100 km2 are merged with closest non-sliver neighbour
           .plotInitialTime = 1, ## sim(start) + 1
-          .useCache = FALSE # c(".inputObjects")
+          .useCache = ".inputObjects", ## don't cache 'init'
         ),
         scfmRegime = list(
           fireEpoch = c(1971, 2000), ## TODO: use longer epoch for areas too small w/ not enough fire data
-          .useCache = FALSE # c(".inputObjects")
+          .useCache = ".inputObjects", ## don't cache 'init'
         ),
         scfmSpread = list(
           startTime = 1, ## sim(start) + 1
           .plotInitialTime = 1, ## sim(start) + 1
           .plotInterval = 5,
-          .useCache = FALSE # c(".inputObjects")
+          .useCache = ".inputObjects", ## don't cache 'init'
         ),
         timeSinceFire = list(
           startTime = 1L,
-          .useCache = c(".inputObjects") ## faster without caching for "init"
+          .useCache = ".inputObjects" ## faster without caching for "init"
         )
       )
 
