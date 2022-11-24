@@ -358,7 +358,7 @@ bcnrvConfig <- R6::R6Class(
           upload = FALSE,
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
           .plotInitialTime = 0, ## sim(start)
-          .useCache = c(".inputObjects", "init")
+          .useCache = c(".inputObjects") ## don't cache 'init'
         ),
         LandWeb_summary = list(
           ageClasses = c("Young1", "Young2", "Immature1", "Immature2", "Mature1", "Mature2", "Old", "Old2"),
@@ -390,7 +390,7 @@ bcnrvConfig <- R6::R6Class(
           upload = FALSE,
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
           .plotInitialTime = 0, ## sim(start)
-          .useCache = c(".inputObjects", "init")
+          .useCache = c(".inputObjects") ## don't cache 'init'
         ),
         scfmDriver = list(
           pMax = 0.27,
