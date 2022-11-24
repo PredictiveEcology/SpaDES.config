@@ -401,26 +401,26 @@ bcnrvConfig <- R6::R6Class(
         ),
         scfmEscape = list(
           startTime = 1, ## sim(start) + 1
-          .useCache = ".inputObjects", ## don't cache 'init'
+          .useCache = ".inputObjects" ## don't cache 'init'
         ),
         scfmIgnition = list(
           startTime = 1, ## sim(start) + 1
-          .useCache = ".inputObjects", ## don't cache 'init'
+          .useCache = ".inputObjects" ## don't cache 'init'
         ),
         scfmLandcoverInit = list(
           sliverThreshold = 1e8, ## polygons <100 km2 are merged with closest non-sliver neighbour
           .plotInitialTime = 1, ## sim(start) + 1
-          .useCache = ".inputObjects", ## don't cache 'init'
+          .useCache = ".inputObjects" ## don't cache 'init'
         ),
         scfmRegime = list(
           fireEpoch = c(1971, 2000), ## TODO: use longer epoch for areas too small w/ not enough fire data
-          .useCache = ".inputObjects", ## don't cache 'init'
+          .useCache = ".inputObjects" ## don't cache 'init'
         ),
         scfmSpread = list(
           startTime = 1, ## sim(start) + 1
           .plotInitialTime = 1, ## sim(start) + 1
           .plotInterval = 5,
-          .useCache = ".inputObjects", ## don't cache 'init'
+          .useCache = ".inputObjects" ## don't cache 'init'
         ),
         timeSinceFire = list(
           startTime = 1L,
