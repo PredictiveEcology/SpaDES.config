@@ -167,6 +167,7 @@ bcnrvContext <- R6::R6Class(
 #'
 #' @export
 #' @importFrom R6 R6Class
+#' @importFrom Require normPath
 #' @rdname bcnrvConfig-class
 bcnrvConfig <- R6::R6Class(
   "bcnrvConfig",
@@ -224,6 +225,7 @@ bcnrvConfig <- R6::R6Class(
         LandWeb_output = "LandWeb_output",
         # LandWeb_summary = "LandWeb_summary", ## used for postprocess, not devel nor production
         # NRV_summary = "NRV_summary", ## used for postprocess, not devel nor production
+        scfmDiagnostics = "scfmDiagnostics",
         scfmDriver = "scfmDriver",
         scfmEscape = "scfmEscape",
         scfmIgnition = "scfmIgnition",
@@ -391,6 +393,9 @@ bcnrvConfig <- R6::R6Class(
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
           .plotInitialTime = 0, ## sim(start)
           .useCache = c(".inputObjects") ## don't cache 'init'
+        ),
+        scfmDiagnostics = list(
+          ## TODO
         ),
         scfmDriver = list(
           pMax = 0.27,

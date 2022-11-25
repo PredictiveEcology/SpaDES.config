@@ -6,8 +6,8 @@ test_that("BC NRV config + context setup is working", {
 
   pr_mods <- list("BC_HRV_preamble", "Biomass_borealDataPrep", "Biomass_core",
                   "Biomass_regeneration", "Biomass_speciesData", "LandWeb_output",
-                  "scfmDriver", "scfmEscape", "scfmIgnition", "scfmLandcoverInit",
-                  "scfmRegime", "scfmSpread", "timeSinceFire")
+                  "scfmDiagnostics", "scfmDriver", "scfmEscape", "scfmIgnition",
+                  "scfmLandcoverInit", "scfmRegime", "scfmSpread", "timeSinceFire")
   names(pr_mods) <- pr_mods
   dv_mods <- pr_mods
   pp_mods <- list("BC_HRV_preamble", "Biomass_speciesData", "HSI_PineMarten",
