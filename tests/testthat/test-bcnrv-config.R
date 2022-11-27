@@ -18,10 +18,11 @@ test_that("BC NRV config + context setup is working", {
   config.bc <- suppressWarnings({
     useConfig(projectName = "BC_NRV", projectPath = prjDir,
               mode = "development", rep = 1L, studyAreaName = .studyAreaName)
-  }) ## TODO: spurious warning re: unused module LandWeb_summary
+  })
 
   ## context
-  expect_equal(config.bc$context[["runName"]], "multiple_LUs_n04_d6b6441dd2d0e467_res125_rep01", ignore_attr = TRUE)
+  expect_equal(config.bc$context[["runName"]],
+               "multiple_LUs_n04_d6b6441dd2d0e467_BECSUBZONE_res125_rep01", ignore_attr = TRUE)
 
   ## args
   expect_equal(config.bc$args[["delayStart"]], 0L)
@@ -40,6 +41,7 @@ test_that("BC NRV config + context setup is working", {
   expect_identical(config.bc$params$Biomass_borealDataPrep$.studyAreaName, config.bc$params$.globals$.studyAreaName)
   expect_identical(config.bc$params$Biomass_borealDataPrep$.plots, config.bc$params$.globals$.plots)
   expect_identical(config.bc$params$Biomass_speciesData$types, NULL)
+  expect_identical(config.bc$params$BC_HRV_preamble$fireRegimePolysType, "BECSUBZONE")
 
   ## paths
   expect_identical(.isAbsolutePath(unlist(config.bc$paths)),
@@ -47,12 +49,54 @@ test_that("BC NRV config + context setup is working", {
                      modulePath1 = FALSE, modulePath2 = FALSE, outputPath = FALSE,
                      projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
   expect_identical(
+    .getRelativePath(config.bc$paths[["outputPath"]], prjDir),
+    file.path("outputs", "multiple_LUs_n04_d6b6441dd2d0e467_BECSUBZONE_res125", "rep01")
+  )
+  expect_identical(
     .getRelativePath(config.bc$paths[["logPath"]], prjDir),
-    file.path("outputs", "multiple_LUs_n04_d6b6441dd2d0e467_res125", "rep01", "log")
+    file.path(.getRelativePath(config.bc$paths[["outputPath"]], prjDir), "log")
   )
   expect_identical(
     .getRelativePath(config.bc$paths[["tilePath"]], prjDir),
-    file.path("outputs", "multiple_LUs_n04_d6b6441dd2d0e467_res125", "rep01", "tiles")
+    file.path(.getRelativePath(config.bc$paths[["outputPath"]], prjDir), "tiles")
+  )
+
+  ## fire regime polygon types ---------------------------------------------------------------------
+  config.bc$context$frpType <- "ECODISTRICT"
+  config.bc$update()$validate()
+
+  ## context
+  expect_equal(config.bc$context[["runName"]],
+               "multiple_LUs_n04_d6b6441dd2d0e467_ECODISTRICT_res125_rep01", ignore_attr = TRUE)
+
+  ## args
+  ##
+
+  ## modules
+  ##
+
+  ## options
+  ##
+
+  ## params
+  expect_identical(config.bc$params$BC_HRV_preamble$fireRegimePolysType, "ECODISTRICT")
+
+  ## paths
+  expect_identical(.isAbsolutePath(unlist(config.bc$paths)),
+                   c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
+                     modulePath1 = FALSE, modulePath2 = FALSE, outputPath = FALSE,
+                     projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
+  expect_identical(
+    .getRelativePath(config.bc$paths[["outputPath"]], prjDir),
+    file.path("outputs", "multiple_LUs_n04_d6b6441dd2d0e467_ECODISTRICT_res125", "rep01")
+  )
+  expect_identical(
+    .getRelativePath(config.bc$paths[["logPath"]], prjDir),
+    file.path(.getRelativePath(config.bc$paths[["outputPath"]], prjDir), "log")
+  )
+  expect_identical(
+    .getRelativePath(config.bc$paths[["tilePath"]], prjDir),
+    file.path(.getRelativePath(config.bc$paths[["outputPath"]], prjDir), "tiles")
   )
 
   ## mode prostprocess -----------------------------------------------------------------------------
@@ -60,7 +104,8 @@ test_that("BC NRV config + context setup is working", {
   config.bc$update()$validate()
 
   ## context
-  expect_equal(config.bc$context[["runName"]], "multiple_LUs_n04_d6b6441dd2d0e467_res125", ignore_attr = TRUE)
+  expect_equal(config.bc$context[["runName"]],
+               "multiple_LUs_n04_d6b6441dd2d0e467_ECODISTRICT_res125", ignore_attr = TRUE)
 
   ## args
   expect_equal(config.bc$args[["delayStart"]], 0L)
@@ -72,10 +117,24 @@ test_that("BC NRV config + context setup is working", {
   ##
 
   ## params
-  ##
+  expect_identical(config.bc$params$BC_HRV_preamble$fireRegimePolysType, "ECODISTRICT")
 
   ## paths
-  ##
-
+  expect_identical(.isAbsolutePath(unlist(config.bc$paths)),
+                   c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
+                     modulePath1 = FALSE, modulePath2 = FALSE, outputPath = FALSE,
+                     projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
+  expect_identical(
+    .getRelativePath(config.bc$paths[["outputPath"]], prjDir),
+    file.path("outputs", "multiple_LUs_n04_d6b6441dd2d0e467_ECODISTRICT_res125")
+  )
+  expect_identical(
+    .getRelativePath(config.bc$paths[["logPath"]], prjDir),
+    file.path(.getRelativePath(config.bc$paths[["outputPath"]], prjDir), "log")
+  )
+  expect_identical(
+    .getRelativePath(config.bc$paths[["tilePath"]], prjDir),
+    file.path(.getRelativePath(config.bc$paths[["outputPath"]], prjDir), "tiles")
+  )
   rm(config.bc)
 })

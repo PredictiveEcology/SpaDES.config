@@ -540,6 +540,7 @@ landwebConfig <- R6::R6Class(
 
       ## paths --------------------------------------
       self$paths <- list(
+        logPath = file.path(.updateOutputPath(self, .landwebRunName), "log"),
         outputPath = .updateOutputPath(self, .landwebRunName),
         tilePath = file.path(.updateOutputPath(self, .landwebRunName), "tiles")
       )

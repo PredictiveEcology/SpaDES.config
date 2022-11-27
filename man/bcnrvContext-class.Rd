@@ -21,13 +21,17 @@ and employing custom field validation.
 \item{\code{mode}}{Character string giving the project run mode.
 One of 'production', 'development', or 'postprocess'.}
 
-\item{\code{studyAreaHash}}{Character string giving the hash of current study area (read-only).}
+\item{\code{frpType}}{Character string denoting the polygons to use for scfm fire regime fitting.
+One of 'BECSUBZONE', 'BECZONE', 'ECODISTRICT', or other types in
+\code{scfmutils::fireRegimePolyTypes()}.}
 
-\item{\code{studyAreaName}}{Character string giving the name of current study area.}
+\item{\code{pixelSize}}{raster pixel resolution (in metres) to use for simulations}
 
 \item{\code{rep}}{replicate id (integer)}
 
-\item{\code{pixelSize}}{raster pixel resolution (in metres) to use for simulations}
+\item{\code{studyAreaHash}}{Character string giving the hash of current study area (read-only).}
+
+\item{\code{studyAreaName}}{Character string giving the name of current study area.}
 }
 \if{html}{\out{</div>}}
 }
@@ -47,6 +51,7 @@ One of 'production', 'development', or 'postprocess'.}
 \if{html}{\out{<div class="r">}}\preformatted{bcnrvContext$new(
   projectPath,
   mode = "development",
+  frpType = "BECSUBZONE",
   rep = 1L,
   res = 125,
   studyAreaName = "Chine"
@@ -60,6 +65,10 @@ One of 'production', 'development', or 'postprocess'.}
 
 \item{\code{mode}}{Character string. One of 'production', 'development', or 'postprocess'.}
 
+\item{\code{frpType}}{Character string denoting the polygons to use for scfm fire regime fitting.
+One of 'BECSUBZONE', 'BECZONE', 'ECODISTRICT', or other types in
+\code{scfmutils::fireRegimePolyTypes()}.}
+
 \item{\code{rep}}{Integer denoting the replicate ID for the current run.}
 
 \item{\code{res}}{Numeric indicating the map resolution (pixel size) to use.
@@ -67,10 +76,6 @@ Must be one of 50, 125 (default), 250.}
 
 \item{\code{studyAreaName}}{Character string identifying a study area (see \code{BC_HRV_preamble}
 module for up-to-date descriptions of each study area label).}
-
-\item{\code{version}}{Integer. Shorthand denoting whether vegetation parameter forcings (\code{version = 2})
-should be used as they were for the ca. 2018 runs.
-Version 3 uses the default LandR Biomass parameters (i.e., no forcings).}
 }
 \if{html}{\out{</div>}}
 }

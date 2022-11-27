@@ -2,6 +2,7 @@
 .bcnrvRunName <- function(context, withRep = TRUE) {
   .runName <- paste0(
     context$studyAreaName,
+    paste0("_", context$frpType),
     if (context$pixelSize == 250) "" else paste0("_res", context$pixelSize),
     if (isTRUE(withRep)) {
       if (context$mode == "postprocess") "" else sprintf("_rep%02d", context$rep)
@@ -29,6 +30,10 @@ bcnrvContext <- R6::R6Class(
   public = list(
     #' @param projectPath Character string giving the path to the project directory.
     #'
+    #' @param frpType Character string denoting the polygons to use for scfm fire regime fitting.
+    #'                One of 'BECSUBZONE', 'BECZONE', 'ECODISTRICT', or other types in
+    #'                `scfmutils::fireRegimePolyTypes()`.
+    #'
     #' @param mode Character string. One of 'production', 'development', or 'postprocess'.
     #'
     #' @param rep Integer denoting the replicate ID for the current run.
@@ -38,15 +43,13 @@ bcnrvContext <- R6::R6Class(
     #'
     #' @param studyAreaName Character string identifying a study area (see `BC_HRV_preamble`
     #'                      module for up-to-date descriptions of each study area label).
-    #'
-    #' @param version Integer. Shorthand denoting whether vegetation parameter forcings (`version = 2`)
-    #'                should be used as they were for the ca. 2018 runs.
-    #'                Version 3 uses the default LandR Biomass parameters (i.e., no forcings).
-    initialize = function(projectPath, mode = "development", rep = 1L, res = 125, studyAreaName = "Chine") {
+    initialize = function(projectPath, mode = "development", frpType = "BECSUBZONE",
+                          rep = 1L, res = 125, studyAreaName = "Chine") {
       stopifnot(
         res %in% c(50, 125, 250)
       )
 
+      private[[".frpType"]] <- frpType
       private[[".pixelSize"]] <- res
       private[[".projectPath"]] <- normPath(projectPath)
 
@@ -72,6 +75,7 @@ bcnrvContext <- R6::R6Class(
         user = self$user,
         studyAreaName = self$studyAreaName,
         rep = self$rep,
+        frpType = self$frpType,
         pixelSize = self$pixelSize,
         runName = self$runName
       )
@@ -100,6 +104,49 @@ bcnrvContext <- R6::R6Class(
       }
     },
 
+    #' @field frpType Character string denoting the polygons to use for scfm fire regime fitting.
+    #'                One of 'BECSUBZONE', 'BECZONE', 'ECODISTRICT', or other types in
+    #'                `scfmutils::fireRegimePolyTypes()`.
+    frpType = function(value) {
+      if (missing(value)) {
+        return(private[[".frpType"]])
+      } else {
+        if (requireNamespace("scfmutils", quietly = TRUE)) {
+          stopifnot(value %in% scfmutils::fireRegimePolyTypes())
+        } else {
+          .needPkg("scfmutils", "stop")
+        }
+
+        private[[".frpType"]] <- value
+        self$runName <- .bcnrvRunName(self)
+      }
+    },
+
+    #' @field pixelSize raster pixel resolution (in metres) to use for simulations
+    pixelSize = function(value) {
+      if (missing(value)) {
+        return(private[[".pixelSize"]])
+      } else {
+        stopifnot(value %in% c(250, 125, 50))
+        private[[".pixelSize"]] <- value
+        self$runName <- .bcnrvRunName(self)
+      }
+    },
+
+    #' @field rep  replicate id (integer)
+    rep = function(value) {
+      if (missing(value)) {
+        return(private[[".rep"]])
+      } else {
+        if (private[[".mode"]] == "postprocess" && !is.na(value)) {
+          warning("unable to set context$rep because context$mode == 'postprocess'")
+        } else {
+          private[[".rep"]] <- as.integer(value)
+          self$runName <- .bcnrvRunName(self)
+        }
+      }
+    },
+
     #' @field studyAreaHash  Character string giving the hash of current study area (read-only).
     studyAreaHash = function(value) {
       if (missing(value)) {
@@ -123,35 +170,11 @@ bcnrvContext <- R6::R6Class(
         private[[".studyAreaName"]] <- sprintf("multiple_LUs_n%02d_%s", length(value), self$studyAreaHash)
         self$runName <- .bcnrvRunName(self)
       }
-    },
-
-    #' @field rep  replicate id (integer)
-    rep = function(value) {
-      if (missing(value)) {
-        return(private[[".rep"]])
-      } else {
-        if (private[[".mode"]] == "postprocess" && !is.na(value)) {
-          warning("unable to set context$rep because context$mode == 'postprocess'")
-        } else {
-          private[[".rep"]] <- as.integer(value)
-          self$runName <- .bcnrvRunName(self)
-        }
-      }
-    },
-
-    #' @field pixelSize raster pixel resolution (in metres) to use for simulations
-    pixelSize = function(value) {
-      if (missing(value)) {
-        return(private[[".pixelSize"]])
-      } else {
-        stopifnot(value %in% c(250, 125, 50))
-        private[[".pixelSize"]] <- value
-        self$runName <- .bcnrvRunName(self)
-      }
     }
   ),
 
   private = list(
+    .frpType = "BECSUBZONE",
     .pixelSize = 125,
     .studyAreaHash = NA_character_
   )
@@ -294,7 +317,7 @@ bcnrvConfig <- R6::R6Class(
           bufferDist = 20000,        ## 20 km buffer
           bufferDistLarge = 50000,   ## 50 km buffer
           dispersalType = "default",
-          fireRegimePolysType = "BECZONE",
+          fireRegimePolysType = self$context[["frpType"]],
           friMultiple = 1L,
           landscapeUnits = dots$studyAreaName, ## the un-hashed vector of studyAreaNames
           minFRI = 25L,
@@ -441,6 +464,13 @@ bcnrvConfig <- R6::R6Class(
     #' @description Update a `bcnrvConfig` object from its context.
     #'              Must be called anytime the context is updated.
     update = function() {
+      ## frpType ------------------------------------
+      self$params <- list(
+        BC_HRV_preamble = list(
+          fireRegimePolysType = self$context[["frpType"]]
+        )
+      )
+
       ## mode ---------------------------------------
       if (self$context[["mode"]] %in% c("development", "production")) {
         self$args <- list(
@@ -484,6 +514,7 @@ bcnrvConfig <- R6::R6Class(
 
       ## paths --------------------------------------
       self$paths <- list(
+        logPath = file.path(.updateOutputPath(self, .bcnrvRunName), "log"),
         outputPath = .updateOutputPath(self, .bcnrvRunName),
         tilePath = file.path(.updateOutputPath(self, .bcnrvRunName), "tiles")
       )
