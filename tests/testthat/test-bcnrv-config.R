@@ -100,7 +100,7 @@ test_that("BC NRV config + context setup is working", {
     file.path(.getRelativePath(config.bc$paths[["outputPath"]], prjDir), "tiles")
   )
 
-  ## mode prostprocess -----------------------------------------------------------------------------
+  ## mode postprocess ------------------------------------------------------------------------------
   config.bc$context$mode <- "postprocess"
   config.bc$update()$validate()
 
