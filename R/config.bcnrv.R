@@ -321,7 +321,7 @@ bcnrvConfig <- R6::R6Class(
           friMultiple = 1L,
           landscapeUnits = dots$studyAreaName, ## the un-hashed vector of studyAreaNames
           minFRI = 25L,
-          pixelSize = 125,
+          pixelSize = self$context[["pixelSize"]],
           treeClassesLCC = c(1:15, 20, 32, 34:36), ## should match B_bDP's forestedLCCClasses
           .plotInitialTime = 0, ## sim(start),
           .useCache = c(".inputObjects") ## faster without caching for "init"

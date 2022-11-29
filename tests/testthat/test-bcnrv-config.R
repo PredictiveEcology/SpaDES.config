@@ -41,6 +41,7 @@ test_that("BC NRV config + context setup is working", {
   expect_identical(config.bc$params$Biomass_borealDataPrep$.studyAreaName, config.bc$params$.globals$.studyAreaName)
   expect_identical(config.bc$params$Biomass_borealDataPrep$.plots, config.bc$params$.globals$.plots)
   expect_identical(config.bc$params$Biomass_speciesData$types, NULL)
+  expect_identical(config.bc$params$BC_HRV_preamble$pixelSize, 125)
   expect_identical(config.bc$params$BC_HRV_preamble$fireRegimePolysType, "BECSUBZONE")
 
   ## paths
