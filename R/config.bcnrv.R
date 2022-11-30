@@ -441,7 +441,7 @@ bcnrvConfig <- R6::R6Class(
           .useCache = ".inputObjects" ## don't cache 'init'
         ),
         scfmRegime = list(
-          fireEpoch = c(1971, 2000), ## TODO: use longer epoch for areas too small w/ not enough fire data
+          fireEpoch = c(1971, 2010), ## default 1971-2000; using longer epoch for areas too small w/ not enough fire data
           .useCache = ".inputObjects" ## don't cache 'init'
         ),
         scfmSpread = list(
