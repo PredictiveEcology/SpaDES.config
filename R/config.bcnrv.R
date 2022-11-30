@@ -422,7 +422,7 @@ bcnrvConfig <- R6::R6Class(
         ),
         scfmDriver = list(
           pMax = 0.27,
-          targetN = 2000, ## increase targetN for more robust estimates, longer run-time
+          targetN = 4000, ## increase targetN for more robust estimates, longer run-time
           .useCache = ".inputObjects", ## don't cache 'init'
           .useCloud = FALSE,
           .useParallelFireRegimePolys = TRUE
