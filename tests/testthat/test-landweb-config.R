@@ -5,8 +5,8 @@ test_that("LandWeb config + context setup is working", {
   prjDir <- "~/GitHub/LandWeb"
 
   pr_mods <- list("Biomass_borealDataPrep", "Biomass_core", "Biomass_regeneration",
-                  "Biomass_speciesData",  "LandMine", "LandWeb_output", "LandWeb_preamble",
-                  "timeSinceFire")
+                  "Biomass_speciesData",
+                  "LandMine", "LandWeb_output", "LandWeb_preamble", "timeSinceFire")
   names(pr_mods) <- pr_mods
   dv_mods <- pr_mods
   pp_mods <- list("LandWeb_preamble", "Biomass_speciesData", "LandWeb_summary")
@@ -16,7 +16,7 @@ test_that("LandWeb config + context setup is working", {
   config.lw <- suppressWarnings({
     useConfig(projectName = "LandWeb", projectPath = prjDir,
               mode = "development", rep = 1L, studyAreaName = "LandWeb", version = 3)
-  }) ## TODO: spurious warning re: unused module LandWeb_summary
+  })
 
   ## context
   expect_equal(config.lw$context[["runName"]], "LandWeb_full_v3_rep01", ignore_attr = TRUE)
@@ -60,7 +60,7 @@ test_that("LandWeb config + context setup is working", {
   config.mb <- suppressWarnings({
     useConfig(projectName = "LandWeb", projectPath = prjDir,
               mode = "production", rep = 5, studyAreaName = "provMB", version = 3)
-  }) ## TODO: spurious warning re: unused module LandWeb_summary
+  })
 
   ## context
   expect_equal(config.mb$context[["runName"]], "provMB_v3_rep05", ignore_attr = TRUE)

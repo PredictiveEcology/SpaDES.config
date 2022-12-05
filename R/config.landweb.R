@@ -296,6 +296,7 @@ landwebConfig <- R6::R6Class(
         Biomass_core = "Biomass_core",
         Biomass_regeneration = "Biomass_regeneration",
         Biomass_speciesData = "Biomass_speciesData",
+        #HSI_Caribou_MB = "HSI_Caribou_MB", ## used for postprocess in MB, not devel nor production
         LandMine = "LandMine",
         LandWeb_output = "LandWeb_output",
         LandWeb_preamble = "LandWeb_preamble",
@@ -390,6 +391,22 @@ landwebConfig <- R6::R6Class(
           omitNonVegPixels = TRUE, ## TODO: not used?
           types = c("KNN", "CASFRI", "Pickell", "ForestInventory"),
           .useCache = c(".inputObjects", "init")
+        ),
+        HSI_Caribou_MB = list(
+          ageClasses = c("Young", "Immature", "Mature", "Old"), ## LandWebUtils:::.ageClasses
+          ageClassCutOffs = c(0, 40, 80, 120),                  ## LandWebUtils:::.ageClassCutOffs
+          ageClassMaxAge = 400L, ## was `maxAge` previously
+          reps = 1L:15L, ## TODO: used elsewhere to setup runs (expt table)?
+          simOutputPath = self$paths[["outputPath"]],
+          summaryInterval = 100,        ## also in .globals
+          summaryPeriod = c(700, 1000), ## also in .globals
+          upload = FALSE,
+          uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
+          version = .version,
+          .makeTiles = FALSE, ## no tiles until parallel tile creation resolved (ropensci/tiler#18)
+          .plotInitialTime = 0, ## sim(start)
+          .useCache = c(".inputObjects", "postprocess"), ## don't cache 'init'
+          .useParallel = self$options[["map.maxNumCores"]]
         ),
         LandMine = list(
           biggestPossibleFireSizeHa = 5e5,
@@ -488,7 +505,11 @@ landwebConfig <- R6::R6Class(
           )
         )
       } else if (self$context$mode == "postprocess") {
-        self$modules <- list("LandWeb_preamble", "Biomass_speciesData", "LandWeb_summary")
+        if (grepl("provMB", self$context[["studyAreaName"]])) {
+          self$modules <- list("LandWeb_preamble", "Biomass_speciesData", "HSI_Caribou_MB", "LandWeb_summary")
+        } else {
+          self$modules <- list("LandWeb_preamble", "Biomass_speciesData", "LandWeb_summary")
+        }
       }
 
       ## options -- update based on context
