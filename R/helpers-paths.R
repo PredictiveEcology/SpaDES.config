@@ -106,6 +106,12 @@
 paths4spades <- function(paths) {
   if (requireNamespace("SpaDES.core", quietly = TRUE)) {
     want <- grep("Path$", names(formals(SpaDES.core::setPaths)), value = TRUE)
+    if (is.null(paths[["rasterPath"]]) && !is.null(paths[["scratchPath"]])) {
+      paths[["rasterPath"]] <- file.path(paths[["scratchPath"]], "raster")
+    }
+    if (is.null(paths[["terraPath"]]) && !is.null(paths[["scratchPath"]])) {
+      paths[["terraPath"]] <- file.path(paths[["scratchPath"]], "terra")
+    }
     paths[which(names(paths) %in% want)]
   } else {
     .needPkg("SpaDES.core", "stop")

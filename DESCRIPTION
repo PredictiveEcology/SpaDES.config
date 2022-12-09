@@ -7,8 +7,8 @@ Description: Tools for defining and validating project configurations
 URL:
     https://spades-config.predictiveecology.org/,
     https://github.com/PredictiveEcology/SpaDES.config
-Date: 2022-12-05
-Version: 0.0.2.9051
+Date: 2022-12-08
+Version: 0.0.2.9052
 Authors@R: c(
     person("Alex M", "Chubaty", email = "achubaty@for-cast.ca",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7146-8135")),
