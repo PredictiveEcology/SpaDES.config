@@ -52,12 +52,12 @@
 #' Establish database connection for Cache
 #'
 #' @param type character string giving the Cache type.
-#'             One of `"sql"` or `"postgresql"`.
+#'             One of `"sqlite"` or `"postgresql"`.
 #'
 #' @export
 #' @importFrom Require Require
-dbConnCache <- function(type = "sql") {
-  conn <- if (type == "sql") {
+dbConnCache <- function(type = "sqlite") {
+  conn <- if (type == "sqlite") {
     if (requireNamespace("RSQLite", quietly = TRUE)) {
       NULL
     } else {
