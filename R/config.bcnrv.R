@@ -418,11 +418,12 @@ bcnrvConfig <- R6::R6Class(
           .useCache = c(".inputObjects") ## don't cache 'init'
         ),
         scfmDiagnostics = list(
-          ## TODO
+          mode = "single"
         ),
         scfmDriver = list(
           pMax = 0.27,
           targetN = 4000, ## increase targetN for more robust estimates, longer run-time
+          scamOptimizer = "efs",
           .useCache = ".inputObjects", ## don't cache 'init'
           .useCloud = FALSE,
           .useParallelFireRegimePolys = TRUE
@@ -493,7 +494,17 @@ bcnrvConfig <- R6::R6Class(
       } else if (self$context$mode == "postprocess") {
         ## TODO: additional postprocessing modules
         self$modules <- list("BC_HRV_preamble", "Biomass_speciesData", "HSI_PineMarten",
-                             "LandWeb_summary", "NRV_summary")
+                             "LandWeb_summary", "NRV_summary", "scfmDiagnostics")
+
+        self$params <- list(
+          .globals = list(
+            reps = 1L:50L
+          ),
+          scfmDiagnostics = list(
+            mode = "multi",
+            simTimes = c(0, self$args[["endtime"]])
+          )
+        )
       }
 
       ## options -- based on mode

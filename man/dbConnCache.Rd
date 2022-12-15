@@ -4,11 +4,11 @@
 \alias{dbConnCache}
 \title{Establish database connection for Cache}
 \usage{
-dbConnCache(type = "sql")
+dbConnCache(type = "sqlite")
 }
 \arguments{
 \item{type}{character string giving the Cache type.
-One of \code{"sql"} or \code{"postgresql"}.}
+One of \code{"sqlite"} or \code{"postgresql"}.}
 }
 \description{
 Establish database connection for Cache

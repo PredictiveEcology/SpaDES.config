@@ -11,7 +11,7 @@ test_that("BC NRV config + context setup is working", {
   names(pr_mods) <- pr_mods
   dv_mods <- pr_mods
   pp_mods <- list("BC_HRV_preamble", "Biomass_speciesData", "HSI_PineMarten",
-                  "LandWeb_summary", "NRV_summary")
+                  "LandWeb_summary", "NRV_summary", "scfmDiagnostics")
   names(pp_mods) <- pp_mods
 
   .studyAreaName <- c("Corkscrew", "Christenson Creek", "Downton", "Punky Moore")
@@ -43,6 +43,7 @@ test_that("BC NRV config + context setup is working", {
   expect_identical(config.bc$params$Biomass_speciesData$types, NULL)
   expect_identical(config.bc$params$BC_HRV_preamble$pixelSize, 125)
   expect_identical(config.bc$params$BC_HRV_preamble$fireRegimePolysType, "BECSUBZONE")
+  expect_identical(config.bc$params$scfmDiagnostics$mode, "single")
 
   ## paths
   expect_identical(.isAbsolutePath(unlist(config.bc$paths)),
@@ -119,6 +120,7 @@ test_that("BC NRV config + context setup is working", {
 
   ## params
   expect_identical(config.bc$params$BC_HRV_preamble$fireRegimePolysType, "ECODISTRICT")
+  expect_identical(config.bc$params$scfmDiagnostics$mode, "multi")
 
   ## paths
   expect_identical(.isAbsolutePath(unlist(config.bc$paths)),
