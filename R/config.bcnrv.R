@@ -502,7 +502,7 @@ bcnrvConfig <- R6::R6Class(
           ),
           scfmDiagnostics = list(
             mode = "multi",
-            simTimes = c(0, self$args[["endtime"]])
+            simTimes = c(0, self$args[["endTime"]])
           )
         )
       }
