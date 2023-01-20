@@ -205,7 +205,7 @@ bcnrvConfig <- R6::R6Class(
     initialize = function(projectPath, ...) {
       dots <- list(...)
 
-      self$context <- useContext(projectName = "BC_NRV", projectPath = projectPath, ...)
+      self$context <- useContext(projectName = basename(projectPath), projectPath = projectPath, ...)
 
       ## do paths first as these may be used below
       # paths ---------------------------------------------------------------------------------------
@@ -217,7 +217,7 @@ bcnrvConfig <- R6::R6Class(
         modulePath = c(.baseModulePath, file.path(.baseModulePath, "scfm", .baseModulePath)),
         outputPath = .baseOutputPath,
         projectPath = normPath(projectPath),
-        scratchPath = file.path(dirname(tempdir()), "scratch", "BC_HRV"),
+        scratchPath = file.path(dirname(tempdir()), "scratch", basename(projectPath)),
         tilePath = file.path(.baseOutputPath, "tiles")
       )
 
@@ -229,7 +229,8 @@ bcnrvConfig <- R6::R6Class(
           useCloud = FALSE
         ),
         delayStart = 0,
-        endTime = 1000,
+        endTime = 1000, ## TODO: use `simYears = list(start = 0, end = 1000)` in order to use
+                        ##       `self$args$simYears$start` instead of hardgoding `start(sim)`
         notifications = list(
           slackChannel = ""
         ),
@@ -280,8 +281,8 @@ bcnrvConfig <- R6::R6Class(
         reproducible.nThreads = 2,
         reproducible.overwrite = TRUE,
         reproducible.showSimilar = TRUE,
-        reproducible.useGDAL = FALSE, ## NOTE: gdal is faster, but mixing gdal with raster causes inconsistencies
-        reproducible.useTerra = FALSE, ## TODO: update + test with terra
+        reproducible.useGDAL = FALSE,
+        reproducible.useTerra = TRUE,
         Require.RPackageCache = "default", ## will use default package cache directory: `RequirePkgCacheDir()`
         spades.futurePlan = "callr",
         spades.memoryUseInterval = 10, ## track memory use every 10 seconds

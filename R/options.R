@@ -20,9 +20,13 @@ setProjectOptions <- function(config) {
   opts <- options(config$options)
 
   if (requireNamespace("raster", quietly = TRUE)) {
-    httr::set_config(httr::config(http_version = 0)) ## TODO: is this still needed??
-    message("Additonally setting httr option `http_version = 0`, which is needed to download",
+    message("Setting httr option `http_version = 0`, which is needed to download",
             " from from certain websites.")
+    httr::set_config(httr::config(http_version = 0))
+
+    message("Setting httr timeout to 10 seconds.")
+    httr::timeout(seconds = 10)
+
   } else {
     .needPkg("httr", "stop")
   }

@@ -1,7 +1,7 @@
 #' Use a pre-defined project run context
 #'
 #' @param projectName character string of length 1 giving the name of the project.
-#'                    Can be one of "LandWeb",
+#'                    Can be one of "LandWeb", "BC_NRV", "LandRfS",
 #'                    else will return a default context.
 #'
 #' @param projectPath Character string giving the path to the project directory.
@@ -14,7 +14,7 @@
 #' @importFrom SpaDES.project findProjectName
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ## default generic context
 #' useContext("myProject", "path/to/myProject")
 #'
@@ -35,6 +35,7 @@ useContext <- function(projectName = NULL, projectPath = NULL, ...) {
     tolower(projectName),
     bc_nrv = bcnrvContext$new(projectPath = projectPath, ...),
     landweb = landwebContext$new(projectPath = projectPath, ...),
+    landrfs = landrfsContext$new(projectPath = projectPath, ...),
     projContext$new(projectPath = projectPath, ...) ## default
   )
 }
@@ -198,6 +199,7 @@ useConfig <- function(projectName = NULL, projectPath = NULL, ...) {
     tolower(projectName),
     bc_nrv = bcnrvConfig$new(projectPath = projectPath, ...),
     landweb = landwebConfig$new(projectPath = projectPath, ...),
+    landrfs = landrfsConfig$new(projectName = projectName, projectPath = projectPath, ...),
     projConfig$new(projectName = projectName, projectPath = projectPath, ...) ## default
   )$update()$validate()
 
@@ -268,8 +270,6 @@ projConfig <- R6::R6Class(
     #' @description Create an new `projConfig` object
     #'
     #' @param projectName character string of length 1 giving the name of the project.
-    #'                    Can be one of "LandWeb",
-    #'                    else will return a default context.
     #'
     #' @param projectPath character string giving the path to the project directory.
     #'

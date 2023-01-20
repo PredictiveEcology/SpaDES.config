@@ -105,9 +105,7 @@ Create an new \code{projConfig} object
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{projectName}}{character string of length 1 giving the name of the project.
-Can be one of "LandWeb",
-else will return a default context.}
+\item{\code{projectName}}{character string of length 1 giving the name of the project.}
 
 \item{\code{projectPath}}{character string giving the path to the project directory.}
 

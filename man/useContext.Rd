@@ -8,7 +8,7 @@ useContext(projectName = NULL, projectPath = NULL, ...)
 }
 \arguments{
 \item{projectName}{character string of length 1 giving the name of the project.
-Can be one of "LandWeb",
+Can be one of "LandWeb", "BC_NRV", "LandRfS",
 else will return a default context.}
 
 \item{projectPath}{Character string giving the path to the project directory.}
@@ -22,7 +22,7 @@ a \code{projContext} object.
 Use a pre-defined project run context
 }
 \examples{
-\dontrun{
+\donttest{
 ## default generic context
 useContext("myProject", "path/to/myProject")
 
