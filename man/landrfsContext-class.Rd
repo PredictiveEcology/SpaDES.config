@@ -21,6 +21,11 @@ and employing custom field validation.
 \item{\code{mode}}{Character string giving the project run mode.
 One of 'production', 'development', or 'postprocess'.}
 
+\item{\code{climateGCM}}{Character strings giving the CMIP6 climate scenario GCM from ClimateNA.
+E.g., \code{"CanESM5"} or \code{"CNRM-ESM2-1"}.}
+
+\item{\code{climateSSP}}{Numeric CMIP climate scenario SSP. E.g., \code{370} or \code{585}.}
+
 \item{\code{pixelSize}}{raster pixel resolution (in metres) to use for simulations}
 
 \item{\code{rep}}{replicate id (integer)}

@@ -339,7 +339,6 @@ landrfsConfig <- R6::R6Class(
         ),
         Biomass_speciesData = list(
           dataYear = self$args$simYears$start,
-          omitNonVegPixels = TRUE, ## TODO: not used?
           types = "KNN",
           .plotInitialTime = self$args$simYears$start, ## sim(start)
           .useCache = c(".inputObjects", "init")

@@ -362,7 +362,6 @@ bcnrvConfig <- R6::R6Class(
         ),
         Biomass_speciesData = list(
           dataYear = 2011,
-          omitNonVegPixels = TRUE, ## TODO: not used?
           types = NULL, # using "BCVRI2011" from preamble
           .plotInitialTime = 0, ## sim(start)
           .useCache = c(".inputObjects", "init")

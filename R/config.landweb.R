@@ -389,7 +389,6 @@ landwebConfig <- R6::R6Class(
           .useCache = c(".inputObjects", "init")
         ),
         Biomass_speciesData = list(
-          omitNonVegPixels = TRUE, ## TODO: not used?
           types = c("KNN", "CASFRI", "Pickell", "ForestInventory"),
           .useCache = c(".inputObjects", "init")
         ),
