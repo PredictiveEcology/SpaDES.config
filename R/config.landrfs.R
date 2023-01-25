@@ -6,7 +6,7 @@
     paste0("_SSP", context$climateSSP),
     if (context$pixelSize == 250) "" else paste0("_res", context$pixelSize),
     if (isTRUE(withRep)) {
-      if (context$mode == "postprocess") "" else sprintf("_rep%02d", context$rep)
+      if ("postprocess" %in% context[["mode"]]) "" else sprintf("_rep%02d", context$rep)
     } else {
       ""
     }
@@ -36,7 +36,8 @@ landrfsContext <- R6::R6Class(
     #'
     #' @param climateSSP Numeric CMIP climate scenario SSP. E.g., `370` or `585`.
     #'
-    #' @param mode Character string. One of 'production', 'development', or 'postprocess'.
+    #' @param mode Character string. One of 'development', 'postprocess', or 'production'.
+    #'             If 'development', may also include 'fit' (e.g., `c('development', 'fit)`).
     #'
     #' @param rep Integer denoting the replicate ID for the current run.
     #'
@@ -94,15 +95,18 @@ landrfsContext <- R6::R6Class(
 
   active = list(
     #' @field mode  Character string giving the project run mode.
-    #'              One of 'production', 'development', or 'postprocess'.
+    #'              One of 'development', 'postprocess', or 'production'.
+    #'              If 'development' may also include 'fit' (e.g., `c('development', 'fit')`).
     mode = function(value) {
       if (missing(value)) {
         return(private[[".mode"]])
       } else {
-        stopifnot(tolower(value) %in% c("production", "development", "postprocess"))
+        stopifnot(
+          all(tolower(value) %in% c("development", "fit", "postprocess", "production"))
+        )
         private[[".mode"]] <- tolower(value)
 
-        if (private[[".mode"]] == "postprocess") {
+        if ("postprocess" %in% private[[".mode"]]) {
           self$rep <- NA_integer_
         }
       }
@@ -145,8 +149,8 @@ landrfsContext <- R6::R6Class(
       if (missing(value)) {
         return(private[[".rep"]])
       } else {
-        if (private[[".mode"]] == "postprocess" && !is.na(value)) {
-          warning("unable to set context$rep because context$mode == 'postprocess'")
+        if ("postprocess" %in% private[[".mode"]] && !is.na(value)) {
+          warning("unable to set context$rep because context$mode is 'postprocess'")
         } else {
           private[[".rep"]] <- as.integer(value)
           self$runName <- .landrfsRunName(self)
@@ -449,12 +453,12 @@ landrfsConfig <- R6::R6Class(
       )
 
       ## mode ---------------------------------------
-      if (self$context[["mode"]] %in% c("development", "production")) {
+      if (any(c("development", "production") %in% self$context[["mode"]])) {
         self$args <- list(
           cloud = list(
             useCloud = TRUE
           ),
-          delayStart = if (self$context[["mode"]] == "production") delay_rnd(5L:15L) else 0L, # 5-15 minutes
+          delayStart = if ("production" %in% self$context[["mode"]]) delay_rnd(5L:15L) else 0L, # 5-15 minutes
           successionTimestep = 10
         )
 
@@ -463,7 +467,7 @@ landrfsConfig <- R6::R6Class(
             .plots = c("object", "png", "raw") ## don't plot to screen
           )
         )
-      } else if (self$context$mode == "postprocess") {
+      } else if ("postprocess" %in% self$context[["mode"]]) {
         self$modules <- list("Biomass_summary", "fireSense_summary")
 
         self$params <- list(
@@ -481,8 +485,8 @@ landrfsConfig <- R6::R6Class(
 
       ## options -- based on mode
       self$options <- list(
-        LandR.assertions = if (self$context[["mode"]] == "production") FALSE else TRUE,
-        spades.moduleCodeChecks = if (self$context[["mode"]] == "production") FALSE else TRUE
+        LandR.assertions = if ("production" %in% self$context[["mode"]]) FALSE else TRUE,
+        spades.moduleCodeChecks = if ("production" %in% self$context[["mode"]]) FALSE else TRUE
       )
 
       ## study area + run info ----------------------

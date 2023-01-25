@@ -88,7 +88,7 @@
 .updateOutputPath <- function(config, runNameFun) {
   .runName <- runNameFun(config$context, withRep = FALSE)
 
-  if (config$context$mode == "postprocess") {
+  if ("postprocess" %in% config$context$mode) {
     file.path(.baseOutputPath, .runName)
   } else {
     file.path(.baseOutputPath, .runName, sprintf("rep%02d", config$context[["rep"]]))

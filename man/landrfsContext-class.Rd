@@ -19,7 +19,8 @@ and employing custom field validation.
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{mode}}{Character string giving the project run mode.
-One of 'production', 'development', or 'postprocess'.}
+One of 'development', 'postprocess', or 'production'.
+If 'development' may also include 'fit' (e.g., \code{c('development', 'fit')}).}
 
 \item{\code{climateGCM}}{Character strings giving the CMIP6 climate scenario GCM from ClimateNA.
 E.g., \code{"CanESM5"} or \code{"CNRM-ESM2-1"}.}
@@ -68,7 +69,8 @@ E.g., \code{"CanESM5"} or \code{"CNRM-ESM2-1"}.}
 
 \item{\code{climateSSP}}{Numeric CMIP climate scenario SSP. E.g., \code{370} or \code{585}.}
 
-\item{\code{mode}}{Character string. One of 'production', 'development', or 'postprocess'.}
+\item{\code{mode}}{Character string. One of 'development', 'postprocess', or 'production'.
+If 'development', may also include 'fit' (e.g., \verb{c('development', 'fit)}).}
 
 \item{\code{rep}}{Integer denoting the replicate ID for the current run.}
 
