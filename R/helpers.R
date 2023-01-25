@@ -109,7 +109,7 @@ printRunInfo <- function(context) {
     "| ", rep("-", col1width), " | ", rep("-", col2width), " |\n",
     sapply(names(cntxt), function(x) {
       col1text <- formatC(x, width = col1width, format = "s")
-      col2text <- formatC(as.character(cntxt[[x]]), width = col2width, format = "s")
+      col2text <- formatC(paste(cntxt[[x]], collapse = ","), width = col2width, format = "s")
 
       paste("|", col1text, "|", col2text, "|\n")
     }),
