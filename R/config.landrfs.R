@@ -295,6 +295,7 @@ landrfsConfig <- R6::R6Class(
         .globals = list(
           fireTimestep = 1L,
           initialB = NA,
+          reps = 1L:10L,
           sppEquivCol = "LandR",
           successionTimestep = 10,
           .plotInitialTime = self$args$simYears$start,
@@ -356,7 +357,9 @@ landrfsConfig <- R6::R6Class(
           quantileAgeSubset = 98,
           speciesFittingApproach = "focal"
         ),
-        Biomass_summary = list(),
+        Biomass_summary = list(
+          ## TODO
+        ),
         canClimateData = list(
           climateGCM = self$context$climateGCM,
           climateSSP = self$context$climateSSP,
