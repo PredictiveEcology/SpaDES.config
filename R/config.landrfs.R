@@ -368,8 +368,7 @@ landrfsConfig <- R6::R6Class(
           climateGCM = self$context$climateGCM,
           climateSSP = self$context$climateSSP,
           historicalFireYears = 1991:2020,
-          studyAreaName = NA_character_,
-          runName = self$context$runName,
+          studyAreaName = self$context$studyAreaName,
           .useCache = ".inputObjects"
         ),
         fireSense = list(
@@ -395,7 +394,8 @@ landrfsConfig <- R6::R6Class(
         fireSense_EscapePredict = list(),
         fireSense_IgnitionFit = list(
           family = quote(MASS::negative.binomial(theta = 1, link = "identity")),
-          iterDEoptim = 300
+          iterDEoptim = 300,
+          studyAreaName = self$context$studyAreaName
         ),
         fireSense_IgnitionPredict = list(
           ##
