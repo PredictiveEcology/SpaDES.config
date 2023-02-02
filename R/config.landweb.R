@@ -311,7 +311,7 @@ landwebConfig <- R6::R6Class(
       )
 
       modulePackages <- SpaDES.project::setupModules(paths = self$paths,
-                                     modules = file.path("PredictiveEcology", unname(unlist(private[[".modules"]]))),
+                                     modules = file.path("PredictiveEcology", paste0(unname(unlist(private[[".modules"]])), "@development")),
                                      useGit = FALSE,
                                      overwrite = FALSE, verbose = 1)#, envir = envir, verbose = verbose)
 
