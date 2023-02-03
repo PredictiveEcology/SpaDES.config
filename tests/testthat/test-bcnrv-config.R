@@ -63,6 +63,36 @@ test_that("BC NRV config + context setup is working", {
     file.path(.getRelativePath(config.bc$paths[["outputPath"]], prjDir), "tiles")
   )
 
+  ## single study area name using NRD/NRR ----------------------------------------------------------
+  config.bc$context$studyAreaName <- "NRR_Cariboo"
+  config.bc$update()$validate()
+
+  ## context
+  expect_equal(config.bc$context[["runName"]],
+               "NRR_Cariboo_BECSUBZONE_res125_rep01", ignore_attr = TRUE)
+
+  ## args
+  ##
+
+  ## modules
+  ##
+
+  ## options
+  ##
+
+  ## params
+  #expect_identical(config.bc$params$BC_HRV_preamble$landscapeUnits, "NRR_Cariboo") ## TODO:
+
+  ## paths
+  expect_identical(.isAbsolutePath(unlist(config.bc$paths)),
+                   c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
+                     modulePath1 = FALSE, modulePath2 = FALSE, outputPath = FALSE,
+                     projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
+  expect_identical(
+    .getRelativePath(config.bc$paths[["outputPath"]], prjDir),
+    file.path("outputs", "NRR_Cariboo_BECSUBZONE_res125", "rep01")
+  )
+
   ## fire regime polygon types ---------------------------------------------------------------------
   config.bc$context$frpType <- "ECODISTRICT"
   config.bc$update()$validate()
@@ -139,5 +169,6 @@ test_that("BC NRV config + context setup is working", {
     .getRelativePath(config.bc$paths[["tilePath"]], prjDir),
     file.path(.getRelativePath(config.bc$paths[["outputPath"]], prjDir), "tiles")
   )
+
   rm(config.bc)
 })

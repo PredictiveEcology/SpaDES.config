@@ -167,7 +167,12 @@ bcnrvContext <- R6::R6Class(
         } else {
           .needPkg("reproducible", "stop")
         }
-        private[[".studyAreaName"]] <- sprintf("multiple_LUs_n%02d_%s", length(value), self$studyAreaHash)
+
+        private[[".studyAreaName"]] <- if (length(value) == 1) {
+          value
+        } else {
+          sprintf("multiple_LUs_n%02d_%s", length(value), self$studyAreaHash)
+        }
         self$runName <- .bcnrvRunName(self)
       }
     }
@@ -202,10 +207,10 @@ bcnrvConfig <- R6::R6Class(
     #'
     #' @param ... Additional arguments passed to `useContext()`
     #'
-    initialize = function(projectPath, ...) {
+    initialize = function(projectName, projectPath, ...) {
       dots <- list(...)
 
-      self$context <- useContext(projectName = basename(projectPath), projectPath = projectPath, ...)
+      self$context <- useContext(projectName = projectName, projectPath = projectPath, ...)
 
       ## do paths first as these may be used below
       # paths ---------------------------------------------------------------------------------------

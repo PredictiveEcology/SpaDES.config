@@ -197,8 +197,8 @@ useConfig <- function(projectName = NULL, projectPath = NULL, ...) {
   ## additional project types can be added here
   config <- switch(
     tolower(projectName),
-    bc_nrv = bcnrvConfig$new(projectPath = projectPath, ...),
-    landweb = landwebConfig$new(projectPath = projectPath, ...),
+    bc_nrv = bcnrvConfig$new(projectName = projectName, projectPath = projectPath, ...),
+    landweb = landwebConfig$new(projectName = projectName, projectPath = projectPath, ...),
     landrfs = landrfsConfig$new(projectName = projectName, projectPath = projectPath, ...),
     projConfig$new(projectName = projectName, projectPath = projectPath, ...) ## default
   )$update()$validate()
