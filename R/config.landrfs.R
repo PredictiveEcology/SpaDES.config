@@ -395,6 +395,8 @@ landrfsConfig <- R6::R6Class(
         fireSense_IgnitionFit = list(
           family = quote(MASS::negative.binomial(theta = 1, link = "identity")),
           iterDEoptim = 300,
+          rescalers = NULL,
+          rescaleVars = FALSE,
           studyAreaName = self$context$studyAreaName
         ),
         fireSense_IgnitionPredict = list(
