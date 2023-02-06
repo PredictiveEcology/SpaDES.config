@@ -2,11 +2,11 @@
 .landwebRunName <- function(context, withRep = TRUE) {
   .runName <- paste0(
     context$studyAreaName,
-    if (context$dispersalType == "default") "" else paste0("_", context$dispersalType, "Dispersal"),
-    if (context$ROStype == "default") "" else paste0("_", context$ROStype, "ROS"),
+    if (context$dispersalType == "default") "" else paste0("_", context[["dispersalType"]], "Dispersal"),
+    if (context$ROStype == "default") "" else paste0("_", context[["ROStype"]], "ROS"),
     if (isTRUE(context$succession)) "" else "_noSuccession",
-    if (context$friMultiple == 1) "" else paste0("_fri", context$friMultiple),
-    if (context$pixelSize == 250) "" else paste0("_res", context$pixelSize),
+    if (context$friMultiple == 1) "" else paste0("_fri", context[["friMultiple"]]),
+    if (context$pixelSize == 250) "" else paste0("_res", context[["pixelSize"]]),
     if (isTRUE(withRep)) {
       if (context$mode == "postprocess") "" else sprintf("_rep%02d", context$rep)
     } else {
@@ -39,6 +39,10 @@ landwebContext <- R6::R6Class(
     #'
     #' @param rep Integer denoting the replicate ID for the current run.
     #'
+    #' @param ROStype Character string describing the scaling of the LandMine fire model's
+    #'                'rate of spread' parameters.
+    #'                One of 'default', 'burny', 'equal' (i.e., all 1), 'log'.
+    #'
     #' @param res Numeric indicating the map resolution (pixel size) to use.
     #'            Must be one of 50, 125, 250 (default).
     #'
@@ -48,10 +52,18 @@ landwebContext <- R6::R6Class(
     #' @param version Integer. Shorthand denoting whether vegetation parameter forcings (`version = 2`)
     #'                should be used as they were for the ca. 2018 runs.
     #'                Version 3 uses the default LandR Biomass parameters (i.e., no forcings).
-    initialize = function(projectPath, mode = "development", rep = 1L, res = 250,
+    initialize = function(projectPath, mode = "development", rep = 1L, res = 250, ROStype = NA,
                           studyAreaName = "random", version = 3) {
+
+      if (is.na(ROStype)) {
+        ROStype <- if (version == 2) "log" else if (version == 3) "default"
+      } else {
+        ROStype <- tolower(ROStype)
+      }
+
       stopifnot(
         res %in% c(50, 125, 250),
+        ROStype %in% c("default", "burny", "equal", "log"),
         version %in% c(2, 3)
       )
 
@@ -60,7 +72,7 @@ landwebContext <- R6::R6Class(
       private[[".friMultiple"]] <- 1L
       private[[".pixelSize"]] <- res
       private[[".projectPath"]] <- normPath(projectPath)
-      private[[".ROStype"]] <- if (version == 2) "log" else if (version == 3) "default"
+      private[[".ROStype"]] <- ROStype
       private[[".succession"]] <- TRUE
       private[[".version"]] <- as.integer(version)
 
@@ -202,12 +214,12 @@ landwebContext <- R6::R6Class(
 
     #' @field ROStype  Character string describing the scaling of the LandMine fire model's
     #'                 'rate of spread' parameters.
-    #'                 One of 'default' (i.e., none), 'equal' (i.e., all 1), 'log'.
+    #'                 One of 'default', 'burny', 'equal' (i.e., all 1), 'log'.
     ROStype = function(value) {
       if (missing(value)) {
         return(private[[".ROStype"]])
       } else {
-        stopifnot(value %in% c("default", "equal", "log"))
+        stopifnot(value %in% c("default", "burny", "equal", "log"))
         private[[".ROStype"]] <- value
         self$runName <- .landwebRunName(self)
       }
@@ -256,8 +268,8 @@ landwebConfig <- R6::R6Class(
     #'
     #' @param ... Additional arguments passed to `useContext()`
     #'
-    initialize = function(projectPath, ...) {
-      self$context <- useContext(projectName = basename(projectPath), projectPath = projectPath, ...)
+    initialize = function(projectName, projectPath, ...) {
+      self$context <- useContext(projectName = projectName, projectPath = projectPath, ...)
 
       .version <- if (grepl("v3$", self$context[["studyAreaName"]])) 3L else 2L ## TODO: clunky
 
@@ -414,7 +426,8 @@ landwebConfig <- R6::R6Class(
           maxReburns = 20L,
           maxRetriesPerID = 4L,
           minPropBurn = 0.90,
-          ROSother = 30L,
+          ROSother = switch(self$context[["ROStype"]], burny = 6L, equal = 1L, log = log(30L), 30L),
+          ROStype = self$context[["ROStype"]],
           useSeed = NULL, ## NULL to avoid setting a seed
           .plotInitialTime = 1, ## sim(start) + 1
           .plotInterval = 1,
@@ -433,7 +446,7 @@ landwebConfig <- R6::R6Class(
           friMultiple = 1L,
           pixelSize = 250,
           minFRI = 25L,
-          ROStype = "default",
+          ROStype = self$context[["ROStype"]],
           treeClassesLCC = c(1:15, 20, 32, 34:36), ## should match B_bDP's forestedLCCClasses
           .plotInitialTime = 0, ## sim(start)
           .useCache = c(".inputObjects") ## faster without caching for "init"
@@ -528,7 +541,8 @@ landwebConfig <- R6::R6Class(
           pixelGroupBiomassClass = 1000 / (250 / self$context[["pixelSize"]])^2 ## 1000 / mapResFact^2; can be coarse because initial conditions are irrelevant
         ),
         LandMine = list(
-          ROSother = switch(self$context[["ROStype"]], equal = 1L, log = log(30L), 30L),
+          ROSother = switch(self$context[["ROStype"]], burny = 6L, equal = 1L, log = log(30L), 30L),
+          ROStype = self$context[["ROStype"]],
           .unitTest = if (self$context[["mode"]] == "production") FALSE else TRUE
         ),
         LandWeb_preamble = list(

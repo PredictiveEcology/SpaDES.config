@@ -59,11 +59,11 @@ test_that("LandWeb config + context setup is working", {
   ## study area: manitoba --------------------------------------------------------------------------
   config.mb <- suppressWarnings({
     useConfig(projectName = "LandWeb", projectPath = prjDir,
-              mode = "production", rep = 5, studyAreaName = "provMB", version = 3)
+              mode = "production", rep = 5, ROStype = "burny", studyAreaName = "provMB", version = 3)
   })
 
   ## context
-  expect_equal(config.mb$context[["runName"]], "provMB_v3_rep05", ignore_attr = TRUE)
+  expect_equal(config.mb$context[["runName"]], "provMB_v3_burnyROS_rep05", ignore_attr = TRUE)
 
   ## args
   expect_gt(config.mb$args[["delayStart"]], 0L)
@@ -84,11 +84,11 @@ test_that("LandWeb config + context setup is working", {
   ## paths
   expect_identical(
     .getRelativePath(config.mb$paths[["logPath"]], prjDir),
-    file.path("outputs", "provMB_v3", "rep05", "log")
+    file.path("outputs", "provMB_v3_burnyROS", "rep05", "log")
   )
   expect_identical(
     .getRelativePath(config.mb$paths[["tilePath"]], prjDir),
-    file.path("outputs", "provMB_v3", "rep05", "tiles")
+    file.path("outputs", "provMB_v3_burnyROS", "rep05", "tiles")
   )
 
   rm(config.mb)

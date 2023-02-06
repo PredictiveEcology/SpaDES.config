@@ -36,7 +36,7 @@ One of 'default', 'aspen', 'high', 'none'.}
 
 \item{\code{ROStype}}{Character string describing the scaling of the LandMine fire model's
 'rate of spread' parameters.
-One of 'default' (i.e., none), 'equal' (i.e., all 1), 'log'.}
+One of 'default', 'burny', 'equal' (i.e., all 1), 'log'.}
 
 \item{\code{succession}}{logical}
 }
@@ -60,6 +60,7 @@ One of 'default' (i.e., none), 'equal' (i.e., all 1), 'log'.}
   mode = "development",
   rep = 1L,
   res = 250,
+  ROStype = NA,
   studyAreaName = "random",
   version = 3
 )}\if{html}{\out{</div>}}
@@ -77,6 +78,10 @@ or 'profile'.}
 
 \item{\code{res}}{Numeric indicating the map resolution (pixel size) to use.
 Must be one of 50, 125, 250 (default).}
+
+\item{\code{ROStype}}{Character string describing the scaling of the LandMine fire model's
+'rate of spread' parameters.
+One of 'default', 'burny', 'equal' (i.e., all 1), 'log'.}
 
 \item{\code{studyAreaName}}{Character string identifying a study area (see \code{LandWeb_preamble}
 module for up-to-date descriptions of each study area label).}

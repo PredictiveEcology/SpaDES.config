@@ -40,7 +40,7 @@ certain fields.
 \subsection{Method \code{new()}}{
 Create an new \code{landwebConfig} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{landwebConfig$new(projectPath, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{landwebConfig$new(projectName, projectPath, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
