@@ -412,7 +412,7 @@ landrfsConfig <- R6::R6Class(
           libPathDEoptim = file.path(tools::R_user_dir(basename(projectPath), "data"), "packages",
                                      version$platform, getRversion()[, 1:2]),
           mode = c("fit", "visualize"), ## combo of "debug", "fit", "visualize"
-          mutuallyExclusive = list("youngAge" = c("class", "nf_")),
+          mutuallyExclusive = list("youngAge" = c("class", "nonForest")),
           objFunCoresInternal = 1L,
           objfunFireReps = 100,
           rescaleAll = TRUE,
