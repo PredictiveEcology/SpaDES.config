@@ -388,10 +388,15 @@ landrfsConfig <- R6::R6Class(
         ),
         fireSense_dataPrepPredict = list(
           nonForestCanBeYoungAge = TRUE,
-          whichModulesToPrepare = c("fireSense_IgnitionPredict", "fireSense_EscapePredict", "fireSense_SpreadPredict")
+          whichModulesToPrepare = c("fireSense_IgnitionPredict", "fireSense_EscapePredict", "fireSense_SpreadPredict"),
+          .runInitialTime = self$args$simYears$start ## sim(start)
         ),
-        fireSense_EscapeFit = list(),
-        fireSense_EscapePredict = list(),
+        fireSense_EscapeFit = list(
+          ##
+        ),
+        fireSense_EscapePredict = list(
+          .runInitialTime = self$args$simYears$start ## sim(start)
+        ),
         fireSense_IgnitionFit = list(
           family = quote(MASS::negative.binomial(theta = 1, link = "identity")),
           iterDEoptim = 300,
@@ -400,7 +405,7 @@ landrfsConfig <- R6::R6Class(
           studyAreaName = self$context$studyAreaName
         ),
         fireSense_IgnitionPredict = list(
-          ##
+          .runInitialTime = self$args$simYears$start ## sim(start)
         ),
         fireSense_SpreadFit = list(
           cloudFolderID_DE = self$args$cloud$cacheDir,
@@ -426,7 +431,7 @@ landrfsConfig <- R6::R6Class(
           .plotSize = list(height = 1600, width = 2000)
         ),
         fireSense_SpreadPredict = list(
-          ## TODO
+          .runInitialTime = self$args$simYears$start ## sim(start)
         ),
         fireSense_summary = list(
           ## TODO
