@@ -374,7 +374,8 @@ landrfsConfig <- R6::R6Class(
         fireSense = list(
           plotIgnitions = FALSE,
           whichModulesToPrepare = c("fireSense_IgnitionPredict", "fireSense_EscapePredict", "fireSense_SpreadPredict"),
-          .plotInterval = NA
+          .plotInterval = NA,
+          .runInitialTime = self$args$simYears$start ## sim(start)
         ),
         fireSense_dataPrepFit = list(
           fireYears = 2001:2020,
