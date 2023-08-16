@@ -226,7 +226,7 @@ landrfsConfig <- R6::R6Class(
         cloud = list(
           cacheDir = "",
           googleUser = "",
-          useCloud = FALSE
+          useCloud = FALSE ## TODO: cloudCache spams Google Drive folder; doesn't respect drive path
         ),
         delayStart = 0,
         simYears = list(start = 2011, end = 2100),
@@ -280,10 +280,10 @@ landrfsConfig <- R6::R6Class(
         reproducible.quick = FALSE,
         reproducible.showSimilar = TRUE,
         reproducible.useCache = TRUE,
-        reproducible.useCloud = FALSE,
+        reproducible.useCloud = FALSE, ## TODO: cloudCache spams Google Drive; doesn't respect drive path
         reproducible.useGDAL = FALSE, ## using terra
         reproducible.useTerra = TRUE,
-        Require.RPackageCache = "default", ## default package cache directory: `RequirePkgCacheDir()`
+        Require.install = FALSE, ## don't use Require; assume all pkgs installed
         spades.futurePlan = "callr",
         spades.memoryUseInterval = 10, ## track memory use every 10 seconds
         spades.messagingNumCharsModule = 36,
@@ -291,7 +291,7 @@ landrfsConfig <- R6::R6Class(
         spades.qsThreads = 4,
         spades.recoveryMode = FALSE,
         spades.scratchPath = normPath(self$paths[["scratchPath"]]),
-        spades.useRequire = FALSE
+        spades.useRequire = FALSE ## don't use Require; assume all pkgs installed
       )
 
       # parameters ---------------------------------------------------------------------------------
@@ -464,7 +464,7 @@ landrfsConfig <- R6::R6Class(
       if (any(c("development", "production") %in% self$context[["mode"]])) {
         self$args <- list(
           cloud = list(
-            useCloud = TRUE
+            useCloud = FALSE ## TODO: cloudCache spams Google Drive folder; doesn't respect drive path
           ),
           delayStart = if ("production" %in% self$context[["mode"]]) delay_rnd(5L:15L) else 0L, # 5-15 minutes
           successionTimestep = 10

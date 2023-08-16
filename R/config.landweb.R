@@ -337,9 +337,10 @@ landwebConfig <- R6::R6Class(
         reproducible.nThreads = 2,
         reproducible.overwrite = TRUE,
         reproducible.showSimilar = TRUE,
+        reproducible.useCloud = FALSE, ## TODO: cloudCache spams Google Drive; doesn't respect drive path
         reproducible.useGDAL = FALSE,
         reproducible.useTerra = TRUE,
-        Require.RPackageCache = "default", ## will use default package cache directory: `RequirePkgCacheDir()`
+        Require.install = FALSE, ## don't use Require; assume all pkgs installed
         spades.futurePlan = "callr",
         spades.memoryUseInterval = 10, ## track memory use every 10 seconds
         spades.messagingNumCharsModule = 36,
@@ -347,7 +348,7 @@ landwebConfig <- R6::R6Class(
         spades.qsThreads = 4,
         spades.recoveryMode = FALSE,
         spades.scratchPath = normPath(self$paths[["scratchPath"]]),
-        spades.useRequire = FALSE # Don't use Require... meaning assume all pkgs installed
+        spades.useRequire = FALSE ## don't use Require; assume all pkgs installed
       )
 
       # parameters ---------------------------------------------------------------------------------
@@ -486,7 +487,7 @@ landwebConfig <- R6::R6Class(
       if (self$context[["mode"]] %in% c("development", "production")) {
         self$args <- list(
           cloud = list(
-            useCloud = TRUE
+            useCloud = FALSE ## TODO: cloudCache spams Google Drive folder; doesn't respect drive path
           ),
           delayStart = if (self$context[["mode"]] == "production") delay_rnd(5L:15L) else 0L, # 5-15 minutes
           endTime = 1000,
