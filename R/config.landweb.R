@@ -39,12 +39,12 @@ landwebContext <- R6::R6Class(
     #'
     #' @param rep Integer denoting the replicate ID for the current run.
     #'
+    #' @param res Numeric indicating the map resolution (pixel size) to use.
+    #'            Must be one of 50, 125, 250 (default).
+    #'
     #' @param ROStype Character string describing the scaling of the LandMine fire model's
     #'                'rate of spread' parameters.
     #'                One of 'default', 'burny', 'equal' (i.e., all 1), 'log'.
-    #'
-    #' @param res Numeric indicating the map resolution (pixel size) to use.
-    #'            Must be one of 50, 125, 250 (default).
     #'
     #' @param studyAreaName Character string identifying a study area (see `LandWeb_preamble`
     #'                      module for up-to-date descriptions of each study area label).
@@ -263,6 +263,8 @@ landwebConfig <- R6::R6Class(
   inherit = projConfig,
   public = list(
     #' @description Create an new `landwebConfig` object
+    #'
+    #' @param projectName character string of length 1 giving the name of the project.
     #'
     #' @param projectPath character string giving the path to the project directory.
     #'

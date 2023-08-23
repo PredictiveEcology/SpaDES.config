@@ -46,6 +46,8 @@ Create an new \code{bcnrvConfig} object
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{projectName}}{character string of length 1 giving the name of the project.}
+
 \item{\code{projectPath}}{character string giving the path to the project directory.}
 
 \item{\code{...}}{Additional arguments passed to \code{useContext()}}

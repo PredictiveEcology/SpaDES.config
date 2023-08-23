@@ -203,6 +203,8 @@ bcnrvConfig <- R6::R6Class(
   public = list(
     #' @description Create an new `bcnrvConfig` object
     #'
+    #' @param projectName character string of length 1 giving the name of the project.
+    #'
     #' @param projectPath character string giving the path to the project directory.
     #'
     #' @param ... Additional arguments passed to `useContext()`
