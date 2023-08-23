@@ -4,7 +4,7 @@
 \alias{authGoogle}
 \title{Google Drive authentication}
 \usage{
-authGoogle(tryToken, tryEmail)
+authGoogle(tryToken = NULL, tryEmail = NULL)
 }
 \arguments{
 \item{tryToken}{the shorthand name for the token, corresponding to the token filename

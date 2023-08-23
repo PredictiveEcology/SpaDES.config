@@ -132,12 +132,13 @@ printRunInfo <- function(context) {
 #'
 #' @export
 #' @importFrom crayon green red silver
-authGoogle <- function(tryToken, tryEmail) {
+authGoogle <- function(tryToken = NULL, tryEmail = NULL) {
   if (requireNamespace("googledrive", quietly = TRUE)) {
     if (hasToken(tryToken)) {
       googledrive::drive_auth(path = findToken(tryToken)) ## TODO: specify project path
     } else {
       message(crayon::red("No Google service account token found. Trying user authentication..."))
+      if (!is.null(tryEmail) && !nzchar(tryEmail)) tryEmail <- NULL
       googledrive::drive_auth(email = tryEmail, use_oob = .isRstudioServer())
     }
 
