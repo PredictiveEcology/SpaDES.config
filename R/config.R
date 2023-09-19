@@ -11,7 +11,6 @@
 #' @return a `projContext` object.
 #'
 #' @export
-#' @importFrom SpaDES.project findProjectName
 #'
 #' @examples
 #' \donttest{
@@ -175,7 +174,6 @@ projContext <- R6::R6Class(
 #' @return a `projConfig` object
 #'
 #' @export
-#' @importFrom SpaDES.project findProjectName findProjectPath
 #'
 #' @examples
 #' \dontrun{
@@ -222,7 +220,6 @@ useConfig <- function(projectName = NULL, projectPath = NULL, ...) {
 #' @author Alex Chubaty and Eliot McIntire
 #' @export projConfig
 #' @importFrom R6 R6Class
-#' @importFrom Require modifyList3 normPath
 #'
 #' @examples
 #' \dontrun{
@@ -309,7 +306,6 @@ projConfig <- R6::R6Class(
 
     #' @description Validate the values of fields in a `projConfig` object
     #'
-    #' @importFrom Require modifyList3
     validate = function() {
       ## check all modules exist in project --------------------------------------------------------
       fullModulePath <- normPath(file.path(self$paths[["projectPath"]], self$paths[["modulePath"]]))
@@ -332,9 +328,9 @@ projConfig <- R6::R6Class(
           if (length(self$params[[x]]) == 0) {
             ## missing parameters likely means the module was not originally in the list
             ## pull in the param values from the full list
-            modifyList3(params_[[x]], private[[".params_full"]][[x]])
+            modList(params_[[x]], private[[".params_full"]][[x]])
           } else {
-            modifyList3(params_[[x]], self$params[[x]])
+            modList(params_[[x]], self$params[[x]])
           }
         })
         names(params_) <- self$modules
@@ -371,7 +367,7 @@ projConfig <- R6::R6Class(
       if (missing(value)) {
         return(private[[".args"]])
       } else {
-        private[[".args"]] <- modifyList3(private[[".args"]], as.list(value))
+        private[[".args"]] <- modList(private[[".args"]], as.list(value))
       }
     },
 
@@ -381,7 +377,7 @@ projConfig <- R6::R6Class(
         return(private[[".modules"]])
       } else {
         ## allow passing partial list to exclude modules, instead of simply using:
-        ## private[[".modules"]] <- modifyList3(self$modules, modules)
+        ## private[[".modules"]] <- modList(self$modules, modules)
 
         updatedModules <- as.list(value) ## ensure it's a list
 
@@ -398,7 +394,7 @@ projConfig <- R6::R6Class(
       if (missing(value)) {
         return(private[[".options"]])
       } else {
-        private[[".options"]] <- modifyList3(private[[".options"]], as.list(value))
+        private[[".options"]] <- modList(private[[".options"]], as.list(value))
       }
     },
 
@@ -422,11 +418,11 @@ projConfig <- R6::R6Class(
         mods2keep <- c(".globals", moduleNames)
         params_ <- subset(private[[".params"]], names(private[[".params"]]) %in% mods2keep)
         params_ <- lapply(mods2keep, function(x) {
-          tmp <- modifyList3(params_[[x]], value[[x]])
+          tmp <- modList(params_[[x]], value[[x]])
           if (x != ".globals") {
             ## if user updates global params, propagate this change to corresponding module params
             globals_ <- subset(params_[[".globals"]], names(params_[[".globals"]]) %in% names(tmp))
-            tmp <- modifyList3(tmp, globals_)
+            tmp <- modList(tmp, globals_)
           }
 
           tmp
@@ -434,7 +430,7 @@ projConfig <- R6::R6Class(
         names(params_) <- mods2keep
 
         ## keep track of parameter changes in the complete list
-        private[[".params_full"]] <- modifyList3(private[[".params_full"]], params_)
+        private[[".params_full"]] <- modList(private[[".params_full"]], params_)
 
         ## set current params to only be the subset of those in config$modules
         private[[".params"]] <- params_
@@ -448,7 +444,7 @@ projConfig <- R6::R6Class(
         return(private[[".paths"]])
       } else {
         ## update paths
-        updatedPaths <- modifyList3(private[[".paths"]], value)
+        updatedPaths <- modList(private[[".paths"]], value)
 
         ## ensure paths are kept relative to projectPath except for scratch dirs
         pathNames <- names(updatedPaths)

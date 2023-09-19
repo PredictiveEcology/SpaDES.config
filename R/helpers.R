@@ -1,3 +1,31 @@
+#' Identify user or machine
+#'
+#' @param name Optional character string giving user or machine name to match.
+#'
+#' @return if `name` is non-`NULL`, returns a logical indicating whether
+#' the current user/machine matches `name`.
+#' Otherwise returns a character string with the value of the current user/machine.
+#'
+#' @export
+#' @rdname whoami
+user <- function(name = NULL) {
+  if (is.null(name)) {
+    Sys.info()[["user"]]
+  } else {
+    identical(name, Sys.info()[["user"]])
+  }
+}
+
+#' @export
+#' @rdname whoami
+machine <- function(name = NULL) {
+  if (is.null(name)) {
+    Sys.info()[["nodename"]]
+  } else {
+    grepl(name, Sys.info()[["nodename"]])
+  }
+}
+
 #' Notify the user of a missing package
 #'
 #' @param pkg character string of length 1 giving the name of the package
@@ -55,7 +83,6 @@
 #'             One of `"sqlite"` or `"postgresql"`.
 #'
 #' @export
-#' @importFrom Require Require
 dbConnCache <- function(type = "sqlite") {
   conn <- if (type == "sqlite") {
     if (requireNamespace("RSQLite", quietly = TRUE)) {
@@ -149,7 +176,6 @@ authGoogle <- function(tryToken = NULL, tryEmail = NULL) {
   }
 }
 
-#' @importFrom Require normPath
 #' @keywords internal
 findToken <- function(name, path = ".") {
   normPath(list.files(path, paste0(name, "-.*[.]json")[1]))
@@ -168,4 +194,12 @@ hasToken <- function(name) {
 #' @export
 delay_rnd <- function(t = 1L:15L) {
   sample(t, 1)
+}
+
+## copied from Require::modifyList3
+#' @importFrom utils modifyList
+modList <- function(..., keep.null = TRUE) {
+  dots <- list(...)
+  dots <- dots[!unlist(lapply(dots, is.null))]
+  do.call(Reduce, alist(modifyList, dots))
 }

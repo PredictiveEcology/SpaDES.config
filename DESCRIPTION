@@ -7,8 +7,8 @@ Description: Tools for defining and validating project configurations
 URL:
     https://spades-config.predictiveecology.org/,
     https://github.com/PredictiveEcology/SpaDES.config
-Date: 2023-08-23
-Version: 0.0.2.9071
+Date: 2023-09-18
+Version: 0.0.3
 Authors@R: c(
     person("Alex M", "Chubaty", email = "achubaty@for-cast.ca",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7146-8135")),
@@ -19,10 +19,10 @@ Depends:
     R (>= 4.2)
 Imports:
     crayon,
+    fs,
     methods,
     R6,
-    Require (>= 0.2.6),
-    SpaDES.project,
+    rprojroot,
     tools,
     utils
 Suggests:
@@ -51,7 +51,7 @@ Remotes:
     PredictiveEcology/pemisc@development,
     PredictiveEcology/reproducible@development,
     PredictiveEcology/Require@development,
-    PredictiveEcology/scfmutils,
+    PredictiveEcology/scfmutils@development,
     PredictiveEcology/SpaDES.core@development,
     PredictiveEcology/SpaDES.project@transition
 Encoding: UTF-8

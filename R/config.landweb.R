@@ -25,7 +25,6 @@
 #'
 #' @export
 #' @importFrom R6 R6Class
-#' @importFrom Require normPath
 #' @rdname landwebContext-class
 landwebContext <- R6::R6Class(
   "landwebContext",
