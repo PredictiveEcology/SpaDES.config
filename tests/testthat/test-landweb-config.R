@@ -9,7 +9,8 @@ test_that("LandWeb config + context setup is working", {
                   "LandMine", "LandWeb_output", "LandWeb_preamble", "timeSinceFire")
   names(pr_mods) <- pr_mods
   dv_mods <- pr_mods
-  pp_mods <- list("LandWeb_preamble", "Biomass_speciesData", "LandWeb_summary")
+  pp_mods <- list("LandWeb_preamble", "Biomass_speciesData",
+                  "burnSummaries", "LandMine", "LandWeb_summary")
   names(pp_mods) <- pp_mods
 
   ## study area: LandWeb ---------------------------------------------------------------------------
@@ -113,7 +114,8 @@ test_that("LandWeb config + context setup is working", {
   expect_equal(config.pp.tolko$args[["delayStart"]], 0L)
 
   ## modules
-  pp_mods <- list("LandWeb_preamble", "Biomass_speciesData", "LandWeb_summary")
+  pp_mods <- list("LandWeb_preamble", "Biomass_speciesData",
+                  "burnSummaries", "LandMine", "LandWeb_summary")
   names(pp_mods) <- pp_mods
   expect_identical(config.pp.tolko$modules, pp_mods)
 

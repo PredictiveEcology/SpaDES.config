@@ -310,11 +310,12 @@ landwebConfig <- R6::R6Class(
         Biomass_core = "Biomass_core",
         Biomass_regeneration = "Biomass_regeneration",
         Biomass_speciesData = "Biomass_speciesData",
-        #HSI_Caribou_MB = "HSI_Caribou_MB", ## used for postprocess in MB, not devel nor production
+        # burnSummaries = "burnSummaries", ## used for postprocess, not devel nor production
+        # HSI_Caribou_MB = "HSI_Caribou_MB", ## used for postprocess in MB, not devel nor production
         LandMine = "LandMine",
         LandWeb_output = "LandWeb_output",
         LandWeb_preamble = "LandWeb_preamble",
-        #LandWeb_summary = "LandWeb_summary", ## used for postprocess, not devel nor production
+        # LandWeb_summary = "LandWeb_summary", ## used for postprocess, not devel nor production
         timeSinceFire = "timeSinceFire"
       )
 
@@ -404,7 +405,7 @@ landwebConfig <- R6::R6Class(
         ),
         Biomass_speciesData = list(
           types = c("KNN", "CASFRI", "Pickell", "ForestInventory"),
-          .plots <- c("png"),
+          .plots = c("png"),
           .useCache = c(".inputObjects", "init")
         ),
         burnSummaries = list(
@@ -428,7 +429,7 @@ landwebConfig <- R6::R6Class(
           .useParallel = self$options[["map.maxNumCores"]]
         ),
         LandMine = list(
-          biggestPossibleFireSizeHa = 5e5, ## 8e4 pixels @250m
+          biggestPossibleFireSizeHa = 5e5, ## 5e5 ha = 8e4 pixels @250m
           burnInitialTime = 1L, ## start(sim, "year") + 1; same as fireInitialTime
           maxReburns = c(1L, 20L),
           maxRetriesPerID = 9L,

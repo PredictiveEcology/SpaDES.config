@@ -33,6 +33,7 @@ Suggests:
     httr,
     knitr,
     LandR,
+    LandWebUtils,
     lme4,
     pemisc,
     raster,
@@ -48,6 +49,7 @@ Suggests:
 Remotes:
     PredictiveEcology/fireSenseUtils@development,
     PredictiveEcology/LandR@development,
+    PredictiveEcology/LandWebUtils@development,
     PredictiveEcology/pemisc@development,
     PredictiveEcology/reproducible@development,
     PredictiveEcology/Require@development,
