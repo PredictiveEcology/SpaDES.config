@@ -187,7 +187,6 @@ landrfsContext <- R6::R6Class(
 #'
 #' @export
 #' @importFrom R6 R6Class
-#' @importFrom Require normPath
 #' @importFrom tools R_user_dir
 #' @rdname landrfsConfig-class
 landrfsConfig <- R6::R6Class(

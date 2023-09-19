@@ -138,3 +138,10 @@ findProjectPath <- function() {
 findProjectName <- function() {
   basename(findProjectPath())
 }
+
+#' @importFrom fs path_abs
+normPath <- function(path) {
+  unlist(path) |>
+    fs::path_abs() |>
+    as.character()
+}

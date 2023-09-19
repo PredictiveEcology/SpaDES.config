@@ -195,7 +195,6 @@ bcnrvContext <- R6::R6Class(
 #'
 #' @export
 #' @importFrom R6 R6Class
-#' @importFrom Require normPath
 #' @rdname bcnrvConfig-class
 bcnrvConfig <- R6::R6Class(
   "bcnrvConfig",

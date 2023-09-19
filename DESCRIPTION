@@ -19,9 +19,9 @@ Depends:
     R (>= 4.2)
 Imports:
     crayon,
+    fs,
     methods,
     R6,
-    Require (>= 0.2.6),
     rprojroot,
     tools,
     utils
