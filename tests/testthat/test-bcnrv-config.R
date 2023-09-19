@@ -46,7 +46,7 @@ test_that("BC NRV config + context setup is working", {
   expect_identical(config.bc$params$scfmDiagnostics$mode, "single")
 
   ## paths
-  expect_identical(.isAbsolutePath(unlist(config.bc$paths)),
+  expect_identical(fs::is_absolute_path(unlist(config.bc$paths)),
                    c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
                      modulePath1 = FALSE, modulePath2 = FALSE, outputPath = FALSE,
                      projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
@@ -84,7 +84,7 @@ test_that("BC NRV config + context setup is working", {
   #expect_identical(config.bc$params$BC_HRV_preamble$landscapeUnits, "NRR_Cariboo") ## TODO:
 
   ## paths
-  expect_identical(.isAbsolutePath(unlist(config.bc$paths)),
+  expect_identical(fs::is_absolute_path(unlist(config.bc$paths)),
                    c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
                      modulePath1 = FALSE, modulePath2 = FALSE, outputPath = FALSE,
                      projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
@@ -114,7 +114,7 @@ test_that("BC NRV config + context setup is working", {
   expect_identical(config.bc$params$BC_HRV_preamble$fireRegimePolysType, "ECODISTRICT")
 
   ## paths
-  expect_identical(.isAbsolutePath(unlist(config.bc$paths)),
+  expect_identical(fs::is_absolute_path(unlist(config.bc$paths)),
                    c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
                      modulePath1 = FALSE, modulePath2 = FALSE, outputPath = FALSE,
                      projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
@@ -153,7 +153,7 @@ test_that("BC NRV config + context setup is working", {
   expect_identical(config.bc$params$scfmDiagnostics$mode, "multi")
 
   ## paths
-  expect_identical(.isAbsolutePath(unlist(config.bc$paths)),
+  expect_identical(fs::is_absolute_path(unlist(config.bc$paths)),
                    c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
                      modulePath1 = FALSE, modulePath2 = FALSE, outputPath = FALSE,
                      projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))

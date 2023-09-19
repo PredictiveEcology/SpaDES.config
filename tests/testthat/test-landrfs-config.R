@@ -45,7 +45,7 @@ test_that("LandR-fireSense config + context setup is working", {
   expect_identical(config.landrfs$params$Biomass_speciesData$types, "KNN")
 
   ## paths
-  expect_identical(.isAbsolutePath(unlist(config.landrfs$paths)),
+  expect_identical(fs::is_absolute_path(unlist(config.landrfs$paths)),
                    c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
                      modulePath = FALSE, outputPath = FALSE,
                      projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
@@ -89,7 +89,7 @@ test_that("LandR-fireSense config + context setup is working", {
   expect_identical(config.landrfs$params$Biomass_speciesData$types, "KNN")
 
   ## paths
-  expect_identical(.isAbsolutePath(unlist(config.landrfs$paths)),
+  expect_identical(fs::is_absolute_path(unlist(config.landrfs$paths)),
                    c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
                      modulePath = FALSE, outputPath = FALSE,
                      projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
@@ -126,7 +126,7 @@ test_that("LandR-fireSense config + context setup is working", {
   ##
 
   ## paths
-  expect_identical(.isAbsolutePath(unlist(config.landrfs$paths)),
+  expect_identical(fs::is_absolute_path(unlist(config.landrfs$paths)),
                    c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
                      modulePath = FALSE, outputPath = FALSE,
                      projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
@@ -165,7 +165,7 @@ test_that("LandR-fireSense config + context setup is working", {
   ##
 
   ## paths
-  expect_identical(.isAbsolutePath(unlist(config.landrfs$paths)),
+  expect_identical(fs::is_absolute_path(unlist(config.landrfs$paths)),
                    c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
                      modulePath = FALSE, outputPath = FALSE,
                      projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))

@@ -42,9 +42,11 @@ test_that("LandWeb config + context setup is working", {
   expect_identical(config.lw$params$Biomass_speciesData$types, c("KNN", "CASFRI", "Pickell", "ForestInventory"))
 
   ## paths
-  expect_identical(.isAbsolutePath(unlist(config.lw$paths)),
-                   c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE, modulePath = FALSE, outputPath = FALSE,
-                     projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
+  expect_identical(
+    fs::is_absolute_path(unlist(config.lw$paths)),
+    c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE, modulePath = FALSE, outputPath = FALSE,
+      projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE) |> unname()
+  )
   expect_identical(
     .getRelativePath(config.lw$paths[["logPath"]], prjDir),
     file.path("outputs", "LandWeb_full_v3", "rep01", "log")
