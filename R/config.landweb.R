@@ -405,7 +405,12 @@ landwebConfig <- R6::R6Class(
         ),
         Biomass_speciesData = list(
           types = c("KNN", "CASFRI", "Pickell", "ForestInventory"),
+          .plots <- c("png"),
           .useCache = c(".inputObjects", "init")
+        ),
+        burnSummaries = list(
+          reps = 1L:15L, ## TODO: used elsewhere to setup runs (expt table)?
+          simOutputPath = self$paths[["outputPath"]]
         ),
         HSI_Caribou_MB = list(
           ageClasses = c("Young", "Immature", "Mature", "Old"), ## LandWebUtils:::.ageClasses
@@ -424,18 +429,19 @@ landwebConfig <- R6::R6Class(
           .useParallel = self$options[["map.maxNumCores"]]
         ),
         LandMine = list(
-          biggestPossibleFireSizeHa = 5e5,
+          biggestPossibleFireSizeHa = 5e5, ## 8e4 pixels @250m
           burnInitialTime = 1L, ## start(sim, "year") + 1; same as fireInitialTime
-          maxReburns = 20L,
-          maxRetriesPerID = 4L,
+          maxReburns = c(1L, 20L),
+          maxRetriesPerID = 9L,
           minPropBurn = 0.90,
+          mode = if ("postprocess" %in% self$context[["mode"]]) "multi" else "single",
           ROSother = switch(self$context[["ROStype"]], burny = 6L, equal = 1L, log = log(30L), 30L),
           ROStype = self$context[["ROStype"]],
           useSeed = NULL, ## NULL to avoid setting a seed
           .plotInitialTime = 1, ## sim(start) + 1
           .plotInterval = 1,
           .unitTest = TRUE,
-          .useCache = c(".inputObjects", "init")
+          .useCache = FALSE
         ),
         LandWeb_output = list(
           summaryInterval = 100, ## also set in .globals
@@ -520,11 +526,11 @@ landwebConfig <- R6::R6Class(
             .studyAreaName = self$context[["studyAreaName"]]
           )
         )
-      } else if (self$context$mode == "postprocess") {
+      } else if (self$context[["mode"]] == "postprocess") {
         if (grepl("provMB", self$context[["studyAreaName"]])) {
           self$modules <- list("LandWeb_preamble", "Biomass_speciesData", "HSI_Caribou_MB", "LandWeb_summary")
         } else {
-          self$modules <- list("LandWeb_preamble", "Biomass_speciesData", "LandWeb_summary")
+          self$modules <- list("LandWeb_preamble", "Biomass_speciesData", "burnSummaries", "LandMine", "LandWeb_summary")
         }
       }
 
