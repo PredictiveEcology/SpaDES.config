@@ -11,7 +11,6 @@
 #' @return a `projContext` object.
 #'
 #' @export
-#' @importFrom SpaDES.project findProjectName
 #'
 #' @examples
 #' \donttest{
@@ -175,7 +174,6 @@ projContext <- R6::R6Class(
 #' @return a `projConfig` object
 #'
 #' @export
-#' @importFrom SpaDES.project findProjectName findProjectPath
 #'
 #' @examples
 #' \dontrun{

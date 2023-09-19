@@ -22,7 +22,7 @@ Imports:
     methods,
     R6,
     Require (>= 0.2.6),
-    SpaDES.project,
+    rprojroot,
     tools,
     utils
 Suggests:
@@ -51,7 +51,7 @@ Remotes:
     PredictiveEcology/pemisc@development,
     PredictiveEcology/reproducible@development,
     PredictiveEcology/Require@development,
-    PredictiveEcology/scfmutils,
+    PredictiveEcology/scfmutils@development,
     PredictiveEcology/SpaDES.core@development,
     PredictiveEcology/SpaDES.project@transition
 Encoding: UTF-8
