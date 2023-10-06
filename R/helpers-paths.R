@@ -113,7 +113,7 @@ paths4spades <- function(paths) {
 
 #' Find the project root directory
 #'
-#' Searches from current working directory for and Rstudio project file
+#' Searches from current working directory for an Rstudio project file
 #' or git repository, falling back on using the current working directory.
 #'
 #' @return `findProjectPath` returns an absolute path;
