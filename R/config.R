@@ -1,48 +1,7 @@
-#' Use a pre-defined project run context
-#'
-#' @param projectName character string of length 1 giving the name of the project.
-#'                    Can be one of "LandWeb", "BC_NRV", "LandRfS",
-#'                    else will return a default context.
-#'
-#' @param projectPath Character string giving the path to the project directory.
-#'
-#' @param ... additional context arguments used by individual projects.
-#'
-#' @return a `projContext` object.
-#'
-#' @export
-#'
-#' @examples
-#' \donttest{
-#' ## default generic context
-#' useContext("myProject", "path/to/myProject")
-#'
-#' ## default LandWeb context
-#' useContext("LandWeb", "~/GitHub/LandWeb",
-#'            mode = "development", rep = 1L, studyAreaName = "LandWeb", version = 3)
-#' }
-useContext <- function(projectName = NULL, projectPath = NULL, ...) {
-  if (is.null(projectName)) {
-    projectName <- findProjectName()
-  }
-
-  if (is.null(projectPath)) {
-    projectPath <- findProjectPath()
-  }
-
-  switch(
-    tolower(projectName),
-    bc_nrv = bcnrvContext$new(projectPath = projectPath, ...),
-    landweb = landwebContext$new(projectPath = projectPath, ...),
-    landrfs = landrfsContext$new(projectPath = projectPath, ...),
-    projContext$new(projectPath = projectPath, ...) ## default
-  )
-}
-
 #' Project context class
 #'
 #' @author Alex Chubaty
-# @export
+#' @export
 #' @importFrom R6 R6Class
 #' @rdname projContext-class
 projContext <- R6::R6Class(
@@ -161,52 +120,9 @@ projContext <- R6::R6Class(
   )
 )
 
-#' Use a pre-defined project run context
-#'
-#' @param projectName character string of length 1 giving the name of the project.
-#'                    Can be one of "LandWeb",
-#'                    else will return a default context.
-#'
-#' @param projectPath character string giving the path to the project directory.
-#'
-#' @param ... additional context arguments used by individual projects.
-#'
-#' @return a `projConfig` object
-#'
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' ## default generic project config
-#' config <- useConfig("myProject", "path/to/myMproject")
-#'
-#' ## default LandWeb project config
-#' config <- useConfig("LandWeb", "~/GitHub/LandWeb", mode = "development", version = 3)
-#' }
-useConfig <- function(projectName = NULL, projectPath = NULL, ...) {
-  if (is.null(projectName)) {
-    projectName <- findProjectName()
-  }
-
-  if (is.null(projectPath)) {
-    projectPath <- findProjectPath()
-  }
-
-  ## additional project types can be added here
-  config <- switch(
-    tolower(projectName),
-    bc_nrv = bcnrvConfig$new(projectName = projectName, projectPath = projectPath, ...),
-    landweb = landwebConfig$new(projectName = projectName, projectPath = projectPath, ...),
-    landrfs = landrfsConfig$new(projectName = projectName, projectPath = projectPath, ...),
-    projConfig$new(projectName = projectName, projectPath = projectPath, ...) ## default
-  )$update()$validate()
-
-  return(config)
-}
-
 #' Project configuration class
 #'
-#' @note Several fields use a update their list values when assigning to them,
+#' @note Several fields update their list values when assigning to them,
 #' rather than replacing the entire list as might be expected with traditional R assignment.
 #' This can make updating lists easier (don't need to worry about copy existing values
 #' or otherwise worry about appending/updating the list; or accidentally dropping elements),
@@ -218,7 +134,7 @@ useConfig <- function(projectName = NULL, projectPath = NULL, ...) {
 #'   `args`, `options`, `params`, and `paths`, but notably **not** `modules`.
 #'
 #' @author Alex Chubaty and Eliot McIntire
-#' @export projConfig
+#' @export
 #' @importFrom R6 R6Class
 #'
 #' @examples

@@ -1,28 +1,32 @@
 #' Default project paths
 #'
-#' @keywords internal
-#' @rdname dot-basePaths
-.baseCachePath <- "cache"
+#' @param type character. one of 'cache', 'modules', 'inputs', 'outputs', 'log'.
+#'
+#' @return character representing the project's default `type` path of type.
+#'         if `type` is `NULL` (i.e., not specified), returns a named list of default paths.
+#'
+#' @export
+#' @rdname projectPaths
+projectPaths <- function(type = NULL) {
+  ## allow some variations (i.e., plurals) to be used as aliases
+  defaultPaths <- list(
+    cache = "cache",
+    module = "modules",
+    modules = "modules",
+    input = "inputs",
+    inputs = "inputs",
+    output = "outputs",
+    outputs = "outputs",
+    log = file.path("outputs", "log"),
+    logs = file.path("outputs", "log")
+  )
 
-#' @keywords internal
-#' @rdname dot-basePaths
-.baseDataCachePath <- NULL ## TODO: standardize use of this!
-
-#' @keywords internal
-#' @rdname dot-basePaths
-.baseModulePath <- "modules"
-
-#' @keywords internal
-#' @rdname dot-basePaths
-.baseInputPath <- "inputs"
-
-#' @keywords internal
-#' @rdname dot-basePaths
-.baseOutputPath <- "outputs"
-
-#' @keywords internal
-#' @rdname dot-basePaths
-.baseLogPath <- file.path(.baseOutputPath, "log")
+  if (is.null(type)) {
+    defaultPaths
+  } else {
+    defaultPaths[[type]]
+  }
+}
 
 #' Similar to e.g., `fs::path_rel` but from the 'other end' of the path,
 #' i.e., working from the right (end) of the path instead of the left (beginning).
@@ -77,14 +81,20 @@
 }
 .updateRelativePath <- Vectorize(.updateRelativePath, USE.NAMES = FALSE)
 
-#' @keywords internal
-.updateOutputPath <- function(config, runNameFun) {
+#' Update project config output path
+#'
+#' @param config a `projConfig` object
+#'
+#' @param runNameFun function that computes a run name, returning a character string.
+#'
+#' @export
+updateOutputPath <- function(config, runNameFun) {
   .runName <- runNameFun(config$context, withRep = FALSE)
 
   if ("postprocess" %in% config$context$mode) {
-    file.path(.baseOutputPath, .runName)
+    file.path(projectPaths("outputs"), .runName)
   } else {
-    file.path(.baseOutputPath, .runName, sprintf("rep%02d", config$context[["rep"]]))
+    file.path(projectPaths("outputs"), .runName, sprintf("rep%02d", config$context[["rep"]]))
   }
 }
 
@@ -132,10 +142,20 @@ findProjectName <- function() {
   basename(findProjectPath())
 }
 
-#' @importFrom fs path_expand path_norm
+#' Normalize a file path
+#'
+#' @param path character string giving a file path
+#'
+#' @export
+#' @importFrom fs path_expand_r path_norm
 normPath <- function(path) {
   unlist(path) |>
     fs::path_norm() |>
-    fs::path_expand() |>
+    fs::path_expand_r() |>
     normalizePath(winslash = "/", mustWork = FALSE)
+}
+
+## copied from example in `?Sys.readlink`
+is.symlink <- function(paths) {
+  isTRUE(nzchar(Sys.readlink(paths), keepNA = TRUE))
 }

@@ -310,6 +310,7 @@ landwebConfig <- R6::R6Class(
         Biomass_core = "Biomass_core",
         Biomass_regeneration = "Biomass_regeneration",
         Biomass_speciesData = "Biomass_speciesData",
+        Biomass_speciesParameters = "Biomass_speciesParameters",
         # burnSummaries = "burnSummaries", ## used for postprocess, not devel nor production
         # HSI_Caribou_MB = "HSI_Caribou_MB", ## used for postprocess in MB, not devel nor production
         LandMine = "LandMine",
@@ -407,6 +408,9 @@ landwebConfig <- R6::R6Class(
           types = c("KNN", "CASFRI", "Pickell", "ForestInventory"),
           .plots = c("png"),
           .useCache = c(".inputObjects", "init")
+        ),
+        Biomass_speciesParameters = list(
+          PSPdataTypes = "NFI"
         ),
         burnSummaries = list(
           reps = 1L:15L, ## TODO: used elsewhere to setup runs (expt table)?

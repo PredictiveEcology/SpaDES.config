@@ -9,7 +9,7 @@ Project configuration class
 Project configuration class
 }
 \note{
-Several fields use a update their list values when assigning to them,
+Several fields update their list values when assigning to them,
 rather than replacing the entire list as might be expected with traditional R assignment.
 This can make updating lists easier (don't need to worry about copy existing values
 or otherwise worry about appending/updating the list; or accidentally dropping elements),

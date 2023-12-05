@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers-paths.R
 \name{.getRelativePath}
 \alias{.getRelativePath}
-\title{Similar to e.g., \code{fs::path_common} but from the 'other end' of the path,
+\title{Similar to e.g., \code{fs::path_rel} but from the 'other end' of the path,
 i.e., working from the right (end) of the path instead of the left (beginning).
 This allows extracting the project-relative paths for a project in different
 directories, which is useful when some project files (e.g., cache, inputs, outputs)

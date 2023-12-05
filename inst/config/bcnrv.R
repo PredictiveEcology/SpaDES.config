@@ -235,7 +235,7 @@ bcnrvConfig <- R6::R6Class(
           useCloud = FALSE
         ),
         delayStart = 0,
-        endTime = 1000, ## TODO: use `simYears = list(start = 0, end = 1000)` in order to use
+        endTime = 1200, ## TODO: use `simYears = list(start = 0, end = 1200)` in order to use
                         ##       `self$args$simYears$start` instead of hardgoding `start(sim)`
         notifications = list(
           slackChannel = ""
@@ -251,6 +251,7 @@ bcnrvConfig <- R6::R6Class(
         Biomass_core = "Biomass_core",
         Biomass_regeneration = "Biomass_regeneration",
         Biomass_speciesData = "Biomass_speciesData",
+        Biomass_speciesParameters = "Biomass_speciesParameters",
         # HSI_PineMarten = "HSI_PineMarten", ## used for postprocess, not devel nor production
         LandWeb_output = "LandWeb_output",
         # LandWeb_summary = "LandWeb_summary", ## used for postprocess, not devel nor production
@@ -309,7 +310,7 @@ bcnrvConfig <- R6::R6Class(
           sppEquivCol = "BC_HRV",
           successionTimestep = 10,
           summaryInterval = 50,
-          summaryPeriod = c(600, 1000),
+          summaryPeriod = c(800, 1200),
           vegLeadingProportion = 0.8,
           .plotInitialTime = 0,
           .plots = c("object", "png", "raw", "screen"),
@@ -373,6 +374,9 @@ bcnrvConfig <- R6::R6Class(
           .plotInitialTime = 0, ## sim(start)
           .useCache = c(".inputObjects", "init")
         ),
+        Biomass_speciesParameters = list(
+          PSPdataTypes = "NFI"
+        ),
         LandWeb_output = list(
           summaryInterval = 50, ## also set in .globals
           .plotInitialTime = 0 ## sim(start)
@@ -385,8 +389,8 @@ bcnrvConfig <- R6::R6Class(
           reps = 1L:10L, ## TODO: used elsewhere to setup runs (expt table)?
           studyAreaNamesCol = "LU_NAME",
           summaryInterval = 50,        ## also in .globals
-          summaryPeriod = c(600, 1000), ## also in .globals
-          timeSeriesTimes = 601:650,
+          summaryPeriod = c(800, 1200), ## also in .globals
+          timeSeriesTimes = 801:850,
           upload = FALSE,
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
           .plotInitialTime = 0, ## sim(start)
@@ -399,8 +403,8 @@ bcnrvConfig <- R6::R6Class(
           reps = 1L:10L, ## TODO: used elsewhere to setup runs (expt table)?
           simOutputPath = self$paths[["outputPath"]],
           summaryInterval = 50,        ## also in .globals
-          summaryPeriod = c(600, 1000), ## also in .globals
-          timeSeriesTimes = 601:650,
+          summaryPeriod = c(800, 1200), ## also in .globals
+          timeSeriesTimes = 801:850,
           upload = FALSE,
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
           version = private[[".version"]],
@@ -417,8 +421,8 @@ bcnrvConfig <- R6::R6Class(
           #simOutputPath = self$paths[["outputPath"]],
           studyAreaNamesCol = "LU_NAME",
           summaryInterval = 50,        ## also in .globals
-          summaryPeriod = c(600, 1000), ## also in .globals
-          timeSeriesTimes = 601:650,
+          summaryPeriod = c(800, 1200), ## also in .globals
+          timeSeriesTimes = 801:850,
           upload = FALSE,
           uploadTo = "", ## TODO: use google-ids.csv to define these per WBI?
           .plotInitialTime = 0, ## sim(start)
@@ -488,9 +492,9 @@ bcnrvConfig <- R6::R6Class(
           delayStart = if (self$context[["mode"]] == "production") delay_rnd(5L:15L) else 0L, # 5-15 minutes
           endTime = 1000,
           successionTimestep = 10,
-          summaryPeriod = c(600, 1000),
-          summaryInterval = 50,
-          timeSeriesTimes = 601:650
+          summaryPeriod = c(800, 1200), ## TODO: remove from args; used in params
+          summaryInterval = 50, ## TODO: remove from args; used in params
+          timeSeriesTimes = 801:850 ## TODO: remove from args; used in params
         )
 
         self$params <- list(
