@@ -124,8 +124,12 @@ printRunInfo <- function(context) {
   context$print()
 }
 
-#' @keywords internal
-.context2md <- function(cntxt) {
+#' Format context info for markdown
+#'
+#' @param cntxt a `projContext` object
+#'
+#' @export
+context2md <- function(cntxt) {
   stopifnot(is(cntxt, "list"))
 
   col1width <- max(nchar(names(cntxt)))
