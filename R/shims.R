@@ -1,0 +1,51 @@
+## based on https://github.com/rstudio/renv/blob/main/R/shims.R
+
+the$shims <- new.env(parent = emptyenv())
+
+shim_create <- function(shim, sham) {
+  formals(shim) <- formals(sham)
+  shim
+}
+
+shims_activate <- function() {
+  shims_deactivate()
+
+  get_module_shim <- shim_create(shim_get_module, shim_get_module)
+  assign("getModule", get_module_shim, envir = the$shims)
+
+  args <- list(the$shims, name = "SpaDES.config:shims", warn.conflicts = FALSE)
+  do.call(base::attach, args)
+
+}
+
+shims_deactivate <- function() {
+  while ("SpaDES.config:shims" %in% search())
+    detach("SpaDES.config:shims")
+}
+
+# determine whether can safely handle a call to SpaDES.project::getModule()
+shim_get_module_compatible <- function(matched) {
+  ok <- c("", "modules", "modulePath", "overwrite", "verbose")
+  unhandled <- setdiff(names(matched), ok)
+  length(unhandled) == 0L
+}
+
+## override SpaDES.project::getModule() to use project's version
+shim_get_module <- function(modules, modulePath, overwrite, verbose) {
+  if (requireNamespace("SpaDES.project", quietly = TRUE)) {
+    ## check for compatible calls
+    matched <- match.call(SpaDES.project::getModule)
+    if (!shim_get_module_compatible(matched)) {
+      call <- sys.call()
+      call[[1L]] <- quote(SpaDES.project::getModule)
+      return(eval(call, envir = parent.frame()))
+    }
+  }
+
+  ## otherwise, invoke our version
+  call <- sys.call()
+  call[[1L]] <- quote(SpaDES.config::use_project_module)
+
+  ## evaluate call
+  eval(call, envir = parent.frame())
+}

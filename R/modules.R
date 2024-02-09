@@ -1,4 +1,4 @@
-#' Mock version of `SpaDES.project::getModule()`
+#' Use SpaDES module from project directory
 #'
 #' Allows use of SpaDES modules that make nested module calls (i.e., submodules).
 #' For projects using version control with *git* submodules, this version
@@ -12,7 +12,7 @@
 #' @param overwrite not used
 #' @param verbose not used
 #' @export
-getModule <- function(modules, modulePath, overwrite, verbose) {
+use_project_module <- function(modules, modulePath, overwrite, verbose) {
   ## TODO: is modules always length 1?
 
   modules <- strsplit(modules, "/")[[1]][2] |>
@@ -21,7 +21,7 @@ getModule <- function(modules, modulePath, overwrite, verbose) {
 
   if (!dir.exists(file.path(modulePath, modules))) {
     projModulePath <- file.path(findProjectPath(), "modules", modules) ## TODO
-    file.symlink(projModulePath, modulePath)
+    file.symlink(projModulePath, modulePath) ## TODO: confirm this creates dir junction on windows
   }
 
   if (is.symlink(modulePath)) {
