@@ -15,7 +15,6 @@ shims_activate <- function() {
 
   args <- list(the$shims, name = "SpaDES.config:shims", warn.conflicts = FALSE)
   do.call(base::attach, args)
-
 }
 
 shims_deactivate <- function() {
