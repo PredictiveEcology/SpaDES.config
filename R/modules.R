@@ -19,7 +19,7 @@ use_project_module <- function(modules, modulePath, overwrite, verbose) {
     strsplit("@") |>
     (function(x) x[[1]][1])()
 
-  if (!dir.exists(file.path(modulePath, modules))) {
+  if (!dir.exists(modulePath)) {
     projModulePath <- file.path(findProjectPath(), "modules", modules) ## TODO
     file.symlink(projModulePath, modulePath) ## TODO: confirm this creates dir junction on windows
   }
