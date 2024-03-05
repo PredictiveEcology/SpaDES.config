@@ -16,7 +16,8 @@ Authors@R: c(
            role = c("aut"), comment = c(ORCID = "0000-0002-6914-8316"))
     )
 Depends:
-    R (>= 4.2)
+    R (>= 4.2),
+    SpaDES.project
 Imports:
     crayon,
     fs,
@@ -42,7 +43,6 @@ Suggests:
     RSQLite,
     scfmutils (>= 0.0.2),
     SpaDES.core (>= 1.1.1),
-    SpaDES.project,
     testthat (>= 3.0.0),
     tiler
 Remotes:

@@ -22,23 +22,29 @@ shims_deactivate <- function() {
     detach("SpaDES.config:shims")
 }
 
-# determine whether can safely handle a call to SpaDES.project::getModule()
+# determine whether can safely handle a call to `SpaDES.project::getModule()`
 shim_get_module_compatible <- function(matched) {
   ok <- c("", "modules", "modulePath", "overwrite", "verbose")
   unhandled <- setdiff(names(matched), ok)
   length(unhandled) == 0L
 }
 
-## override SpaDES.project::getModule() to use project's version
+#'  Override `SpaDES.project::getModule()` to use the project's version of the module.
+#'
+#' @param modules See `?SpaDES.project::getModule`.
+#' @param modulePath See `?SpaDES.project::getModule`.
+#' @param overwrite See `?SpaDES.project::getModule`.
+#' @param verbose See `?SpaDES.project::getModule`.
+#'
+#' @return See `?SpaDES.project::getModule`.
+#'
 shim_get_module <- function(modules, modulePath, overwrite, verbose) {
-  if (requireNamespace("SpaDES.project", quietly = TRUE)) {
-    ## check for compatible calls
-    matched <- match.call(SpaDES.project::getModule)
-    if (!shim_get_module_compatible(matched)) {
-      call <- sys.call()
-      call[[1L]] <- quote(SpaDES.project::getModule)
-      return(eval(call, envir = parent.frame()))
-    }
+  ## check for compatible calls
+  matched <- match.call(SpaDES.project::getModule)
+  if (!shim_get_module_compatible(matched)) {
+    call <- sys.call()
+    call[[1L]] <- quote(SpaDES.project::getModule)
+    return(eval(call, envir = parent.frame()))
   }
 
   ## otherwise, invoke our version
