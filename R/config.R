@@ -33,8 +33,8 @@ projContext <- R6::R6Class(
       private[[".runName"]] <- NA_character_
       attr(private[[".runName"]], "auto") <- TRUE
 
-      self$machine <- Sys.info()[["nodename"]]
-      self$user <- Sys.info()[["user"]]
+      self$machine <- machine()
+      self$user <- user()
 
       self$mode <- mode
       self$rep <- rep

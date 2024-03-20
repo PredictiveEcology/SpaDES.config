@@ -1,3 +1,7 @@
+# SpaDES.config (development version)
+
+* minor improvements;
+
 # SpaDES.config 1.0.5
 
 * implemented shim for `SpaDES.project::getModule()` which now redirects to `use_project_module()` (requires `SpaDES.project` to be loaded, so added to Depends);
