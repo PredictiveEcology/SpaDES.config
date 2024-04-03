@@ -23,7 +23,8 @@ shims_deactivate <- function() {
 }
 
 # determine whether can safely handle a call to `SpaDES.project::getModule()`
-shim_get_module_compatible <- function(matched) {
+shim_get_module_compatible <- function() {
+  matched <- match.call(SpaDES.project::getModule)
   ok <- c("", "modules", "modulePath", "overwrite", "verbose")
   unhandled <- setdiff(names(matched), ok)
   length(unhandled) == 0L
@@ -39,9 +40,7 @@ shim_get_module_compatible <- function(matched) {
 #' @return See `?SpaDES.project::getModule`.
 #'
 shim_get_module <- function(modules, modulePath, overwrite, verbose) {
-  ## check for compatible calls
-  matched <- match.call(SpaDES.project::getModule)
-  if (!shim_get_module_compatible(matched)) {
+  if (!shim_get_module_compatible()) {
     call <- sys.call()
     call[[1L]] <- quote(SpaDES.project::getModule)
     return(eval(call, envir = parent.frame()))
