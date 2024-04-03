@@ -26,6 +26,7 @@ Imports:
     rprojroot,
     utils
 Suggests:
+    box,
     covr,
     DBI,
     fireSenseUtils,
