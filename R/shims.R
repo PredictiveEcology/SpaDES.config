@@ -10,7 +10,7 @@ shim_create <- function(shim, sham) {
 shims_activate <- function() {
   shims_deactivate()
 
-  get_module_shim <- shim_create(shim_get_module, shim_get_module)
+  get_module_shim <- shim_create(shim_get_module, SpaDES.project::getModule)
   assign("getModule", get_module_shim, envir = the$shims)
 
   args <- list(the$shims, name = "SpaDES.config:shims", warn.conflicts = FALSE)

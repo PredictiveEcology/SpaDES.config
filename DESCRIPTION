@@ -8,7 +8,7 @@ URL:
     https://spades-config.predictiveecology.org/,
     https://github.com/PredictiveEcology/SpaDES.config
 Date: 2024-04-03
-Version: 1.0.5.9001
+Version: 1.0.6
 Authors@R: c(
     person("Alex M", "Chubaty", email = "achubaty@for-cast.ca",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7146-8135")),
