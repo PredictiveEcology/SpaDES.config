@@ -33,15 +33,16 @@ machine <- function(name = NULL) {
 #'                which determines how the user is notified: by a message,
 #'                a warning, or an error, respectively.
 #'
+#' @export
 #' @importFrom utils getFromNamespace
 #' @keywords internal
 #' @examples
 #' \dontrun{
-#'   .needPkg("raster", "message")
-#'   .needPkg("raster", "warning")
-#'   .needPkg("raster", "stop")
+#'   needPkg("raster", "message")
+#'   needPkg("raster", "warning")
+#'   needPkg("raster", "stop")
 #' }
-.needPkg <- function(pkg, enforce = "stop") {
+needPkg <- function(pkg, enforce = "stop") {
   stopifnot(length(pkg) == 1, enforce %in% c("message", "warning", "stop"))
 
   msg <- paste("Package", pkg, "is not available.",
