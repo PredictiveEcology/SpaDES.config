@@ -117,7 +117,7 @@ paths4spades <- function(paths) {
     }
     paths[which(names(paths) %in% want)]
   } else {
-    .needPkg("SpaDES.core", "stop")
+    needPkg("SpaDES.core", "stop")
   }
 }
 

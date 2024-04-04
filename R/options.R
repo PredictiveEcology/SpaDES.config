@@ -13,7 +13,7 @@ setProjectOptions <- function(config) {
   if (requireNamespace("raster", quietly = TRUE)) {
     raster::rasterOptions(default = TRUE)
   } else {
-    .needPkg("raster", "stop")
+    needPkg("raster", "stop")
   }
 
   message("Setting options specified in config$options...")
@@ -28,7 +28,7 @@ setProjectOptions <- function(config) {
     httr::timeout(seconds = 10)
 
   } else {
-    .needPkg("httr", "stop")
+    needPkg("httr", "stop")
   }
 
   if (requireNamespace("tiler", quietly = TRUE)) {

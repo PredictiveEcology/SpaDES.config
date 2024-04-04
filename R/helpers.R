@@ -89,7 +89,7 @@ dbConnCache <- function(type = "sqlite") {
     if (requireNamespace("RSQLite", quietly = TRUE)) {
       NULL
     } else {
-      .needPkg("RSQLite", "stop")
+      needPkg("RSQLite", "stop")
     }
   } else if (type == "postgresql") {
     if (requireNamespace("RPostgres", quietly = TRUE)) {
@@ -101,10 +101,10 @@ dbConnCache <- function(type = "sqlite") {
                        user = Sys.getenv("PGUSER"),
                        password = Sys.getenv("PGPASSWORD"))
         } else {
-          .needPkg("DBI", "stop")
+          needPkg("DBI", "stop")
         }
     } else {
-      .needPkg("RPostgres", "stop")
+      needPkg("RPostgres", "stop")
     }
   }
 
@@ -177,7 +177,7 @@ authGoogle <- function(tryToken = NULL, tryEmail = NULL) {
     message(crayon::silver("Authenticating as: "),
             crayon::green(googledrive::drive_user()$emailAddress))
   } else {
-    .needPkg("googledrive", "stop")
+    needPkg("googledrive", "stop")
   }
 }
 
@@ -201,8 +201,19 @@ delay_rnd <- function(t = 1L:15L) {
   sample(t, 1)
 }
 
-## copied from Require::modifyList3
+#' Recursively modify elements of a list
+#'
+#' Wrapper around `utils::modifyList()` that can deal with more than two lists.
+#' Based on `Require::modifyList3`.
+#'
+#' @param ... named lists (possibly empty) where the elements of the first list will
+#'            be updated based on the values of subsequent lists.
+#'
+#' @param keep.null logical indicating whether `NULL` elements should be kept or deleted.
+#'
+#' @export
 #' @importFrom utils modifyList
+#' @seealso [utils::modifyList()]
 modList <- function(..., keep.null = TRUE) {
   dots <- list(...)
   dots <- dots[!unlist(lapply(dots, is.null))]
