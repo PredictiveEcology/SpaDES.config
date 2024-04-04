@@ -28,6 +28,8 @@ projectPaths <- function(type = NULL) {
   }
 }
 
+#' Get relative path
+#'
 #' Similar to e.g., `fs::path_rel` but from the 'other end' of the path,
 #' i.e., working from the right (end) of the path instead of the left (beginning).
 #' This allows extracting the project-relative paths for a project in different
