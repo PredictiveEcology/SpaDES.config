@@ -42,7 +42,7 @@ Suggests:
     roxygen2,
     RPostgres,
     RSQLite,
-    scfmutils (>= 0.0.2),
+    scfmutils (>= 0.0.13),
     SpaDES.core (>= 1.1.1),
     testthat (>= 3.0.0),
     tiler
