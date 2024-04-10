@@ -220,11 +220,13 @@ test_that("BC NRV [FIRESENSE] config + context setup is working", {
 
   .studyAreaName <- c("Corkscrew", "Christenson Creek", "Downton", "Punky Moore")
 
-  boxDir <- file.path("tests", "testthat", "box")
-  boxMod <- file.path(prjDir, "box", "bcnrv.R")
+  boxDir <- file.path("tests", "testthat", "box") |> normPath()
+  boxMod <- file.path(boxDir, "bcnrv.R")
+  prjMod <- file.path(prjDir, "box", "bcnrv.R")
 
   if (!dir.exists(boxDir)) dir.create(boxDir)
-  if (!file.exists(boxMod)) file.symlink(boxMod, file.path(boxDir, "bcnrv.R"))
+  if (!file.exists(boxMod)) file.symlink(prjMod, boxMod)
+  expect_true(is.symlink(boxMod))
 
   box::use(./box/bcnrv)
 
