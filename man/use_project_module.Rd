@@ -20,6 +20,6 @@ use_project_module(modules, modulePath, overwrite, verbose)
 Allows use of SpaDES modules that make nested module calls (i.e., submodules).
 For projects using version control with \emph{git} submodules, this version
 simply creates a symlink to the project's version of the module.
-This ensures the entire project stays in sync with itself, and
-doesn't require installation of an additional package.
+This ensures the entire project stays in sync with itself instead of running
+some random version of the module.
 }
