@@ -53,7 +53,7 @@ Remotes:
     PredictiveEcology/reproducible@development,
     PredictiveEcology/scfmutils@development,
     PredictiveEcology/SpaDES.core@development,
-    PredictiveEcology/SpaDES.project@transition
+    PredictiveEcology/SpaDES.project@development
 Encoding: UTF-8
 Language: en-CA
 License: GPL (>= 3)
