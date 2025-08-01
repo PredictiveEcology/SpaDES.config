@@ -16,7 +16,7 @@ Authors@R: c(
            role = c("aut"), comment = c(ORCID = "0000-0002-6914-8316"))
     )
 Depends:
-    R (>= 4.2),
+    R (>= 4.3),
     SpaDES.project
 Imports:
     crayon,
