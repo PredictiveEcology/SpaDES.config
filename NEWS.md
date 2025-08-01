@@ -1,5 +1,19 @@
 # SpaDES.config (development version)
 
+* use `PredictiveEcology/SpaDES.project@development` following merge of `transition` branch;
+* documentation improvements;
+* update and add new tests;
+
+# SpaDES.config 1.0.7
+
+* require `scfmutils >= 0.0.13`;
+* rename `.needPkg()` to `needPkg()` and export;
+* export `modList()`;
+
+# SpaDES.config 1.0.6
+
+* add `box` to Suggests for use with tests;
+* fix issue with `getModule()` shim creation;
 * minor improvements;
 
 # SpaDES.config 1.0.5
