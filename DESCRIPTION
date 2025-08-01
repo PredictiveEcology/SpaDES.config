@@ -8,7 +8,7 @@ URL:
     https://spades-config.predictiveecology.org/,
     https://github.com/PredictiveEcology/SpaDES.config
 Date: 2025-08-01
-Version: 1.0.7.9000
+Version: 1.0.7.9001
 Authors@R: c(
     person("Alex M", "Chubaty", email = "achubaty@for-cast.ca",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7146-8135")),
@@ -32,13 +32,11 @@ Suggests:
     fireSenseUtils,
     googledrive,
     httr,
-    knitr,
     LandR,
     lme4,
     pemisc,
     raster,
     reproducible,
-    rmarkdown,
     roxygen2,
     RPostgres,
     RSQLite,
@@ -57,7 +55,6 @@ Remotes:
 Encoding: UTF-8
 Language: en-CA
 License: GPL (>= 3)
-VignetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/PredictiveEcology/SpaDES.config/issues
 ByteCompile: yes
 Roxygen: list(markdown = TRUE)
