@@ -1,5 +1,6 @@
 # SpaDES.config (development version)
 
+* drop support for R 4.2 due to changes in dependency packages;
 * use `PredictiveEcology/SpaDES.project@development` following merge of `transition` branch;
 * documentation improvements;
 * update and add new tests;
