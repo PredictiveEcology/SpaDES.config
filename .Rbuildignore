@@ -6,3 +6,5 @@
 ^box$
 ^docs$
 ^pkgdown$
+^[.]?air[.]toml$
+^\.vscode$
