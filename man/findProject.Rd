@@ -5,15 +5,18 @@
 \alias{findProjectName}
 \title{Find the project root directory}
 \usage{
-findProjectPath()
+findProjectPath(from_wd = TRUE)
 
 findProjectName()
+}
+\arguments{
+\item{from_wd}{logical indicating whether to fall back to current working directory.}
 }
 \value{
 \code{findProjectPath} returns an absolute path;
 \code{findProjectName} returns the basename of the path.
 }
 \description{
-Searches from current working directory for an Rstudio project file
-or git repository, falling back on using the current working directory.
+Searches from current working directory for an Rstudio project file or git repository,
+falling back on using the current working directory if \code{from_wd = TRUE}.
 }

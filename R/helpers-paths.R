@@ -125,8 +125,10 @@ paths4spades <- function(paths) {
 
 #' Find the project root directory
 #'
-#' Searches from current working directory for an Rstudio project file
-#' or git repository, falling back on using the current working directory.
+#' Searches from current working directory for an Rstudio project file or git repository,
+#' falling back on using the current working directory if `from_wd = TRUE`.
+#'
+#' @param from_wd logical indicating whether to fall back to current working directory.
 #'
 #' @return `findProjectPath` returns an absolute path;
 #'         `findProjectName` returns the basename of the path.
@@ -134,8 +136,12 @@ paths4spades <- function(paths) {
 #' @export
 #' @importFrom rprojroot find_root from_wd is_git_root is_rstudio_project
 #' @rdname findProject
-findProjectPath <- function() {
-  find_root(is_rstudio_project | is_git_root | from_wd, path = getwd())
+findProjectPath <- function(from_wd = TRUE) {
+  if (isTRUE(from_wd)) {
+    find_root(is_rstudio_project | is_git_root | from_wd, path = getwd())
+  } else {
+    find_root(is_rstudio_project | is_git_root, path = getwd())
+  }
 }
 
 #' @export
