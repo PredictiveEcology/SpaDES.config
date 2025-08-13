@@ -134,13 +134,18 @@ paths4spades <- function(paths) {
 #'         `findProjectName` returns the basename of the path.
 #'
 #' @export
-#' @importFrom rprojroot find_root from_wd is_git_root is_rstudio_project
 #' @rdname findProject
 findProjectPath <- function(from_wd = TRUE) {
   if (isTRUE(from_wd)) {
-    find_root(is_rstudio_project | is_git_root | from_wd, path = getwd())
+    rprojroot::find_root(
+      criterion = rprojroot::is_rstudio_project | rprojroot::is_git_root | rprojroot::from_wd,
+      path = getwd()
+    )
   } else {
-    find_root(is_rstudio_project | is_git_root, path = getwd())
+    rprojroot::find_root(
+      criterion = rprojroot::is_rstudio_project | rprojroot::is_git_root,
+      path = getwd()
+    )
   }
 }
 
