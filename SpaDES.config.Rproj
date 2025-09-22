@@ -22,4 +22,3 @@ PackageCheckArgs: --as-cran
 PackageRoxygenize: rd,collate,namespace,vignette
 
 QuitChildProcessesOnExit: Yes
-DisableExecuteRprofile: Yes

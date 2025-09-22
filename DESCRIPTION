@@ -7,8 +7,8 @@ Description: Tools for defining and validating project configurations
 URL:
     https://spades-config.predictiveecology.org/,
     https://github.com/PredictiveEcology/SpaDES.config
-Date: 2025-08-13
-Version: 1.0.7.9003
+Date: 2025-09-22
+Version: 1.0.7.9004
 Authors@R: c(
     person("Alex M", "Chubaty", email = "achubaty@for-cast.ca",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7146-8135")),
@@ -29,7 +29,6 @@ Suggests:
     box,
     covr,
     DBI,
-    fireSenseUtils,
     googledrive,
     httr,
     LandR,
@@ -40,16 +39,13 @@ Suggests:
     roxygen2,
     RPostgres,
     RSQLite,
-    scfmutils (>= 0.0.13),
     SpaDES.core (>= 1.1.1),
     testthat (>= 3.0.0),
     tiler
 Remotes:
-    PredictiveEcology/fireSenseUtils@development,
     PredictiveEcology/LandR@development,
     PredictiveEcology/pemisc@development,
     PredictiveEcology/reproducible@development,
-    PredictiveEcology/scfmutils@development,
     PredictiveEcology/SpaDES.core@development,
     PredictiveEcology/SpaDES.project@development
 Encoding: UTF-8
@@ -58,5 +54,5 @@ License: GPL (>= 3)
 BugReports: https://github.com/PredictiveEcology/SpaDES.config/issues
 ByteCompile: yes
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Config/testthat/edition: 3
