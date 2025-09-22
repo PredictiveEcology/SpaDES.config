@@ -1,6 +1,7 @@
 # SpaDES.config (development version)
 
 * drop support for R 4.2 due to changes in dependency packages;
+* remove suggested dependencies `fireSenseUtils` and `scfmutils` (#1);
 * use `PredictiveEcology/SpaDES.project@development` following merge of `transition` branch;
 * add `from_wd` argument to `findProjectPath`;
 * documentation improvements;
