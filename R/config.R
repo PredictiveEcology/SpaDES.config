@@ -207,7 +207,8 @@ projConfig <- R6::R6Class(
         logPath = .baseLogPath,
         modulePath = .baseModulePath,
         outputPath = .baseOutputPath,
-        projectPath = normPath(projectPath)
+        projectPath = normPath(projectPath),
+        sharedOutputPath = .baseOutputPath
       )
 
       private[[".args"]] <- list()
