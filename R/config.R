@@ -327,8 +327,10 @@ projConfig <- R6::R6Class(
         unknownModules <- passedParamNames[which(!passedParamNames %in% moduleNames)]
         unknownModules <- unknownModules[!unknownModules %in% c(".globals")]
         if (length(unknownModules) > 0) {
-          warning("Parameters specified for modules not found in `modules` and will be ignored:\n",
-                  paste(unknownModules, collapse = "\n"))
+          message(
+            "Parameters specified for modules not found in `modules` and will be ignored:\n",
+            paste(unknownModules, collapse = "\n")
+          )
         }
 
         mods2keep <- c(".globals", moduleNames)
