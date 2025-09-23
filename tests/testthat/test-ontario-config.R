@@ -62,10 +62,18 @@ test_that("Ontario config + context setup is working", {
   ## paths
   fs_is_abs_paths <- fs::is_absolute_path(unlist(config.onnrv$paths))
   names(fs_is_abs_paths) <- names(unlist(config.onnrv$paths))
-  expect_identical(fs_is_abs_paths,
-                   c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
-                     modulePath = FALSE, outputPath = FALSE,
-                     projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
+  expect_identical(
+    fs_is_abs_paths,
+    c(
+      cachePath = FALSE,
+      inputPath = FALSE,
+      logPath = FALSE,
+      modulePath = FALSE,
+      outputPath = FALSE,
+      projectPath = TRUE,
+      scratchPath = TRUE
+    )
+  )
   expect_identical(
     .getRelativePath(config.onnrv$paths[["outputPath"]], prjDir),
     file.path("outputs", "ON_AOU_5_CanESM5_SSP370", "rep01")
@@ -73,10 +81,6 @@ test_that("Ontario config + context setup is working", {
   expect_identical(
     .getRelativePath(config.onnrv$paths[["logPath"]], prjDir),
     file.path(.getRelativePath(config.onnrv$paths[["outputPath"]], prjDir), "log")
-  )
-  expect_identical(
-    .getRelativePath(config.onnrv$paths[["tilePath"]], prjDir),
-    file.path(.getRelativePath(config.onnrv$paths[["outputPath"]], prjDir), "tiles")
   )
 
   ## context 'fit' ---------------------------------------------------------------------------------
@@ -107,10 +111,18 @@ test_that("Ontario config + context setup is working", {
   ## paths
   fs_is_abs_paths <- fs::is_absolute_path(unlist(config.onnrv$paths))
   names(fs_is_abs_paths) <- names(unlist(config.onnrv$paths))
-  expect_identical(fs_is_abs_paths,
-                   c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
-                     modulePath = FALSE, outputPath = FALSE,
-                     projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
+  expect_identical(
+    fs_is_abs_paths,
+    c(
+      cachePath = FALSE,
+      inputPath = FALSE,
+      logPath = FALSE,
+      modulePath = FALSE,
+      outputPath = FALSE,
+      projectPath = TRUE,
+      scratchPath = TRUE
+    )
+  )
   expect_identical(
     .getRelativePath(config.onnrv$paths[["outputPath"]], prjDir),
     file.path("outputs", "ON_AOU_5_CanESM5_SSP370", "rep01")
@@ -118,10 +130,6 @@ test_that("Ontario config + context setup is working", {
   expect_identical(
     .getRelativePath(config.onnrv$paths[["logPath"]], prjDir),
     file.path(.getRelativePath(config.onnrv$paths[["outputPath"]], prjDir), "log")
-  )
-  expect_identical(
-    .getRelativePath(config.onnrv$paths[["tilePath"]], prjDir),
-    file.path(.getRelativePath(config.onnrv$paths[["outputPath"]], prjDir), "tiles")
   )
 
   ## climate scenarios -----------------------------------------------------------------------------
@@ -146,10 +154,18 @@ test_that("Ontario config + context setup is working", {
   ## paths
   fs_is_abs_paths <- fs::is_absolute_path(unlist(config.onnrv$paths))
   names(fs_is_abs_paths) <- names(unlist(config.onnrv$paths))
-  expect_identical(fs_is_abs_paths,
-                   c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
-                     modulePath = FALSE, outputPath = FALSE,
-                     projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
+  expect_identical(
+    fs_is_abs_paths,
+    c(
+      cachePath = FALSE,
+      inputPath = FALSE,
+      logPath = FALSE,
+      modulePath = FALSE,
+      outputPath = FALSE,
+      projectPath = TRUE,
+      scratchPath = TRUE
+    )
+  )
   expect_identical(
     .getRelativePath(config.onnrv$paths[["outputPath"]], prjDir),
     file.path("outputs", "ON_AOU_5_CanESM5_SSP585", "rep01")
@@ -157,10 +173,6 @@ test_that("Ontario config + context setup is working", {
   expect_identical(
     .getRelativePath(config.onnrv$paths[["logPath"]], prjDir),
     file.path(.getRelativePath(config.onnrv$paths[["outputPath"]], prjDir), "log")
-  )
-  expect_identical(
-    .getRelativePath(config.onnrv$paths[["tilePath"]], prjDir),
-    file.path(.getRelativePath(config.onnrv$paths[["outputPath"]], prjDir), "tiles")
   )
 
   ## mode postprocess ------------------------------------------------------------------------------
@@ -185,10 +197,18 @@ test_that("Ontario config + context setup is working", {
   ## paths
   fs_is_abs_paths <- fs::is_absolute_path(unlist(config.onnrv$paths))
   names(fs_is_abs_paths) <- names(unlist(config.onnrv$paths))
-  expect_identical(fs_is_abs_paths,
-                   c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE,
-                     modulePath = FALSE, outputPath = FALSE,
-                     projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE))
+  expect_identical(
+    fs_is_abs_paths,
+    c(
+      cachePath = FALSE,
+      inputPath = FALSE,
+      logPath = FALSE,
+      modulePath = FALSE,
+      outputPath = FALSE,
+      projectPath = TRUE,
+      scratchPath = TRUE
+    )
+  )
   expect_identical(
     .getRelativePath(config.onnrv$paths[["outputPath"]], prjDir),
     file.path("outputs", "ON_AOU_5_CanESM5_SSP585")
@@ -196,10 +216,6 @@ test_that("Ontario config + context setup is working", {
   expect_identical(
     .getRelativePath(config.onnrv$paths[["logPath"]], prjDir),
     file.path(.getRelativePath(config.onnrv$paths[["outputPath"]], prjDir), "log")
-  )
-  expect_identical(
-    .getRelativePath(config.onnrv$paths[["tilePath"]], prjDir),
-    file.path(.getRelativePath(config.onnrv$paths[["outputPath"]], prjDir), "tiles")
   )
   rm(config.onnrv)
 })

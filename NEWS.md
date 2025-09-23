@@ -4,6 +4,7 @@
 * remove suggested dependencies `fireSenseUtils` and `scfmutils` (#1);
 * use `PredictiveEcology/SpaDES.project@development` following merge of `transition` branch;
 * add `from_wd` argument to `findProjectPath`;
+* remove `tilePath` from default paths;
 * message instead of warning for ignored module parameters;
 * documentation improvements;
 * update and add new tests;

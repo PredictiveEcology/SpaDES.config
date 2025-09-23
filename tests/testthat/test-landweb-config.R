@@ -29,9 +29,6 @@ test_that("LandWeb config + context setup is working", {
   expect_identical(config.lw$modules, pr_mods)
 
   ## options
-  expect_equal(config.lw$options[["map.dataPath"]], config.lw$paths[["inputPath"]], ignore_attr = TRUE)
-  expect_equal(config.lw$options[["map.tilePath"]], config.lw$paths[["tilePath"]], ignore_attr = TRUE)
-  expect_equal(config.lw$options[["rasterMaxMemory"]], 1e12)
   expect_equal(config.lw$options[["reproducible.destinationPath"]], config.lw$paths[["inputPath"]], ignore_attr = TRUE)
 
   ## params
@@ -45,16 +42,20 @@ test_that("LandWeb config + context setup is working", {
   ## paths
   expect_identical(
     fs::is_absolute_path(unlist(config.lw$paths)),
-    c(cachePath = FALSE, inputPath = FALSE, logPath = FALSE, modulePath = FALSE, outputPath = FALSE,
-      projectPath = TRUE, scratchPath = TRUE, tilePath = FALSE) |> unname()
+    c(
+      cachePath = FALSE,
+      inputPath = FALSE,
+      logPath = FALSE,
+      modulePath = FALSE,
+      outputPath = FALSE,
+      projectPath = TRUE,
+      scratchPath = TRUE
+    ) |>
+      unname()
   )
   expect_identical(
     .getRelativePath(config.lw$paths[["logPath"]], prjDir),
     file.path("outputs", "LandWeb_full_v3", "rep01", "log")
-  )
-  expect_identical(
-    .getRelativePath(config.lw$paths[["tilePath"]], prjDir),
-    file.path("outputs", "LandWeb_full_v3", "rep01", "tiles")
   )
 
   rm(config.lw)
@@ -75,9 +76,6 @@ test_that("LandWeb config + context setup is working", {
   expect_identical(config.mb$modules, dv_mods)
 
   ## options
-  expect_equal(config.mb$options[["map.dataPath"]], config.mb$paths[["inputPath"]], ignore_attr = TRUE)
-  expect_equal(config.mb$options[["map.tilePath"]], config.mb$paths[["tilePath"]], ignore_attr = TRUE)
-  expect_equal(config.mb$options[["rasterMaxMemory"]], 5e9)
   expect_equal(config.mb$options[["reproducible.destinationPath"]], config.mb$paths[["inputPath"]], ignore_attr = TRUE)
 
   ## params
@@ -88,10 +86,6 @@ test_that("LandWeb config + context setup is working", {
   expect_identical(
     .getRelativePath(config.mb$paths[["logPath"]], prjDir),
     file.path("outputs", "provMB_v3_burnyROS", "rep05", "log")
-  )
-  expect_identical(
-    .getRelativePath(config.mb$paths[["tilePath"]], prjDir),
-    file.path("outputs", "provMB_v3_burnyROS", "rep05", "tiles")
   )
 
   rm(config.mb)
@@ -129,10 +123,6 @@ test_that("LandWeb config + context setup is working", {
     .getRelativePath(config.pp.tolko$paths[["logPath"]], prjDir),
     file.path("outputs", "Tolko_AB_N_aspenDispersal_logROS", "log")
   )
-  expect_identical(
-    .getRelativePath(config.pp.tolko$paths[["tilePath"]], prjDir),
-    file.path("outputs", "Tolko_AB_N_aspenDispersal_logROS", "tiles")
-  )
 
   rm(config.pp.tolko)
 
@@ -166,10 +156,6 @@ test_that("LandWeb config + context setup is working", {
   expect_identical(
     .getRelativePath(config.pp.e14$paths[["logPath"]], prjDir),
     file.path("outputs", "FMU_E14_highDispersal_logROS_res125", "rep10", "log")
-  )
-  expect_identical(
-    .getRelativePath(config.pp.e14$paths[["tilePath"]], prjDir),
-    file.path("outputs", "FMU_E14_highDispersal_logROS_res125", "rep10", "tiles")
   )
 
   rm(config.pp.e14)

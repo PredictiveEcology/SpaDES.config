@@ -268,8 +268,6 @@ projConfig <- R6::R6Class(
 
       ## check that known options using paths are correct ------------------------------------------
       stopifnot(
-        normPath(self$options[["map.dataPath"]]) == normPath(self$paths[["inputPath"]]),
-        normPath(self$options[["map.tilePath"]]) == normPath(self$paths[["tilePath"]]),
         normPath(self$options[["reproducible.destinationPath"]]) == normPath(self$paths[["inputPath"]])
       )
 
@@ -376,21 +374,10 @@ projConfig <- R6::R6Class(
         names(updatedPaths) <- pathNames
 
         updatedPaths[["logPath"]] <- file.path(updatedPaths[["outputPath"]], "log")
-        updatedPaths[["tilePath"]] <- file.path(updatedPaths[["outputPath"]], "tiles")
 
         private[[".paths"]] <- updatedPaths
 
         ## update known paths in options
-        if ("map.dataPath" %in% names(self$options)) {
-          private[[".options"]][["map.dataPath"]] <- private[[".paths"]][["inputPath"]]
-          attr(private[[".options"]][["map.dataPath"]], "auto") <- TRUE
-        }
-
-        if ("map.tilePath" %in% names(self$options)) {
-          private[[".options"]][["map.tilePath"]] <- private[[".paths"]][["tilePath"]]
-          attr(private[[".options"]][["map.tilePath"]], "auto") <- TRUE
-        }
-
         if ("reproducible.destinationPath" %in% names(self$options)) {
           private[[".options"]][["reproducible.destinationPath"]] <- private[[".paths"]][["inputPath"]]
           attr(private[[".options"]][["reproducible.destinationPath"]], "auto") <- TRUE
