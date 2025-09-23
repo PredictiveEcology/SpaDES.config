@@ -88,7 +88,11 @@ projContext <- R6::R6Class(
         } else {
           value
         }
-        private[[".runName"]] <- sprintf("%s_rep%02d", private[[".studyAreaName"]], private[[".rep"]])
+        private[[".runName"]] <- sprintf(
+          "%s_rep%02d",
+          private[[".studyAreaName"]],
+          private[[".rep"]]
+        )
       }
     },
 
@@ -98,7 +102,11 @@ projContext <- R6::R6Class(
         return(private[[".rep"]])
       } else {
         private[[".rep"]] <- as.integer(value)
-        private[[".runName"]] <- sprintf("%s_rep%02d", private[[".studyAreaName"]], private[[".rep"]])
+        private[[".runName"]] <- sprintf(
+          "%s_rep%02d",
+          private[[".studyAreaName"]],
+          private[[".rep"]]
+        )
       }
     },
 
@@ -115,7 +123,7 @@ projContext <- R6::R6Class(
     .mode = NA_character_,
     .projectPath = NA_character_,
     .rep = NA_integer_,
-    .runName  = NA_character_,
+    .runName = NA_character_,
     .studyAreaName = NA_character_
   )
 )
@@ -228,7 +236,10 @@ projConfig <- R6::R6Class(
 
       modsInPrj <- list.dirs(fullModulePath, recursive = FALSE, full.names = FALSE)
       if (!all(self$modules %in% modsInPrj)) {
-        warning("modules list contains modules not found in modulePath ", self$paths[["modulePath"]])
+        warning(
+          "modules list contains modules not found in modulePath ",
+          self$paths[["modulePath"]]
+        )
       }
 
       ## check user-specified params against module metadata ---------------------------------------
@@ -256,8 +267,13 @@ projConfig <- R6::R6Class(
         params_ <- lapply(names(params_), function(x) {
           if (any(grepl("sim", params_[[x]]))) {
             ids <- which(grepl("\\(sim\\)", params_[[x]]))
-            message("NOTE: parameters in module ", x, " contain `sim`: ",
-                    paste(names(params_[[x]][ids]), collapse = ", "), ".")
+            message(
+              "NOTE: parameters in module ",
+              x,
+              " contain `sim`: ",
+              paste(names(params_[[x]][ids]), collapse = ", "),
+              "."
+            )
           }
           params_[[x]]
         })
@@ -268,7 +284,8 @@ projConfig <- R6::R6Class(
 
       ## check that known options using paths are correct ------------------------------------------
       stopifnot(
-        normPath(self$options[["reproducible.destinationPath"]]) == normPath(self$paths[["inputPath"]])
+        normPath(self$options[["reproducible.destinationPath"]]) ==
+          normPath(self$paths[["inputPath"]])
       )
 
       invisible(self)
@@ -379,7 +396,9 @@ projConfig <- R6::R6Class(
 
         ## update known paths in options
         if ("reproducible.destinationPath" %in% names(self$options)) {
-          private[[".options"]][["reproducible.destinationPath"]] <- private[[".paths"]][["inputPath"]]
+          private[[".options"]][["reproducible.destinationPath"]] <- private[[".paths"]][[
+            "inputPath"
+          ]]
           attr(private[[".options"]][["reproducible.destinationPath"]], "auto") <- TRUE
         }
       }

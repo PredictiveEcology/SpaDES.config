@@ -5,12 +5,25 @@ test_that("Ontario config + context setup is working", {
   prjDir <- "~/GitHub/Ontario_AOU_ROF"
 
   ## NOTE: user expected to add their preamble module to their project config
-  pr_mods <- list("Biomass_borealDataPrep", "Biomass_core", "Biomass_regeneration",
-                  "Biomass_speciesData", "Biomass_speciesFactorial", "Biomass_speciesParameters",
-                  "canClimateData", "fireSense", "fireSense_dataPrepFit",
-                  "fireSense_dataPrepPredict", "fireSense_EscapeFit", "fireSense_EscapePredict",
-                  "fireSense_IgnitionFit", "fireSense_IgnitionPredict", "fireSense_SpreadFit",
-                  "fireSense_SpreadPredict", "gmcsDataPrep")
+  pr_mods <- list(
+    "Biomass_borealDataPrep",
+    "Biomass_core",
+    "Biomass_regeneration",
+    "Biomass_speciesData",
+    "Biomass_speciesFactorial",
+    "Biomass_speciesParameters",
+    "canClimateData",
+    "fireSense",
+    "fireSense_dataPrepFit",
+    "fireSense_dataPrepPredict",
+    "fireSense_EscapeFit",
+    "fireSense_EscapePredict",
+    "fireSense_IgnitionFit",
+    "fireSense_IgnitionPredict",
+    "fireSense_SpreadFit",
+    "fireSense_SpreadPredict",
+    "gmcsDataPrep"
+  )
   names(pr_mods) <- pr_mods
   dv_mods <- pr_mods
   pp_mods <- list("Biomass_summary", "fireSense_summary", "birds_BRT", "NRV_summary")
@@ -22,8 +35,12 @@ test_that("Ontario config + context setup is working", {
   boxMod <- file.path(boxDir, "onnrv.R")
   prjMod <- file.path(prjDir, "box", "prjcfg.R")
 
-  if (!dir.exists(boxDir)) dir.create(boxDir)
-  if (!file.exists(boxMod)) file.symlink(prjMod, boxMod)
+  if (!dir.exists(boxDir)) {
+    dir.create(boxDir)
+  }
+  if (!file.exists(boxMod)) {
+    file.symlink(prjMod, boxMod)
+  }
   expect_true(is.symlink(boxMod))
 
   box::use(./box/onnrv)
@@ -32,15 +49,22 @@ test_that("Ontario config + context setup is working", {
   suppressWarnings({
     config.onnrv <- onnrv$onnrvConfig$new(
       projectPath = prjDir,
-      climateGCM = "CanESM5", climateSSP = 370,
-      mode = "development", nrvType = "hrv",
-      rep = 1L, res = 250, studyAreaName = .studyAreaName
+      climateGCM = "CanESM5",
+      climateSSP = 370,
+      mode = "development",
+      nrvType = "hrv",
+      rep = 1L,
+      res = 250,
+      studyAreaName = .studyAreaName
     )$update()$validate()
   }) ## can't use expect_warning with object assignment
 
   ## context
-  expect_equal(config.onnrv$context[["runName"]],
-               "ON_AOU_5_CanESM5_SSP370_rep01", ignore_attr = TRUE)
+  expect_equal(
+    config.onnrv$context[["runName"]],
+    "ON_AOU_5_CanESM5_SSP370_rep01",
+    ignore_attr = TRUE
+  )
 
   ## args
   expect_equal(config.onnrv$args[["delayStart"]], 0L)
@@ -50,13 +74,23 @@ test_that("Ontario config + context setup is working", {
   expect_identical(config.onnrv$modules, pr_mods)
 
   ## options
-  expect_equal(config.onnrv$options[["reproducible.destinationPath"]], config.onnrv$paths[["inputPath"]], ignore_attr = TRUE)
+  expect_equal(
+    config.onnrv$options[["reproducible.destinationPath"]],
+    config.onnrv$paths[["inputPath"]],
+    ignore_attr = TRUE
+  )
 
   ## params
   expect_identical(names(config.onnrv$params), c(".globals", names(config.onnrv$modules)))
   expect_identical(config.onnrv$params$.globals$.studyAreaName, "ON_AOU_5")
-  expect_identical(config.onnrv$params$Biomass_borealDataPrep$.studyAreaName, config.onnrv$params$.globals$.studyAreaName)
-  expect_identical(config.onnrv$params$Biomass_borealDataPrep$.plots, config.onnrv$params$.globals$.plots)
+  expect_identical(
+    config.onnrv$params$Biomass_borealDataPrep$.studyAreaName,
+    config.onnrv$params$.globals$.studyAreaName
+  )
+  expect_identical(
+    config.onnrv$params$Biomass_borealDataPrep$.plots,
+    config.onnrv$params$.globals$.plots
+  )
   expect_identical(config.onnrv$params$Biomass_speciesData$types, "KNN")
 
   ## paths
@@ -88,8 +122,11 @@ test_that("Ontario config + context setup is working", {
   expect_warning(config.onnrv$update()$validate(), expWarn)
 
   ## context
-  expect_equal(config.onnrv$context[["runName"]],
-               "ON_AOU_5_CanESM5_SSP370_rep01", ignore_attr = TRUE)
+  expect_equal(
+    config.onnrv$context[["runName"]],
+    "ON_AOU_5_CanESM5_SSP370_rep01",
+    ignore_attr = TRUE
+  )
 
   ## args
   expect_equal(config.onnrv$args[["delayStart"]], 0L)
@@ -99,13 +136,23 @@ test_that("Ontario config + context setup is working", {
   expect_identical(config.onnrv$modules, pr_mods)
 
   ## options
-  expect_equal(config.onnrv$options[["reproducible.destinationPath"]], config.onnrv$paths[["inputPath"]], ignore_attr = TRUE)
+  expect_equal(
+    config.onnrv$options[["reproducible.destinationPath"]],
+    config.onnrv$paths[["inputPath"]],
+    ignore_attr = TRUE
+  )
 
   ## params
   expect_identical(names(config.onnrv$params), c(".globals", names(config.onnrv$modules)))
   expect_identical(config.onnrv$params$.globals$.studyAreaName, "ON_AOU_5")
-  expect_identical(config.onnrv$params$Biomass_borealDataPrep$.studyAreaName, config.onnrv$params$.globals$.studyAreaName)
-  expect_identical(config.onnrv$params$Biomass_borealDataPrep$.plots, config.onnrv$params$.globals$.plots)
+  expect_identical(
+    config.onnrv$params$Biomass_borealDataPrep$.studyAreaName,
+    config.onnrv$params$.globals$.studyAreaName
+  )
+  expect_identical(
+    config.onnrv$params$Biomass_borealDataPrep$.plots,
+    config.onnrv$params$.globals$.plots
+  )
   expect_identical(config.onnrv$params$Biomass_speciesData$types, "KNN")
 
   ## paths
@@ -137,7 +184,11 @@ test_that("Ontario config + context setup is working", {
   expect_warning(config.onnrv$update()$validate(), expWarn)
 
   ## context
-  expect_equal(config.onnrv$context[["runName"]], "ON_AOU_5_CanESM5_SSP585_rep01", ignore_attr = TRUE)
+  expect_equal(
+    config.onnrv$context[["runName"]],
+    "ON_AOU_5_CanESM5_SSP585_rep01",
+    ignore_attr = TRUE
+  )
 
   ## args
   ##

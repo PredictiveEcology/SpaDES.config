@@ -4,15 +4,34 @@ test_that("BC NRV [SCFM] config + context setup is working", {
   ## project: BC_HRV ------------------------------------------------------------------------------
   prjDir <- "~/GitHub/BC_HRV"
 
-  pr_mods <- list("BC_HRV_preamble", "Biomass_borealDataPrep", "Biomass_core",
-                  "Biomass_regeneration", "Biomass_speciesData", "Biomass_speciesParameters",
-                  "LandWeb_output", "timeSinceFire") |>
-    append(list("scfmDiagnostics", "scfmDriver", "scfmEscape", "scfmIgnition",
-                "scfmLandcoverInit", "scfmRegime", "scfmSpread"))
+  pr_mods <- list(
+    "BC_HRV_preamble",
+    "Biomass_borealDataPrep",
+    "Biomass_core",
+    "Biomass_regeneration",
+    "Biomass_speciesData",
+    "Biomass_speciesParameters",
+    "LandWeb_output",
+    "timeSinceFire"
+  ) |>
+    append(list(
+      "scfmDiagnostics",
+      "scfmDriver",
+      "scfmEscape",
+      "scfmIgnition",
+      "scfmLandcoverInit",
+      "scfmRegime",
+      "scfmSpread"
+    ))
   names(pr_mods) <- pr_mods
   dv_mods <- pr_mods
-  pp_mods <- list("BC_HRV_preamble", "Biomass_speciesData", "HSI_PineMarten",
-                  "LandWeb_summary", "NRV_summary") |>
+  pp_mods <- list(
+    "BC_HRV_preamble",
+    "Biomass_speciesData",
+    "HSI_PineMarten",
+    "LandWeb_summary",
+    "NRV_summary"
+  ) |>
     append(list("scfmDiagnostics"))
   names(pp_mods) <- pp_mods
 
@@ -21,8 +40,12 @@ test_that("BC NRV [SCFM] config + context setup is working", {
   boxDir <- file.path("tests", "testthat", "box")
   boxMod <- file.path(prjDir, "box", "bcnrv.R")
 
-  if (!dir.exists(boxDir)) dir.create(boxDir)
-  if (!file.exists(boxMod)) file.symlink(boxMod, file.path(boxDir, "bcnrv.R"))
+  if (!dir.exists(boxDir)) {
+    dir.create(boxDir)
+  }
+  if (!file.exists(boxMod)) {
+    file.symlink(boxMod, file.path(boxDir, "bcnrv.R"))
+  }
 
   box::use(./box/bcnrv)
 
@@ -30,14 +53,20 @@ test_that("BC NRV [SCFM] config + context setup is working", {
   suppressWarnings({
     config.bc <- bcnrv$bcnrvConfig$new(
       projectPath = prjDir,
-      fireModel = "scfm", nrvType = "hrv",
-      mode = "development", rep = 1L, studyAreaName = .studyAreaName
+      fireModel = "scfm",
+      nrvType = "hrv",
+      mode = "development",
+      rep = 1L,
+      studyAreaName = .studyAreaName
     )$update()$validate()
   }) ## can't use expect_warning with object assignment
 
   ## context
-  expect_equal(config.bc$context[["runName"]],
-               "multiple_LUs_n04_d6b6441dd2d0e467_scfm_hrv_BECSUBZONE_res125_rep01", ignore_attr = TRUE)
+  expect_equal(
+    config.bc$context[["runName"]],
+    "multiple_LUs_n04_d6b6441dd2d0e467_scfm_hrv_BECSUBZONE_res125_rep01",
+    ignore_attr = TRUE
+  )
 
   ## args
   expect_equal(config.bc$args[["delayStart"]], 0L)
@@ -55,7 +84,10 @@ test_that("BC NRV [SCFM] config + context setup is working", {
   ## params
   expect_identical(names(config.bc$params), c(".globals", names(config.bc$modules)))
   expect_identical(config.bc$params$.globals$.studyAreaName, "multiple_LUs_n04_d6b6441dd2d0e467")
-  expect_identical(config.bc$params$Biomass_borealDataPrep$.studyAreaName, config.bc$params$.globals$.studyAreaName)
+  expect_identical(
+    config.bc$params$Biomass_borealDataPrep$.studyAreaName,
+    config.bc$params$.globals$.studyAreaName
+  )
   expect_identical(config.bc$params$Biomass_borealDataPrep$.plots, config.bc$params$.globals$.plots)
   expect_identical(config.bc$params$Biomass_speciesData$types, NULL)
   expect_identical(config.bc$params$BC_HRV_preamble$pixelSize, 125)
@@ -92,8 +124,11 @@ test_that("BC NRV [SCFM] config + context setup is working", {
   expect_warning(config.bc$update()$validate(), expWarn)
 
   ## context
-  expect_equal(config.bc$context[["runName"]],
-               "NRR_Cariboo_scfm_hrv_BECSUBZONE_res125_rep01", ignore_attr = TRUE)
+  expect_equal(
+    config.bc$context[["runName"]],
+    "NRR_Cariboo_scfm_hrv_BECSUBZONE_res125_rep01",
+    ignore_attr = TRUE
+  )
 
   ## args
   ##
@@ -283,7 +318,7 @@ test_that("BC NRV [FIRESENSE] config + context setup is working", {
   }
   expect_true(is.symlink(boxMod))
 
-  box::use(. / box / bcnrv)
+  box::use(./box/bcnrv)
 
   expWarn <- "Parameters specified for modules not found in `modules` and will be ignored"
   suppressWarnings({

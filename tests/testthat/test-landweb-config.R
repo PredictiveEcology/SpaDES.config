@@ -4,19 +4,37 @@ test_that("LandWeb config + context setup is working", {
   ## project: landweb ------------------------------------------------------------------------------
   prjDir <- "~/GitHub/LandWeb"
 
-  pr_mods <- list("Biomass_borealDataPrep", "Biomass_core", "Biomass_regeneration",
-                  "Biomass_speciesData",
-                  "LandMine", "LandWeb_output", "LandWeb_preamble", "timeSinceFire")
+  pr_mods <- list(
+    "Biomass_borealDataPrep",
+    "Biomass_core",
+    "Biomass_regeneration",
+    "Biomass_speciesData",
+    "LandMine",
+    "LandWeb_output",
+    "LandWeb_preamble",
+    "timeSinceFire"
+  )
   names(pr_mods) <- pr_mods
   dv_mods <- pr_mods
-  pp_mods <- list("LandWeb_preamble", "Biomass_speciesData",
-                  "burnSummaries", "LandMine", "LandWeb_summary")
+  pp_mods <- list(
+    "LandWeb_preamble",
+    "Biomass_speciesData",
+    "burnSummaries",
+    "LandMine",
+    "LandWeb_summary"
+  )
   names(pp_mods) <- pp_mods
 
   ## study area: LandWeb ---------------------------------------------------------------------------
   config.lw <- suppressWarnings({
-    useConfig(projectName = "LandWeb", projectPath = prjDir,
-              mode = "development", rep = 1L, studyAreaName = "LandWeb", version = 3)
+    useConfig(
+      projectName = "LandWeb",
+      projectPath = prjDir,
+      mode = "development",
+      rep = 1L,
+      studyAreaName = "LandWeb",
+      version = 3
+    )
   })
 
   ## context
@@ -29,15 +47,25 @@ test_that("LandWeb config + context setup is working", {
   expect_identical(config.lw$modules, pr_mods)
 
   ## options
-  expect_equal(config.lw$options[["reproducible.destinationPath"]], config.lw$paths[["inputPath"]], ignore_attr = TRUE)
+  expect_equal(
+    config.lw$options[["reproducible.destinationPath"]],
+    config.lw$paths[["inputPath"]],
+    ignore_attr = TRUE
+  )
 
   ## params
   expect_identical(names(config.lw$params), c(".globals", names(config.lw$modules)))
   expect_identical(config.lw$params$.globals$.studyAreaName, "LandWeb_full_v3")
   expect_identical(config.lw$params$Biomass_core$initialB, 10)
-  expect_identical(config.lw$params$Biomass_borealDataPrep$.studyAreaName, config.lw$params$.globals$.studyAreaName)
+  expect_identical(
+    config.lw$params$Biomass_borealDataPrep$.studyAreaName,
+    config.lw$params$.globals$.studyAreaName
+  )
   expect_identical(config.lw$params$Biomass_borealDataPrep$.plots, config.lw$params$.globals$.plots)
-  expect_identical(config.lw$params$Biomass_speciesData$types, c("KNN", "CASFRI", "Pickell", "ForestInventory"))
+  expect_identical(
+    config.lw$params$Biomass_speciesData$types,
+    c("KNN", "CASFRI", "Pickell", "ForestInventory")
+  )
 
   ## paths
   expect_identical(
@@ -62,8 +90,15 @@ test_that("LandWeb config + context setup is working", {
 
   ## study area: manitoba --------------------------------------------------------------------------
   config.mb <- suppressWarnings({
-    useConfig(projectName = "LandWeb", projectPath = prjDir,
-              mode = "production", rep = 5, ROStype = "burny", studyAreaName = "provMB", version = 3)
+    useConfig(
+      projectName = "LandWeb",
+      projectPath = prjDir,
+      mode = "production",
+      rep = 5,
+      ROStype = "burny",
+      studyAreaName = "provMB",
+      version = 3
+    )
   })
 
   ## context
@@ -76,11 +111,18 @@ test_that("LandWeb config + context setup is working", {
   expect_identical(config.mb$modules, dv_mods)
 
   ## options
-  expect_equal(config.mb$options[["reproducible.destinationPath"]], config.mb$paths[["inputPath"]], ignore_attr = TRUE)
+  expect_equal(
+    config.mb$options[["reproducible.destinationPath"]],
+    config.mb$paths[["inputPath"]],
+    ignore_attr = TRUE
+  )
 
   ## params
   expect_identical(config.mb$params[[".globals"]][[".studyAreaName"]], "provMB_v3")
-  expect_identical(config.mb$params[["Biomass_speciesData"]][["types"]], c("KNN", "CASFRI", "Pickell", "MBFRI"))
+  expect_identical(
+    config.mb$params[["Biomass_speciesData"]][["types"]],
+    c("KNN", "CASFRI", "Pickell", "MBFRI")
+  )
 
   ## paths
   expect_identical(
@@ -93,8 +135,14 @@ test_that("LandWeb config + context setup is working", {
   ## study area: Tolko_AB_N (v2) -------------------------------------------------------------------
   ## mode:       postprocess
   config.pp.tolko <- suppressWarnings({
-    useConfig(projectName = "LandWeb", projectPath = prjDir,
-              mode = "postprocess", rep = NA_integer_, studyAreaName = "Tolko_AB_N", version = 2)
+    useConfig(
+      projectName = "LandWeb",
+      projectPath = prjDir,
+      mode = "postprocess",
+      rep = NA_integer_,
+      studyAreaName = "Tolko_AB_N",
+      version = 2
+    )
   }) ## TODO: currently warns about params specified for "missing" modules not used in postprocess
   config.pp.tolko$context[["dispersalType"]] <- "aspen"
   suppressWarnings({
@@ -102,21 +150,33 @@ test_that("LandWeb config + context setup is working", {
   })
 
   ## context
-  expect_equal(config.pp.tolko$context[["runName"]], "Tolko_AB_N_aspenDispersal_logROS", ignore_attr = TRUE)
+  expect_equal(
+    config.pp.tolko$context[["runName"]],
+    "Tolko_AB_N_aspenDispersal_logROS",
+    ignore_attr = TRUE
+  )
 
   ## args
   expect_equal(config.pp.tolko$args[["delayStart"]], 0L)
 
   ## modules
-  pp_mods <- list("LandWeb_preamble", "Biomass_speciesData",
-                  "burnSummaries", "LandMine", "LandWeb_summary")
+  pp_mods <- list(
+    "LandWeb_preamble",
+    "Biomass_speciesData",
+    "burnSummaries",
+    "LandMine",
+    "LandWeb_summary"
+  )
   names(pp_mods) <- pp_mods
   expect_identical(config.pp.tolko$modules, pp_mods)
 
   ## params
   expect_identical(config.pp.tolko$params[[".globals"]][[".studyAreaName"]], "Tolko_AB_N")
   expect_identical(config.pp.tolko$params[[".globals"]][["initialB"]], NA_real_)
-  expect_identical(config.pp.tolko$params[["Biomass_speciesData"]][["types"]], c("KNN", "CASFRI", "Pickell", "ForestInventory"))
+  expect_identical(
+    config.pp.tolko$params[["Biomass_speciesData"]][["types"]],
+    c("KNN", "CASFRI", "Pickell", "ForestInventory")
+  )
   expect_identical(config.pp.tolko$params[["LandWeb_summary"]][["reps"]], 1L:15L)
 
   expect_identical(
@@ -129,8 +189,14 @@ test_that("LandWeb config + context setup is working", {
   ## study area: FMU E14 ---------------------------------------------------------------------------
   ## mode:       production
   config.pp.e14 <- suppressWarnings({
-    useConfig(projectName = "LandWeb", projectPath = prjDir,
-              mode = "production", rep = 10, studyAreaName = "FMU_E14", version = 2)
+    useConfig(
+      projectName = "LandWeb",
+      projectPath = prjDir,
+      mode = "production",
+      rep = 10,
+      studyAreaName = "FMU_E14",
+      version = 2
+    )
   }) ## TODO: currently warns about params specified for "missing" modules not used in postprocess
 
   ## context
@@ -151,7 +217,10 @@ test_that("LandWeb config + context setup is working", {
   ## params
   expect_identical(config.pp.e14$params[[".globals"]][[".studyAreaName"]], "FMU_E14")
   expect_identical(config.pp.e14[["params"]][["Biomass_core"]][["initialB"]], NA_real_)
-  expect_identical(config.pp.e14$params[["Biomass_speciesData"]][["types"]], c("KNN", "CASFRI", "Pickell", "ForestInventory"))
+  expect_identical(
+    config.pp.e14$params[["Biomass_speciesData"]][["types"]],
+    c("KNN", "CASFRI", "Pickell", "ForestInventory")
+  )
 
   expect_identical(
     .getRelativePath(config.pp.e14$paths[["logPath"]], prjDir),
