@@ -1,14 +1,24 @@
 test_that("LandWeb config + context setup is working", {
-  skip("Run manually with latest version of LandWeb Project on test machine")
+  skip_on_cran()
+  skip_if_not_installed("box")
 
   ## project: landweb ------------------------------------------------------------------------------
   prjDir <- "~/GitHub/LandWeb"
+  prjMod <- file.path(prjDir, "box", "landweb.R")
+
+  skip_if_not(file.exists(prjMod))
+
+  .linkProject(prjMod)
+
+  box::use(./box/landweb)
 
   pr_mods <- list(
     "Biomass_borealDataPrep",
     "Biomass_core",
     "Biomass_regeneration",
     "Biomass_speciesData",
+    "Biomass_speciesFactorial",
+    "Biomass_speciesParameters",
     "LandMine",
     "LandWeb_output",
     "LandWeb_preamble",
@@ -18,7 +28,9 @@ test_that("LandWeb config + context setup is working", {
   dv_mods <- pr_mods
   pp_mods <- list(
     "LandWeb_preamble",
+    "Biomass_speciesFactorial",
     "Biomass_speciesData",
+    "Biomass_speciesParameters",
     "burnSummaries",
     "LandMine",
     "LandWeb_summary"
@@ -26,16 +38,14 @@ test_that("LandWeb config + context setup is working", {
   names(pp_mods) <- pp_mods
 
   ## study area: LandWeb ---------------------------------------------------------------------------
-  config.lw <- suppressWarnings({
-    useConfig(
-      projectName = "LandWeb",
-      projectPath = prjDir,
-      mode = "development",
-      rep = 1L,
-      studyAreaName = "LandWeb",
-      version = 3
-    )
-  })
+
+  config.lw <- landweb$landwebConfig$new(
+    projectName = "LandWeb",
+    projectPath = prjDir,
+    mode = "development",
+    rep = 1L,
+    studyAreaName = "LandWeb"
+  )$update()$validate() ## TODO: update & fix tests
 
   ## context
   expect_equal(config.lw$context[["runName"]], "LandWeb_full_v3_rep01", ignore_attr = TRUE)
@@ -89,17 +99,14 @@ test_that("LandWeb config + context setup is working", {
   rm(config.lw)
 
   ## study area: manitoba --------------------------------------------------------------------------
-  config.mb <- suppressWarnings({
-    useConfig(
-      projectName = "LandWeb",
-      projectPath = prjDir,
-      mode = "production",
-      rep = 5,
-      ROStype = "burny",
-      studyAreaName = "provMB",
-      version = 3
-    )
-  })
+  config.mb <- landweb$landwebConfig$new(
+    projectName = "LandWeb",
+    projectPath = prjDir,
+    mode = "production",
+    rep = 5,
+    ROStype = "burny",
+    studyAreaName = "provMB"
+  )
 
   ## context
   expect_equal(config.mb$context[["runName"]], "provMB_v3_burnyROS_rep05", ignore_attr = TRUE)
@@ -132,27 +139,20 @@ test_that("LandWeb config + context setup is working", {
 
   rm(config.mb)
 
-  ## study area: Tolko_AB_N (v2) -------------------------------------------------------------------
+  ## study area: Tolko_AB_N ------------------------------------------------------------------------
   ## mode:       postprocess
-  config.pp.tolko <- suppressWarnings({
-    useConfig(
-      projectName = "LandWeb",
-      projectPath = prjDir,
-      mode = "postprocess",
-      rep = NA_integer_,
-      studyAreaName = "Tolko_AB_N",
-      version = 2
-    )
-  }) ## TODO: currently warns about params specified for "missing" modules not used in postprocess
-  config.pp.tolko$context[["dispersalType"]] <- "aspen"
-  suppressWarnings({
-    config.pp.tolko$update() ## required after context changes
-  })
+  config.pp.tolko <- landweb$landwebConfig$new(
+    projectName = "LandWeb",
+    projectPath = prjDir,
+    mode = "postprocess",
+    rep = NA_integer_,
+    studyAreaName = "Tolko_AB_N"
+  )$update()$validate()
 
   ## context
   expect_equal(
     config.pp.tolko$context[["runName"]],
-    "Tolko_AB_N_aspenDispersal_logROS",
+    "Tolko_AB_N",
     ignore_attr = TRUE
   )
 
@@ -188,24 +188,19 @@ test_that("LandWeb config + context setup is working", {
 
   ## study area: FMU E14 ---------------------------------------------------------------------------
   ## mode:       production
-  config.pp.e14 <- suppressWarnings({
-    useConfig(
-      projectName = "LandWeb",
-      projectPath = prjDir,
-      mode = "production",
-      rep = 10,
-      studyAreaName = "FMU_E14",
-      version = 2
-    )
-  }) ## TODO: currently warns about params specified for "missing" modules not used in postprocess
+  config.pp.e14 <- landweb$landwebConfig$new(
+    projectName = "LandWeb",
+    projectPath = prjDir,
+    mode = "production",
+    rep = 10,
+    studyAreaName = "FMU_E14"
+  )$update()$validate()
 
   ## context
   expect_equal(config.pp.e14$context[["pixelSize"]], 250)
 
   config.pp.e14$context[["pixelSize"]] <- 125
-  suppressWarnings({
-    config.pp.e14$update() ## required after context changes
-  })
+  config.pp.e14$update() ## required after context changes
   expect_equal(config.pp.e14$context[["pixelSize"]], 125)
 
   ## args

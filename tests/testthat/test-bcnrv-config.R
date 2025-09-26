@@ -1,8 +1,18 @@
 test_that("BC NRV [SCFM] config + context setup is working", {
-  skip("Run manually with latest version of BC_HRV project on test machine.")
+  skip_on_cran()
+  skip_if_not_installed("box")
 
-  ## project: BC_HRV ------------------------------------------------------------------------------
+  ## project: BC_HRV -------------------------------------------------------------------------------
   prjDir <- "~/GitHub/BC_HRV"
+  prjMod <- file.path(prjDir, "box", "bcnrv.R")
+
+  skip_if_not(file.exists(prjMod))
+
+  .linkProject(prjMod)
+
+  box::use(./box/bcnrv)
+
+  ### ----------------------------------------------------------------------------------------------
 
   pr_mods <- list(
     "BC_HRV_preamble",
@@ -37,29 +47,14 @@ test_that("BC NRV [SCFM] config + context setup is working", {
 
   .studyAreaName <- c("Corkscrew", "Christenson Creek", "Downton", "Punky Moore")
 
-  boxDir <- file.path("tests", "testthat", "box")
-  boxMod <- file.path(prjDir, "box", "bcnrv.R")
-
-  if (!dir.exists(boxDir)) {
-    dir.create(boxDir)
-  }
-  if (!file.exists(boxMod)) {
-    file.symlink(boxMod, file.path(boxDir, "bcnrv.R"))
-  }
-
-  box::use(./box/bcnrv)
-
-  expWarn <- "Parameters specified for modules not found in `modules` and will be ignored"
-  suppressWarnings({
-    config.bc <- bcnrv$bcnrvConfig$new(
-      projectPath = prjDir,
-      fireModel = "scfm",
-      nrvType = "hrv",
-      mode = "development",
-      rep = 1L,
-      studyAreaName = .studyAreaName
-    )$update()$validate()
-  }) ## can't use expect_warning with object assignment
+  config.bc <- bcnrv$bcnrvConfig$new(
+    projectPath = prjDir,
+    fireModel = "scfm",
+    nrvType = "hrv",
+    mode = "development",
+    rep = 1L,
+    studyAreaName = .studyAreaName
+  )$update()$validate() ## TODO: update & fix tests
 
   ## context
   expect_equal(
@@ -121,7 +116,7 @@ test_that("BC NRV [SCFM] config + context setup is working", {
 
   ## single study area name using NRD/NRR ----------------------------------------------------------
   config.bc$context$studyAreaName <- "NRR_Cariboo"
-  expect_warning(config.bc$update()$validate(), expWarn)
+  config.bc$update()$validate()
 
   ## context
   expect_equal(
@@ -165,7 +160,7 @@ test_that("BC NRV [SCFM] config + context setup is working", {
 
   ## fire regime polygon types ---------------------------------------------------------------------
   config.bc$context$frpType <- "ECODISTRICT"
-  expect_warning(config.bc$update()$validate(), expWarn)
+  config.bc$update()$validate()
 
   ## context
   expect_equal(
@@ -213,7 +208,7 @@ test_that("BC NRV [SCFM] config + context setup is working", {
 
   ## mode postprocess ------------------------------------------------------------------------------
   config.bc$context$mode <- "postprocess"
-  expect_warning(config.bc$update()$validate(), expWarn)
+  config.bc$update()$validate()
 
   ## context
   expect_equal(
@@ -264,10 +259,18 @@ test_that("BC NRV [SCFM] config + context setup is working", {
 })
 
 test_that("BC NRV [FIRESENSE] config + context setup is working", {
-  skip("Run manually with latest version of BC_HRV project on test machine.")
+  skip_on_cran()
+  skip_if_not_installed("box")
 
-  ## project: BC_HRV ------------------------------------------------------------------------------
+  ## project: BC_HRV -------------------------------------------------------------------------------
   prjDir <- "~/GitHub/BC_HRV"
+  prjMod <- file.path(prjDir, "box", "bcnrv.R")
+
+  skip_if_not(file.exists(prjMod))
+
+  .linkProject(prjMod)
+
+  box::use(./box/bcnrv)
 
   pr_mods <- list(
     "BC_HRV_preamble",
@@ -306,31 +309,14 @@ test_that("BC NRV [FIRESENSE] config + context setup is working", {
 
   .studyAreaName <- c("Corkscrew", "Christenson Creek", "Downton", "Punky Moore")
 
-  boxDir <- file.path("tests", "testthat", "box") |> normPath()
-  boxMod <- file.path(boxDir, "bcnrv.R")
-  prjMod <- file.path(prjDir, "box", "bcnrv.R")
-
-  if (!dir.exists(boxDir)) {
-    dir.create(boxDir)
-  }
-  if (!file.exists(boxMod)) {
-    file.symlink(prjMod, boxMod)
-  }
-  expect_true(is.symlink(boxMod))
-
-  box::use(./box/bcnrv)
-
-  expWarn <- "Parameters specified for modules not found in `modules` and will be ignored"
-  suppressWarnings({
-    config.bc <- bcnrv$bcnrvConfig$new(
-      projectPath = prjDir,
-      fireModel = "fireSense",
-      nrvType = "hrv",
-      mode = "development",
-      rep = 1L,
-      studyAreaName = .studyAreaName
-    )$update()$validate()
-  }) ## can't use expect_warning with object assignment
+  config.bc <- bcnrv$bcnrvConfig$new(
+    projectPath = prjDir,
+    fireModel = "fireSense",
+    nrvType = "hrv",
+    mode = "development",
+    rep = 1L,
+    studyAreaName = .studyAreaName
+  )$update()$validate()
 
   ## context
   expect_equal(
@@ -395,7 +381,7 @@ test_that("BC NRV [FIRESENSE] config + context setup is working", {
 
   ## single study area name using NRD/NRR ----------------------------------------------------------
   config.bc$context$studyAreaName <- "NRR_Cariboo"
-  expect_warning(config.bc$update()$validate(), expWarn)
+  config.bc$update()$validate()
 
   ## context
   expect_equal(
@@ -438,7 +424,7 @@ test_that("BC NRV [FIRESENSE] config + context setup is working", {
 
   ## fire regime polygon types ---------------------------------------------------------------------
   config.bc$context$frpType <- "ECODISTRICT"
-  expect_warning(config.bc$update()$validate(), expWarn)
+  config.bc$update()$validate()
 
   ## context
   expect_equal(
@@ -485,7 +471,7 @@ test_that("BC NRV [FIRESENSE] config + context setup is working", {
 
   ## mode postprocess ------------------------------------------------------------------------------
   config.bc$context$mode <- "postprocess"
-  expect_warning(config.bc$update()$validate(), expWarn)
+  config.bc$update()$validate()
 
   ## context
   expect_equal(

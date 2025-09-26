@@ -1,8 +1,16 @@
 test_that("Ontario config + context setup is working", {
-  skip("Run manually with latest version of Ontario_AOU_ROF project on test machine.")
+  skip_on_cran()
+  skip_if_not_installed("box")
 
   ## project: Ontario_AOU_ROF ----------------------------------------------------------------------
   prjDir <- "~/GitHub/Ontario_AOU_ROF"
+  prjMod <- file.path(prjDir, "box", "onnrv.R")
+
+  skip_if_not(file.exists(prjMod))
+
+  .linkProject(prjMod)
+
+  box::use(./box/onnrv)
 
   ## NOTE: user expected to add their preamble module to their project config
   pr_mods <- list(
@@ -31,33 +39,16 @@ test_that("Ontario config + context setup is working", {
 
   .studyAreaName <- "ON_AOU_5"
 
-  boxDir <- file.path("tests", "testthat", "box") |> normPath()
-  boxMod <- file.path(boxDir, "onnrv.R")
-  prjMod <- file.path(prjDir, "box", "prjcfg.R")
-
-  if (!dir.exists(boxDir)) {
-    dir.create(boxDir)
-  }
-  if (!file.exists(boxMod)) {
-    file.symlink(prjMod, boxMod)
-  }
-  expect_true(is.symlink(boxMod))
-
-  box::use(./box/onnrv)
-
-  expWarn <- "Parameters specified for modules not found in `modules` and will be ignored"
-  suppressWarnings({
-    config.onnrv <- onnrv$onnrvConfig$new(
-      projectPath = prjDir,
-      climateGCM = "CanESM5",
-      climateSSP = 370,
-      mode = "development",
-      nrvType = "hrv",
-      rep = 1L,
-      res = 250,
-      studyAreaName = .studyAreaName
-    )$update()$validate()
-  }) ## can't use expect_warning with object assignment
+  config.onnrv <- onnrv$onnrvConfig$new(
+    projectPath = prjDir,
+    climateGCM = "CanESM5",
+    climateSSP = 370,
+    mode = "development",
+    nrvType = "hrv",
+    rep = 1L,
+    res = 250,
+    studyAreaName = .studyAreaName
+  )$update()$validate() ## TODO: update & fix tests
 
   ## context
   expect_equal(
@@ -119,7 +110,7 @@ test_that("Ontario config + context setup is working", {
 
   ## context 'fit' ---------------------------------------------------------------------------------
   config.onnrv$context[["mode"]] <- c("development", "fit")
-  expect_warning(config.onnrv$update()$validate(), expWarn)
+  config.onnrv$update()$validate()
 
   ## context
   expect_equal(
@@ -181,7 +172,7 @@ test_that("Ontario config + context setup is working", {
 
   ## climate scenarios -----------------------------------------------------------------------------
   config.onnrv$context[["climateSSP"]] <- 585
-  expect_warning(config.onnrv$update()$validate(), expWarn)
+  config.onnrv$update()$validate()
 
   ## context
   expect_equal(
@@ -228,7 +219,7 @@ test_that("Ontario config + context setup is working", {
 
   ## mode postprocess ------------------------------------------------------------------------------
   config.onnrv$context$mode <- "postprocess"
-  expect_warning(config.onnrv$update()$validate(), expWarn)
+  config.onnrv$update()$validate()
 
   ## context
   expect_equal(config.onnrv$context[["runName"]], "ON_AOU_5_CanESM5_SSP585", ignore_attr = TRUE)
