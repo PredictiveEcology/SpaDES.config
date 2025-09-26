@@ -237,7 +237,7 @@ projConfig <- R6::R6Class(
 
       modsInPrj <- list.dirs(fullModulePath, recursive = FALSE, full.names = FALSE)
       if (!all(self$modules %in% modsInPrj)) {
-        warning(
+        message(
           "modules list contains modules not found in modulePath ",
           self$paths[["modulePath"]]
         )
