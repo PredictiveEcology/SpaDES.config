@@ -5,8 +5,6 @@
 \title{Project configuration class}
 \description{
 Project configuration class
-
-Project configuration class
 }
 \note{
 Several fields update their list values when assigning to them,
@@ -60,96 +58,102 @@ Fields with list-update assignment mechanics include:
 Alex Chubaty and Eliot McIntire
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{context}}{a \code{projContext} object.}
-}
-\if{html}{\out{</div>}}
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{context}}{a \code{projContext} object.}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{args}}{Named list of additional project arguments.}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{args}}{Named list of additional project arguments.}
 
-\item{\code{modules}}{List of module names, which should correspond to the names in \code{params}.}
+    \item{\code{modules}}{List of module names, which should correspond to the names in \code{params}.}
 
-\item{\code{options}}{Named list of R and R package options to be set.}
+    \item{\code{options}}{Named list of R and R package options to be set.}
 
-\item{\code{params}}{Named list of named lists specifying simulation parameters.
+    \item{\code{params}}{Named list of named lists specifying simulation parameters.
 The names of the outermost list must correspond to modules
 (and may also include \code{.global}).}
 
-\item{\code{paths}}{Named list of paths, which should include (at minimum) the
+    \item{\code{paths}}{Named list of paths, which should include (at minimum) the
 the paths in \code{SpaDES.core::setPaths}.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-projConfig-new}{\code{projConfig$new()}}
-\item \href{#method-projConfig-update}{\code{projConfig$update()}}
-\item \href{#method-projConfig-validate}{\code{projConfig$validate()}}
-\item \href{#method-projConfig-clone}{\code{projConfig$clone()}}
-}
+  \itemize{
+    \item \href{#method-projConfig-initialize}{\code{projConfig$new()}}
+    \item \href{#method-projConfig-update}{\code{projConfig$update()}}
+    \item \href{#method-projConfig-validate}{\code{projConfig$validate()}}
+    \item \href{#method-projConfig-clone}{\code{projConfig$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-projConfig-new"></a>}}
-\if{latex}{\out{\hypertarget{method-projConfig-new}{}}}
-\subsection{Method \code{new()}}{
-Create an new \code{projConfig} object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{projConfig$new(projectName, projectPath, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-projConfig-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-projConfig-initialize}{}}}
+\subsection{\code{projConfig$new()}}{
+  Create an new \code{projConfig} object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{projConfig$new(projectName, projectPath, ...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{projectName}}{character string of length 1 giving the name of the project.}
+      \item{\code{projectPath}}{character string giving the path to the project directory.}
+      \item{\code{...}}{Additional arguments passed to \code{useContext()}}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{projectName}}{character string of length 1 giving the name of the project.}
-
-\item{\code{projectPath}}{character string giving the path to the project directory.}
-
-\item{\code{...}}{Additional arguments passed to \code{useContext()}}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-projConfig-update"></a>}}
 \if{latex}{\out{\hypertarget{method-projConfig-update}{}}}
-\subsection{Method \code{update()}}{
-Update a \code{projConfig} object from its context.
+\subsection{\code{projConfig$update()}}{
+  Update a \code{projConfig} object from its context.
 Must be called anytime the context is updated.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{projConfig$update()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{projConfig$update()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-projConfig-validate"></a>}}
 \if{latex}{\out{\hypertarget{method-projConfig-validate}{}}}
-\subsection{Method \code{validate()}}{
-Validate the values of fields in a \code{projConfig} object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{projConfig$validate()}\if{html}{\out{</div>}}
+\subsection{\code{projConfig$validate()}}{
+  Validate the values of fields in a \code{projConfig} object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{projConfig$validate()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-projConfig-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-projConfig-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{projConfig$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{projConfig$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{projConfig$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

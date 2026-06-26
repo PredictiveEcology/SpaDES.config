@@ -45,3 +45,18 @@ test_that("working with relative paths behaves sensibly", {
   newRelPaths2 <- .updateRelativePath(paths3, paths4)
   expect_true(all(newRelPaths2 == "outputs/LandWeb_v3/rep01/tiles"))
 })
+
+test_that(".getRelativePath falls back gracefully on edge cases", {
+  ## no shared component: previously `max(which(a %in% b))` returned -Inf (warning)
+  ## and produced NA-filled garbage; now it falls back to a plain relative path.
+  expect_match(
+    .getRelativePath("/separate/storage/outputs", "/home/user/myProject"),
+    "separate/storage/outputs$"
+  )
+
+  ## path equals the reference (deepest shared component is the leaf itself) -> "."
+  expect_identical(
+    .getRelativePath("/home/user/myProject", "/home/user/myProject"),
+    "."
+  )
+})

@@ -5,100 +5,101 @@
 \title{Project context class}
 \description{
 Project context class
-
-Project context class
 }
 \author{
 Alex Chubaty
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{machine}}{Character string giving the name of the current machine (i.e., nodename)}
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{machine}}{Character string giving the name of the current machine (i.e., nodename)}
 
-\item{\code{user}}{Character string giving the username on the current machine}
-}
-\if{html}{\out{</div>}}
+    \item{\code{user}}{Character string giving the username on the current machine}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{mode}}{Character string giving the project run mode.
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{mode}}{Character string giving the project run mode.
 E.g., can be used to differentiate among "production".
 "development", or "postprocessing" runs.}
 
-\item{\code{studyAreaName}}{Character string giving the name of current study area.}
+    \item{\code{studyAreaName}}{Character string giving the name of current study area.}
 
-\item{\code{rep}}{replicate id (integer)}
+    \item{\code{rep}}{replicate id (integer)}
 
-\item{\code{runName}}{get or set the current runName}
-}
-\if{html}{\out{</div>}}
+    \item{\code{runName}}{get or set the current runName}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-projContext-new}{\code{projContext$new()}}
-\item \href{#method-projContext-print}{\code{projContext$print()}}
-\item \href{#method-projContext-clone}{\code{projContext$clone()}}
-}
+  \itemize{
+    \item \href{#method-projContext-initialize}{\code{projContext$new()}}
+    \item \href{#method-projContext-print}{\code{projContext$print()}}
+    \item \href{#method-projContext-clone}{\code{projContext$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-projContext-new"></a>}}
-\if{latex}{\out{\hypertarget{method-projContext-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new \code{projContext} object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{projContext$new(
+\if{html}{\out{<a id="method-projContext-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-projContext-initialize}{}}}
+\subsection{\code{projContext$new()}}{
+  Create a new \code{projContext} object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{projContext$new(
   projectPath,
   mode = "development",
   rep = 1L,
   studyAreaName = "default"
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{projectPath}}{Character string giving the path to the project directory.}
-
-\item{\code{mode}}{Character string. One of 'production', 'development', 'postprocess',
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{projectPath}}{Character string giving the path to the project directory.}
+      \item{\code{mode}}{Character string. One of 'production', 'development', 'postprocess',
 or 'profile'.}
+      \item{\code{rep}}{Integer denoting the replicate ID for the current run.}
+      \item{\code{studyAreaName}}{Character string identifying a study area.}
+    }
+    \if{html}{\out{</div>}}
+  }
+}
 
-\item{\code{rep}}{Integer denoting the replicate ID for the current run.}
-
-\item{\code{studyAreaName}}{Character string identifying a study area.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-projContext-print"></a>}}
 \if{latex}{\out{\hypertarget{method-projContext-print}{}}}
-\subsection{Method \code{print()}}{
-print the context object in markdown table format,
+\subsection{\code{projContext$print()}}{
+  print the context object in markdown table format,
 and invisibly return this formatted table for use
 e.g., when writing the context info to a file for humans.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{projContext$print()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{projContext$print()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-projContext-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-projContext-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{projContext$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{projContext$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{projContext$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

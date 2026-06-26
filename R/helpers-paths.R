@@ -47,7 +47,7 @@ projectPaths <- function(type = NULL) {
 #' .getRelativePath(p1, p2) ## "outputs"
 #' ```
 #'
-#' @importFrom fs is_absolute_path
+#' @importFrom fs is_absolute_path path_rel
 #' @keywords internal
 .getRelativePath <- function(path, relativeToPath) {
   path <- normPath(path)
@@ -60,12 +60,19 @@ projectPaths <- function(type = NULL) {
     b <- unlist(strsplit(relativeToPath, "/"))
     b <- b[nzchar(b)]
 
-    ## assume most internal subdirectory is the matching one
-    id <- max(which(a %in% b))
-    relPath <- do.call(file.path, as.list(a[(id + 1):length(a)]))
+    ## assume the deepest shared subdirectory is the matching project root; fall
+    ## back to `fs::path_rel()` when nothing is shared (rather than erroring on
+    ## `max(integer(0))`) or when the match is the path leaf itself.
+    shared <- which(a %in% b)
+    relPath <- if (length(shared) && max(shared) < length(a)) {
+      do.call(file.path, as.list(a[(max(shared) + 1):length(a)]))
+    } else {
+      as.character(fs::path_rel(path, relativeToPath))
+    }
   } else {
     relPath <- path
   }
+  relPath
 }
 .getRelativePath <- Vectorize(.getRelativePath, USE.NAMES = FALSE)
 
@@ -108,6 +115,7 @@ updateOutputPath <- function(config, runNameFun) {
 #' @param paths A named list of paths.
 #'
 #' @export
+#' @rdname paths4spades
 paths4spades <- function(paths) {
   if (requireNamespace("SpaDES.core", quietly = TRUE)) {
     want <- grep("Path$", names(formals(SpaDES.core::setPaths)), value = TRUE)

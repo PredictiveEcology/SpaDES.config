@@ -2,11 +2,12 @@
 
 * drop support for R 4.2 due to changes in dependency packages;
 * remove suggested dependencies `fireSenseUtils` and `scfmutils` (#1);
-* use `PredictiveEcology/SpaDES.project@development` following merge of `transition` branch;
+* remove the `SpaDES.project` dependency and the `getModule()` shim it powered: the shim is redundant because the relevant modules already guard their own `getModule()` calls against existing project modules, so this drops a hard-to-build dependency from the package;
 * add `from_wd` argument to `findProjectPath`;
 * remove `tilePath` from default paths;
 * add `sharedOutputPath` to default paths;
 * message instead of warning for ignored module parameters;
+* `.getRelativePath()` falls back to a plain relative path instead of erroring (and returning NA-filled garbage) when no path component is shared with the project directory, or when the deepest shared component is the path leaf;
 * documentation improvements;
 * update and add new tests;
 
