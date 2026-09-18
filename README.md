@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/github/PredictiveEcology/SpaDES.config/branch/main/graph/badge.svg?token=D6obCssN0K)](https://codecov.io/github/PredictiveEcology/SpaDES.config)
 <!-- badges: end -->
 
-<img align="right" width="80" pad="20" src="https://github.com/PredictiveEcology/SpaDES/raw/master/man/figures/SpaDES.png">
+<img align="right" width="80" pad="20" src="https://github.com/PredictiveEcology/SpaDES/raw/main/man/figures/SpaDES.png">
 
 # SpaDES.config
 
